@@ -19,28 +19,30 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.err.api;
 
-import org.ameba.app.SolutionApp;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
+import java.util.function.Function;
+
+import org.openwms.common.comm.err.ErrorMessage;
+import org.springframework.stereotype.Component;
 
 /**
- * A DriverStarter.
+ * A ErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
+ * dependency. The error handling functionality must be implemented in the actual project, because the OSIP specification does not make
+ * any requirements nor assumptions to error handling.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
-@ImportResource("META-INF/spring/*-context.xml")
-public class DriverStarter {
+@Component
+class ErrorMessageHandler implements Function<ErrorMessage, Void> {
 
     /**
-     * Boot up!
-     *
-     * @param args Some args
+     * Does not do anything.
      */
-    public static void main(String[] args) {
-        SpringApplication.run(DriverStarter.class, args);
+    @Override
+    public Void apply(ErrorMessage errorMessage) {
+
+        // Currently no error handling happens in the base.
+        return null;
     }
 }
