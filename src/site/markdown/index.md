@@ -39,4 +39,4 @@ queue name is built on the fly and follows a naming convention. This is one aspe
 ![Architecture][4]
 
 
- [4]: src/site/resources/images/integration_patterns.png
+[4]: images/integration_patterns.png

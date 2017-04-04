@@ -20,6 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
- * Contains types for {@code ErrorMessage} handling specific to tcp/ip.
+ * Contains types and default implementations to extend the REQ_ telegram handling.
  */
-package org.openwms.common.comm.err.tcp;
+package org.openwms.common.comm.req.spi;
+

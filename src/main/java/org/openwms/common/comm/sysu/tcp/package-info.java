@@ -20,6 +20,6 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
- * This package contains types for {@code SystemUpdateMessage} handling specific to tcp/ip.
+ * Contains types for {@code SystemUpdateMessage} handling specific to tcp/ip.
  */
 package org.openwms.common.comm.sysu.tcp;

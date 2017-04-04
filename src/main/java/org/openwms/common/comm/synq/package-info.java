@@ -20,6 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
- * Contains types for {@code ErrorMessage} handling specific to tcp/ip.
+ * Contains handlers and types according to SYNQ telegram handling.
  */
-package org.openwms.common.comm.err.tcp;
+package org.openwms.common.comm.synq;
+

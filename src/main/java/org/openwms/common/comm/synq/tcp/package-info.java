@@ -20,6 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
- * Contains types for {@code ErrorMessage} handling specific to tcp/ip.
+ * Contains types for {@code TimesyncRequest} handling specific to tcp/ip.
  */
-package org.openwms.common.comm.err.tcp;
+package org.openwms.common.comm.synq.tcp;
+

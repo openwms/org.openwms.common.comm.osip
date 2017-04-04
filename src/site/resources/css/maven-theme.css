@@ -1,0 +1,4 @@
+a.externalLink, a.externalLink:link, a.externalLink:visited, a.externalLink:active, a.externalLink:hover {
+    background: unset;
+    padding-right: 0px;
+}

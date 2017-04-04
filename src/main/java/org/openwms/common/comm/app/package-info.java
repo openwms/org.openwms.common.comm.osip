@@ -20,6 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
- * Contains types for {@code ErrorMessage} handling specific to tcp/ip.
+ * Contains Spring configuration files and other lifecycle relevant types.
  */
-package org.openwms.common.comm.err.tcp;
+package org.openwms.common.comm.app;
+
