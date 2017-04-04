@@ -22,10 +22,6 @@
 package org.openwms.common.comm.req;
 
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.function.Function;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.openwms.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +32,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
