@@ -25,6 +25,7 @@ package org.openwms.common.comm.req;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.openwms.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -36,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Function;
+
+import static java.lang.String.format;
 
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
@@ -50,12 +53,14 @@ class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
     private RestTemplate aLoadBalanced;
     @Autowired
     private DiscoveryClient dc;
+    @Value("${owms.driver.server.routing-service-name:routing-service}")
+    private String routingServiceName;
 
     @Override
     public Void apply(RequestMessage msg) {
-        List<ServiceInstance> list = dc.getInstances("routing-service");
+        List<ServiceInstance> list = dc.getInstances(routingServiceName);
         if (list == null || list.size() == 0) {
-            throw new RuntimeException("No deployed service with name routing-service found");
+            throw new RuntimeException(format("No deployed service with name [%s] found", routingServiceName));
         }
         ServiceInstance si = list.get(0);
         String endpoint = si.getMetadata().get("protocol") + "://" + si.getServiceId() + "/v1/req";
