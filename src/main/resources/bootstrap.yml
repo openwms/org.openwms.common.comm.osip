@@ -8,8 +8,6 @@ spring:
       discovery:
         enabled: true
         service-id: openwms-config
-#      username: ${owms.config.username}
-#      password: ${owms.config.password}
 
 owms:
   eureka:
