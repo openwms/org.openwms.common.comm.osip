@@ -1,17 +1,15 @@
 spring:
-  main:
-    banner-mode: off
   application:
     name: tcpip-driver
   cloud:
     config:
       label: ${owms.tenant:master}
-      fail-fast: true
+      fail-fast: true # true means retry
       discovery:
         enabled: true
         service-id: openwms-config
-      username: ${owms.config.username}
-      password: ${owms.config.password}
+#      username: ${owms.config.username}
+#      password: ${owms.config.password}
 
 owms:
   eureka:
@@ -38,6 +36,8 @@ eureka:
 ---
 spring:
   profiles: CLOUD
+  main:
+    banner-mode: off
 
 eureka:
   instance:
