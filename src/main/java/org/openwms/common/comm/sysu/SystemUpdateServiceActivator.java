@@ -21,8 +21,7 @@
  */
 package org.openwms.common.comm.sysu;
 
-import java.util.function.Function;
-
+import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.NotRespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
+
+import java.util.function.Function;
 
 /**
  * A SystemUpdateServiceActivator.
@@ -51,6 +52,7 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
      * {@inheritDoc}
      */
     @Override
+    @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
     public void wakeUp(SystemUpdateMessage message) {
         handler.apply(message);

@@ -21,8 +21,7 @@
  */
 package org.openwms.common.comm.err;
 
-import java.util.function.Function;
-
+import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.NotRespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
+
+import java.util.function.Function;
 
 /**
  * A ErrorMessageServiceActivator delegates incoming {@link ErrorMessage}s to the appropriate Application Service.
@@ -67,6 +68,7 @@ public class ErrorMessageServiceActivator implements NotRespondingServiceActivat
      * {@inheritDoc}
      */
     @Override
+    @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
     public void wakeUp(ErrorMessage message) {
         handler.apply(message);

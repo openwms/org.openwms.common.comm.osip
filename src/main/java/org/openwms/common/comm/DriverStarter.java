@@ -21,6 +21,7 @@
  */
 package org.openwms.common.comm;
 
+import org.ameba.annotation.EnableAspects;
 import org.ameba.app.SolutionApp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,6 +40,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
 @EnableDiscoveryClient
 @EnableCircuitBreaker
+@EnableAspects
 public class DriverStarter {
 
     /**

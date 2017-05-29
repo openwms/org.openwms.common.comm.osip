@@ -21,8 +21,7 @@
  */
 package org.openwms.common.comm.synq;
 
-import java.util.function.Function;
-
+import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.RespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+
+import java.util.function.Function;
 
 /**
  * A TimesyncServiceActivator is activated on SYNC telegrams and delegates
@@ -68,6 +69,7 @@ class TimesyncServiceActivator implements RespondingServiceActivator<TimesyncReq
      * {@inheritDoc}
      */
     @Override
+    @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
     public Message<TimesyncResponse> wakeUp(Message<TimesyncRequest> message) {
         return handler.apply(message);
