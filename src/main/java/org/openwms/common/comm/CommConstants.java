@@ -43,6 +43,9 @@ public final class CommConstants {
 
     /** Used in logging configuration to extract the telegram type. */
     public static final String LOG_TELEGRAM_TYPE = "lTelegramType";
+    /** Used in logging configuration to log the current configured tenant. */
+    public static final String LOG_TENANT = "lTenant";
+
     private CommConstants() {
     }
 }
