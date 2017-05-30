@@ -20,11 +20,8 @@
         <sift>
             <appender name="SYSLOG-${Tenant}" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
                 <destination>openwms.mooo.com:10515</destination>
-                <destination>openwms.mooo.com:10515</destination>
                 <keepAliveDuration>5 minutes</keepAliveDuration>
                 <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                    <includeMdcKeyName>Tenant</includeMdcKeyName>
-                    <includeMdcKeyName>TelegramType</includeMdcKeyName>
                 </encoder>
             </appender>
         </sift>
