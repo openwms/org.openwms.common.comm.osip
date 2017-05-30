@@ -42,9 +42,9 @@ public final class CommConstants {
     public static final String TELEGRAM_FILLER_CHARACTER = "*";
 
     /** Used in logging configuration to extract the telegram type. */
-    public static final String LOG_TELEGRAM_TYPE = "lTelegramType";
+    public static final String LOG_TELEGRAM_TYPE = "TelegramType";
     /** Used in logging configuration to log the current configured tenant. */
-    public static final String LOG_TENANT = "lTenant";
+    public static final String LOG_TENANT = "Tenant";
 
     private CommConstants() {
     }

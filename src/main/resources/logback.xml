@@ -20,35 +20,11 @@
         <sift>
             <appender name="SYSLOG-${Tenant}" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
                 <destination>openwms.mooo.com:10515</destination>
+                <destination>openwms.mooo.com:10515</destination>
                 <keepAliveDuration>5 minutes</keepAliveDuration>
-                <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                    <providers>
-                        <timestamp>
-                            <timeZone>UTC</timeZone>
-                        </timestamp>
-                        <pattern>
-                            <pattern>
-                                {
-                                "trace": "%X{X-B3-TraceId:-}",
-                                "span": "%X{X-B3-SpanId:-}",
-                                "parent": "%X{X-B3-ParentSpanId:-}",
-                                "requestId": "%X{X-RequestID}",
-                                "tenant": "${Tenant}",
-                                "moduleName": "${MODULE_NAME}",
-                                "serviceName": "${SERVICE_NAME}",
-                                "springAppName": "${springAppName:-}",
-                                "severity": "%level",
-                                "exportable": "%X{X-Span-Export:-}",
-                                "pid": "${PID:-}",
-                                "thread": "%thread",
-                                "tid": "%tid",
-                                "class": "%logger{40}",
-                                "telegramType": "%X{lTelegramType:-}
-                                "message": "%message"
-                                }
-                            </pattern>
-                        </pattern>
-                    </providers>
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                    <includeMdcKeyName>Tenant</includeMdcKeyName>
+                    <includeMdcKeyName>TelegramType</includeMdcKeyName>
                 </encoder>
             </appender>
         </sift>
