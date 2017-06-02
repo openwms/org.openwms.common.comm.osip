@@ -21,20 +21,23 @@
  */
 package org.openwms.common.comm.err.tcp;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
-import static org.openwms.common.comm.Payload.DATE_LENGTH;
-import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
-
-import java.text.ParseException;
-import java.util.Map;
-
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.err.ErrorMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+import java.util.Map;
+
+import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.Payload.DATE_LENGTH;
+import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 
 /**
  * An ErrorTelegramMapper transforms an incoming OSIP telegram string, that is expected to be an error telegram, into an ErrorMessage.
@@ -44,11 +47,14 @@ import org.springframework.stereotype.Component;
 @Component
 class ErrorTelegramMapper implements MessageMapper<ErrorMessage> {
 
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
+
     /**
      * {@inheritDoc}
      */
     @Override
     public Message<ErrorMessage> mapTo(String telegram, Map<String, Object> headers) {
+        TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         int startPayload = LENGTH_HEADER + forType().length();
         int startCreateDate = startPayload + ERROR_CODE_LENGTH;
         try {

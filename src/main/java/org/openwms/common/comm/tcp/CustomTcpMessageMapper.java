@@ -30,6 +30,8 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.util.Assert;
 
+import static org.openwms.common.comm.CommConstants.CORE_INTEGRATION_MESSAGING;
+
 /**
  * A CustomTcpMessageMapper.
  *
@@ -40,7 +42,7 @@ public class CustomTcpMessageMapper extends TcpMessageMapper {
     private final MessageConverter inboundMessageConverter;
     private final MessageConverter outboundMessageConverter;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("CORE_INTEGRATION_MESSAGING");
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CORE_INTEGRATION_MESSAGING);
 
     public CustomTcpMessageMapper(MessageConverter inboundMessageConverter, MessageConverter outboundMessageConverter) {
         Assert.notNull(inboundMessageConverter, "'inboundMessageConverter' must not be null");
@@ -52,7 +54,7 @@ public class CustomTcpMessageMapper extends TcpMessageMapper {
     @Override
     public Message<?> toMessage(TcpConnection connection) throws Exception {
         Object data = connection.getPayload();
-        LOGGER.debug("Incoming:" + data);
+        TELEGRAM_LOGGER.trace("Incoming:" + data);
         if (data != null) {
             Message<?> message = this.inboundMessageConverter.toMessage(data, null);
             AbstractIntegrationMessageBuilder<?> messageBuilder = this.getMessageBuilderFactory().fromMessage(message);
@@ -70,7 +72,7 @@ public class CustomTcpMessageMapper extends TcpMessageMapper {
     @Override
     public Object fromMessage(Message<?> message) throws Exception {
         Object data = this.outboundMessageConverter.fromMessage(message, Object.class);
-        LOGGER.debug("Outgoing:" + data);
+        TELEGRAM_LOGGER.trace("Outgoing:" + data);
         return data;
     }
 }

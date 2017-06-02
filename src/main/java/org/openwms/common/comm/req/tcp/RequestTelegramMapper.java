@@ -21,30 +21,34 @@
  */
 package org.openwms.common.comm.req.tcp;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
-
-import java.text.ParseException;
-import java.util.Map;
-
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.req.RequestMessage;
 import org.openwms.common.comm.req.spi.RequestFieldLengthProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.util.Map;
+
+import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
+
 /**
  * A RequestTelegramMapper tries to map a telegram String to a {@link RequestMessage}.
- * 
+ *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
 class RequestTelegramMapper implements MessageMapper<RequestMessage> {
 
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
     private RequestFieldLengthProvider provider;
 
@@ -53,8 +57,9 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
      */
     @Override
     public Message<RequestMessage> mapTo(String telegram, Map<String, Object> headers) {
+        TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         if (provider == null) {
-            throw new RuntimeException("Telegram handling "+ RequestMessage.IDENTIFIER+" not supported");
+            throw new RuntimeException("Telegram handling " + RequestMessage.IDENTIFIER + " not supported");
         }
         int startPayload = LENGTH_HEADER + forType().length();
         int startActualLocation = startPayload + provider.barcodeLength();

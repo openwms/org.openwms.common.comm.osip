@@ -28,9 +28,12 @@
     </appender>
 
     <logger name="com.netflix.discovery" level="OFF"/>
-    <logger name="org.openwms" level="DEBUG"/>
     <logger name="org.springframework" level="WARN"/>
+
     <logger name="CORE_INTEGRATION_MESSAGING" level="DEBUG"/>
+
+    <logger name="org.openwms" level="DEBUG"/>
+    <logger name="org.openwms.common.comm.synq" level="INFO"/>
 
     <logger name="PRESENTATION_LAYER_ACCESS" level="DEBUG" additivity="false">
         <appender-ref ref="TSL"/>

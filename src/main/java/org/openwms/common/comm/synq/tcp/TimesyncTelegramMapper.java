@@ -21,13 +21,7 @@
  */
 package org.openwms.common.comm.synq.tcp;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
-import static org.openwms.common.comm.ParserUtils.asDate;
-import static org.openwms.common.comm.Payload.DATE_LENGTH;
-
-import java.text.ParseException;
-import java.util.Map;
-
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.api.MessageMapper;
@@ -38,6 +32,13 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.util.Map;
+
+import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.ParserUtils.asDate;
+import static org.openwms.common.comm.Payload.DATE_LENGTH;
+
 /**
  * A TimesyncTelegramMapper.
  *
@@ -47,21 +48,21 @@ import org.springframework.stereotype.Component;
 class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimesyncTelegramMapper.class);
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Message<TimesyncRequest> mapTo(String telegram, Map<String, Object> headers) {
-        LOGGER.debug("Telegram to transform: [{}]", telegram);
-
+        TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         int startSendertime = LENGTH_HEADER + forType().length();
         TimesyncRequest request = new TimesyncRequest();
         try {
             request.setSenderTimer(asDate(telegram.substring(startSendertime, startSendertime + DATE_LENGTH)));
             GenericMessage<TimesyncRequest> result =
                     new GenericMessage<>(request, CommonMessageFactory.createHeaders(telegram, headers));
-            LOGGER.debug("Transformed telegram into TimesyncRequest message:" + result);
+            LOGGER.debug("Transformed telegram into TimesyncRequest message: [{}]", result);
             return result;
         } catch (ParseException e) {
             throw new MessageMismatchException(e.getMessage());
