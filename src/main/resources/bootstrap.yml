@@ -8,6 +8,8 @@ spring:
       discovery:
         enabled: true
         service-id: openwms-config
+  main:
+    web-environment: false
 
 owms:
   eureka:
@@ -16,9 +18,6 @@ owms:
     # need to be overridden in the cloud environment props!
     username: user
     password: sa
-
-server:
-  port: ${PORT:8084}
 
 eureka:
   client:
