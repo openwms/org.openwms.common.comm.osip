@@ -63,7 +63,7 @@ class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
             throw new RuntimeException(format("No deployed service with name [%s] found", routingServiceName));
         }
         ServiceInstance si = list.get(0);
-        String endpoint = si.getMetadata().get("protocol") + "://" + si.getServiceId() + "/v1/req";
+        String endpoint = si.getMetadata().get("protocol") + "://" + si.getServiceId() + "/req";
         aLoadBalanced.exchange(
                 endpoint,
                 HttpMethod.POST,

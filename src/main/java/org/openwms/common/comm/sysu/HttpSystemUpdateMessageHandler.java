@@ -21,8 +21,6 @@
  */
 package org.openwms.common.comm.sysu;
 
-import java.util.function.Function;
-
 import org.openwms.common.comm.CommConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -30,6 +28,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.function.Function;
 
 /**
  * A HttpSystemUpdateMessageHandler forwards system updates to the LocationGroup services directly without using the routing service.
@@ -46,7 +46,7 @@ class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Vo
     @Override
     public Void apply(SystemUpdateMessage msg) {
         restTemplate.exchange(
-                "http://routing-service/v1/sysu",
+                "http://routing-service/sysu",
                 HttpMethod.POST,
                 new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode())),
                 Void.class
