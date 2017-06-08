@@ -22,7 +22,7 @@
 package org.openwms.common.comm.sysu;
 
 import org.openwms.common.comm.CommConstants;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -40,13 +40,22 @@ import java.util.function.Function;
 @Component
 class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Void> {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final String routingServiceName;
+    private final String routingServiceProtocol;
+
+    HttpSystemUpdateMessageHandler(RestTemplate restTemplate,
+                                   @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
+                                   @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol) {
+        this.restTemplate = restTemplate;
+        this.routingServiceName = routingServiceName;
+        this.routingServiceProtocol = routingServiceProtocol;
+    }
 
     @Override
     public Void apply(SystemUpdateMessage msg) {
         restTemplate.exchange(
-                "http://routing-service/sysu",
+                routingServiceProtocol+"://"+routingServiceName+"/sysu",
                 HttpMethod.POST,
                 new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode())),
                 Void.class
