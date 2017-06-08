@@ -21,6 +21,7 @@
  */
 package org.openwms.common.comm.sysu;
 
+import org.openwms.SecurityUtils;
 import org.openwms.common.comm.CommConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -43,13 +44,19 @@ class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Vo
     private final RestTemplate restTemplate;
     private final String routingServiceName;
     private final String routingServiceProtocol;
+    private final String routingServiceUsername;
+    private final String routingServicePassword;
 
     HttpSystemUpdateMessageHandler(RestTemplate restTemplate,
-                                   @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
-                                   @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol) {
+                              @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
+                              @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol,
+                              @Value("${owms.driver.server.routing-service.username:user}") String routingServiceUsername,
+                              @Value("${owms.driver.server.routing-service.password:sa}") String routingServicePassword) {
         this.restTemplate = restTemplate;
         this.routingServiceName = routingServiceName;
         this.routingServiceProtocol = routingServiceProtocol;
+        this.routingServiceUsername = routingServiceUsername;
+        this.routingServicePassword = routingServicePassword;
     }
 
     @Override
@@ -57,7 +64,7 @@ class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Vo
         restTemplate.exchange(
                 routingServiceProtocol+"://"+routingServiceName+"/sysu",
                 HttpMethod.POST,
-                new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode())),
+                new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
                 Void.class
         );
         return null;

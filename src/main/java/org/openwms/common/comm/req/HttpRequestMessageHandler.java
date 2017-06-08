@@ -24,10 +24,7 @@ package org.openwms.common.comm.req;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.openwms.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -35,10 +32,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.function.Function;
-
-import static java.lang.String.format;
 
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
@@ -49,25 +43,30 @@ import static java.lang.String.format;
 @RefreshScope
 class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
 
-    @Autowired
-    private RestTemplate aLoadBalanced;
-    @Autowired
-    private DiscoveryClient dc;
-    @Value("${owms.driver.server.routing-service-name:routing-service}")
-    private String routingServiceName;
+    private final RestTemplate restTemplate;
+    private final String routingServiceName;
+    private final String routingServiceProtocol;
+    private final String routingServiceUsername;
+    private final String routingServicePassword;
+
+    HttpRequestMessageHandler(RestTemplate restTemplate,
+                              @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
+                              @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol,
+                              @Value("${owms.driver.server.routing-service.username:user}") String routingServiceUsername,
+                              @Value("${owms.driver.server.routing-service.password:sa}") String routingServicePassword) {
+        this.restTemplate = restTemplate;
+        this.routingServiceName = routingServiceName;
+        this.routingServiceProtocol = routingServiceProtocol;
+        this.routingServiceUsername = routingServiceUsername;
+        this.routingServicePassword = routingServicePassword;
+    }
 
     @Override
     public Void apply(RequestMessage msg) {
-        List<ServiceInstance> list = dc.getInstances(routingServiceName);
-        if (list == null || list.size() == 0) {
-            throw new RuntimeException(format("No deployed service with name [%s] found", routingServiceName));
-        }
-        ServiceInstance si = list.get(0);
-        String endpoint = si.getMetadata().get("protocol") + "://" + si.getServiceId() + "/req";
-        aLoadBalanced.exchange(
-                endpoint,
+        restTemplate.exchange(
+                routingServiceProtocol+"://"+routingServiceName+"/req",
                 HttpMethod.POST,
-                new HttpEntity<>(new RequestVO(msg.getActualLocation(), msg.getBarcode()), SecurityUtils.createHeaders(si.getMetadata().get("username"), si.getMetadata().get("password"))),
+                new HttpEntity<>(new RequestVO(msg.getActualLocation(), msg.getBarcode()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
                 Void.class
         );
         return null;
