@@ -21,8 +21,8 @@
  */
 package org.openwms.common.comm.sysu;
 
-import org.openwms.SecurityUtils;
 import org.openwms.common.comm.CommConstants;
+import org.openwms.core.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;

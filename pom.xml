@@ -27,8 +27,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openwms</groupId>
-        <artifactId>org.openwms.common</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <artifactId>org.openwms</artifactId>
+        <version>2</version>
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
@@ -126,6 +126,7 @@
     </reporting>
 
     <properties>
+        <core.version>1.1.0-SNAPSHOT</core.version>
         <logback.version>1.2.1</logback.version>
         <logstash-logback-encoder.version>4.9</logstash-logback-encoder.version>
     </properties>
@@ -134,7 +135,7 @@
         <!-- Project dependencies -->
         <dependency>
             <groupId>org.openwms</groupId>
-            <artifactId>org.openwms.common.shared</artifactId>
+            <artifactId>org.openwms.core.util</artifactId>
         </dependency>
 
         <!-- Spring Framework -->
@@ -223,6 +224,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.openwms</groupId>
+                <artifactId>org.openwms.core.util</artifactId>
+                <version>${core.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>

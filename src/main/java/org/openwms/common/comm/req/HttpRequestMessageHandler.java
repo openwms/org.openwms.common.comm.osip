@@ -23,7 +23,7 @@ package org.openwms.common.comm.req;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.openwms.SecurityUtils;
+import org.openwms.core.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
