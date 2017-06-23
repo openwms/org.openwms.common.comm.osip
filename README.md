@@ -35,8 +35,12 @@ how to transform from a String into a [TimesyncRequest](src/main/java/org/openwm
 [`messageRouter`](src/main/java/org/openwms/common/comm/router/CommonMessageRouter.java) picks up the right queue and activates the proper `ServiceActivator`. Notice that the service activators
 queue name is built on the fly and follows a naming convention. This is one aspect to support requirements NR003.
 
-
 ![Architecture][4]
 
+## Release
+
+```
+$ mvn clean deploy -Prelease,gpg
+```
 
  [4]: src/site/resources/images/integration_patterns.png

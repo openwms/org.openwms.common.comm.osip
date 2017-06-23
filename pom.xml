@@ -32,6 +32,7 @@
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
+    <version>1.1.0</version>
     <name>OpenWMS.org COMMON: OSIP TCP/IP Driver</name>
     <url>https://www.interface21.io/docs/common/comm/index.html</url>
 
