@@ -136,6 +136,34 @@ owms.driver.server.so-receive-buffer-size | The expected telegram size of the re
 owms.driver.server.so-send-buffer-size | The expected telegram size of the send buffer, by default OSIP telegrams have a length of 160 chars
 owms.driver.server.routing-service-name | Most OSIP telegrams require to contact the routing service for further action. This is the Spring application name of the TMS Routing Service how it can be discovered from the service registry.
 
+# Logging
+
+The driver component is configured for tenant aware logging. If, for instance, the tenant is configured to 'myProject' (owms.tenant=myProject) a tslog file (Technical Service Log) is written with
+name 'myProject-COMMON.tslog' that contains the time consumption processing each telegram took. An example tslog file looks like:
+
+```
+myProject COMMON 2018-09-27 15:26:27.280  INFO  [MEASURED                                ] : [TSL]>> ErrorMessageServiceActivator#wakeUp
+myProject COMMON 2018-09-27 15:26:27.305  INFO  [MEASURED                                ] : [TSL]<< ErrorMessageServiceActivator#wakeUp took 26 [ms]
+myProject COMMON 2018-09-27 15:27:01.586  INFO  [MEASURED                                ] : [TSL]>> TimesyncServiceActivator#wakeUp
+myProject COMMON 2018-09-27 15:27:01.587  INFO  [MEASURED                                ] : [TSL]<< TimesyncServiceActivator#wakeUp took 1 [ms]
+myProject COMMON 2018-09-27 15:28:48.638  INFO  [MEASURED                                ] : [TSL]>> TimesyncServiceActivator#wakeUp
+myProject COMMON 2018-09-27 15:28:48.657  INFO  [MEASURED                                ] : [TSL]<< TimesyncServiceActivator#wakeUp took 22 [ms]
+myProject COMMON 2018-09-27 15:28:50.704  INFO  [MEASURED                                ] : [TSL]>> TimesyncServiceActivator#wakeUp
+```
+
+Column   | Description
+-------- | ---
+#1  | Tenant name
+#2  | Module name (CORE, COMMON, TMS or WMS)
+#3  | Date of log entry written
+#4  | Time of log entry written
+#5  | Log level (INFO)
+#6  | Log category. All tslogs are using the category MEASURED
+#7  | TSL is another identifier used in log processing systems like logstash
+#8  | >>: incoming or <<: outgoing
+#9  | Type of telegram activator and indirectly the telegram handler used. By this information the processing telegram can be determined
+#10 | How long the message processing took in ms
+
 # Build and Release
 
 ```
