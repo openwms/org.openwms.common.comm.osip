@@ -3,18 +3,29 @@ spring:
     name: tcpip-driver
   cloud:
     config:
+      label: ${owms.tenant:master}
+      fail-fast: true # true means retry
+      discovery:
+        enabled: true
+        service-id: openwms-config
+      username: user # need to be overridden in the cloud environment props!
+      password: sa # need to be overridden in the cloud environment props!
+      headers:
+        protocol: ${owms.cfgsrv.protocol:http}
       enabled: false
   main:
     web-environment: false
 
 owms:
+  srv:
+    protocol: http
+    hostname: localhost
   eureka:
     url: http://user:sa@localhost:8761
   config:
     # need to be overridden in the cloud environment props!
     username: user
     password: sa
-  tenant: myProject
   driver:
     server:
       port: 30001
@@ -34,17 +45,34 @@ eureka:
 
 ---
 spring:
-  profiles: CLOUD
+  profiles: DISTRIBUTED
   cloud:
     config:
-      label: ${owms.tenant:master}
-      fail-fast: true # true means retry
-      discovery:
-        enabled: true
-        service-id: openwms-config
       enabled: true
+
+eureka:
+  instance:
+    hostname: ${owms.eureka.url}
+    # need to be overridden in the cloud environment props!
+    statusPageUrl: http://${eureka.instance.hostname}/info
+    healthCheckUrl: http://${eureka.instance.hostname}/health
+    homePageUrl: http://${eureka.instance.hostname}/
+
+---
+spring:
+  profiles: CLOUD
   main:
-    banner-mode: off
+    banner-mode: "OFF"
+  cloud:
+    config:
+      headers:
+        protocol: ${owms.cfgsrv.protocol:https}
+      enabled: true
+
+owms:
+  srv:
+    protocol: https
+    hostname: openwms-tcpip-driver.herokuapp.com
 
 eureka:
   instance:
@@ -52,6 +80,6 @@ eureka:
     # need to be overridden in the cloud environment props!
     secure-port-enabled: true
     non-secure-port-enabled: false
-    statusPageUrl: https://${eureka.instance.hostName}/info
-    healthCheckUrl: https://${eureka.instance.hostName}/health
-    homePageUrl: https://${eureka.instance.hostName}/
+    statusPageUrl: https://${eureka.instance.hostname}/info
+    healthCheckUrl: https://${eureka.instance.hostname}/health
+    homePageUrl: https://${eureka.instance.hostname}/

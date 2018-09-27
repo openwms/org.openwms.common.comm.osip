@@ -81,19 +81,21 @@ The first telegram string (SYNQ) is sent to the driver, whereas the driver respo
 ## Distributed Deployment
 
 In case of multiple driver components and lots of microservices it makes sense to keep service configuration at a central place, the [OpenWMS.org Configuration](https://github.com/spring-labs/org.openwms.configuration)
-server. This infrastructure service takes the configuration of each process from a configured Git repository and passes it down to the process at startup. By using a configuration sever
-it is also possible to change configuration at runtime without the need to restart processes. Configuration is pushed down into the microservices and the service configuration is refreshed.
+server is the right choice. This infrastructure service takes the configuration of each process from a configured Git repository and passes it down to the process at startup. By using a
+configuration sever it is also possible to change configuration at runtime without the need to restart processes. Configuration is pushed down into the microservices and the service
+configuration is refreshed dynamically.
 
-To run the driver component in this manner, the Spring profile "CLOUD" must be enabled. It's also good practice to provide unique application names, at least when the driver is instantiated
-multiple times:
+To run the driver component in this manner, the Spring profile "DISTRIBUTED" must be enabled. It's also a good practice to provide unique application names, at least when the driver
+is instantiated multiple times:
 
 ```
-$ java -Dspring.profiles.active=CLOUD -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
-$ java -Dspring.profiles.active=CLOUD -Dspring.application.name=tcpip-palett2 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett2 -jar tcpip-driver.jar
 ```
 
-Each driver is now starting up and looking for a configuration server. The application name is used to load the appropriate driver configuration from. For example the Git repository [ZILE](https://github.com/spring-labs/org.openwms.zile/tree/master/conf)
-includes YAML configuration files for all processes used in ZILE project, so also for tcpip-palett1.yml and tcpip-palett2.yml
+Each driver is now starting up and looking for a configuration server. The application name is used to load the appropriate driver configuration from. For example the Git repository
+[ZILE](https://github.com/spring-labs/org.openwms.zile/tree/master/conf) includes YAML configuration files for all processes used in ZILE project, same is true for tcpip-palett1.yml and
+tcpip-palett2.yml.
 
 tcpip-palett1.yml
 ```yaml
