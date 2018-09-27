@@ -37,6 +37,35 @@ queue name is built on the fly and follows a naming convention. This is one aspe
 
 ![Architecture][4]
 
+# Deployment
+
+The TCP/IP driver can run completely independent of cloud infrastructure services. This may the appropriate deployment model during development or for smaller projects where no central
+infrastructure services are required. In a larger project setup where the driver component is instantiated multiple times it makes sense to keep configuration on a central config server,
+this is where [OpenWMS.org Configuration](https://github.com/spring-labs/org.openwms.configuration) comes into play.
+
+## Standalone Deployment
+
+As said all required configuration must be passed at startup time because no infrastructure services are required to access. Without any configuration the driver is started with the provided
+default configuration that is suitable for one driver instance:
+
+```yaml
+owms:
+  driver:
+    server:
+      port: 30001
+```
+
+Property | Description
+-------- | ---
+owms.driver.server.port | The unique port number the driver receives connections on. Multiple driver instances must have different port numbers.
+
+In case you want to override the port number on startup just set the environment variable accordingly. In the following example 2 drivers are started, with different ports.
+
+```
+$ java -Dowms.driver.server.port=30002 -jar tcpip-driver.jar
+```
+
+
 ## Release
 
 ```

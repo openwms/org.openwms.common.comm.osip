@@ -3,11 +3,7 @@ spring:
     name: tcpip-driver
   cloud:
     config:
-      label: ${owms.tenant:master}
-      fail-fast: true # true means retry
-      discovery:
-        enabled: true
-        service-id: openwms-config
+      enabled: false
   main:
     web-environment: false
 
@@ -18,6 +14,14 @@ owms:
     # need to be overridden in the cloud environment props!
     username: user
     password: sa
+  tenant: myProject
+  driver:
+    server:
+      port: 30001
+      so-timeout: 300000
+      so-receive-buffer-size: 160
+      so-send-buffer-size: 160
+      routing-service-name: routing-service # is default
 
 eureka:
   client:
@@ -31,6 +35,14 @@ eureka:
 ---
 spring:
   profiles: CLOUD
+  cloud:
+    config:
+      label: ${owms.tenant:master}
+      fail-fast: true # true means retry
+      discovery:
+        enabled: true
+        service-id: openwms-config
+      enabled: true
   main:
     banner-mode: off
 

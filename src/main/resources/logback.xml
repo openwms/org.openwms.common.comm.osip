@@ -33,7 +33,7 @@
     <logger name="CORE_INTEGRATION_MESSAGING" level="DEBUG"/>
 
     <logger name="org.openwms" level="DEBUG"/>
-    <logger name="org.openwms.common.comm.synq" level="INFO"/>
+    <logger name="org.openwms.common.comm.synq" level="DEBUG"/>
 
     <logger name="PRESENTATION_LAYER_ACCESS" level="DEBUG" additivity="false">
         <appender-ref ref="TSL"/>
@@ -42,7 +42,7 @@
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="SYSLOG"/>
+        <!--appender-ref ref="SYSLOG"/-->
     </root>
 
 </configuration>

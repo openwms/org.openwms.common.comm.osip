@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnection;
 import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
-import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
+import org.springframework.integration.support.MutableMessageHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.util.Assert;
+
+import java.util.HashMap;
 
 import static org.openwms.common.comm.CommConstants.CORE_INTEGRATION_MESSAGING;
 
@@ -57,10 +59,11 @@ public class CustomTcpMessageMapper extends TcpMessageMapper {
         TELEGRAM_LOGGER.trace("Incoming:" + data);
         if (data != null) {
             Message<?> message = this.inboundMessageConverter.toMessage(data, null);
-            AbstractIntegrationMessageBuilder<?> messageBuilder = this.getMessageBuilderFactory().fromMessage(message);
-            this.addStandardHeaders(connection, messageBuilder);
-            this.addCustomHeaders(connection, messageBuilder);
-            return messageBuilder.build();
+            MutableMessageHeaders mmh = new MutableMessageHeaders(new HashMap<>());
+            this.addStandardHeaders(connection, mmh);
+            this.addCustomHeaders(connection, mmh);
+            Message<?> msg = this.getMessageBuilderFactory().fromMessage(message).copyHeaders(mmh).build();
+            return msg;
         } else {
             if (logger.isWarnEnabled()) {
                 logger.warn("Null payload from connection " + connection.getConnectionId());
