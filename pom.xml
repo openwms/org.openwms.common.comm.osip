@@ -27,8 +27,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openwms</groupId>
-        <artifactId>org.openwms.parent</artifactId>
-        <version>3</version>
+        <artifactId>org.openwms</artifactId>
+        <version>2</version>
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
@@ -167,7 +167,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
             <exclusions>
                 <exclusion>
                     <!-- bites with spring-core -->
@@ -178,11 +178,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
