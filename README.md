@@ -62,11 +62,79 @@ owms.driver.server.port | The unique port number the driver receives connections
 In case you want to override the port number on startup just set the environment variable accordingly. In the following example 2 drivers are started, with different ports.
 
 ```
+$ java -Dowms.driver.server.port=30001 -jar tcpip-driver.jar
 $ java -Dowms.driver.server.port=30002 -jar tcpip-driver.jar
 ```
 
+Afterwards simply send a OSIP SYNQ telegram to driver with port 30001 to get a response telegram:
 
-## Release
+```
+$ telnet localhost 30001
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+###00160RAS10MFC__00001SYNQ20171123225959***********************************************************************************************************************
+###00160MFC__RAS1000002SYNC20180927152848***********************************************************************************************************************
+```
+The first telegram string (SYNQ) is sent to the driver, whereas the driver responds with a SYNC telegram to syncronize the current system time.
+
+## Distributed Deployment
+
+In case of multiple driver components and lots of microservices it makes sense to keep service configuration at a central place, the [OpenWMS.org Configuration](https://github.com/spring-labs/org.openwms.configuration)
+server. This infrastructure service takes the configuration of each process from a configured Git repository and passes it down to the process at startup. By using a configuration sever
+it is also possible to change configuration at runtime without the need to restart processes. Configuration is pushed down into the microservices and the service configuration is refreshed.
+
+To run the driver component in this manner, the Spring profile "CLOUD" must be enabled. It's also good practice to provide unique application names, at least when the driver is instantiated
+multiple times:
+
+```
+$ java -Dspring.profiles.active=CLOUD -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=CLOUD -Dspring.application.name=tcpip-palett2 -jar tcpip-driver.jar
+```
+
+Each driver is now starting up and looking for a configuration server. The application name is used to load the appropriate driver configuration from. For example the Git repository [ZILE](https://github.com/spring-labs/org.openwms.zile/tree/master/conf)
+includes YAML configuration files for all processes used in ZILE project, so also for tcpip-palett1.yml and tcpip-palett2.yml
+
+tcpip-palett1.yml
+```yaml
+owms:
+  tenant: ZILE
+  driver:
+    server:
+      port: 30001
+      so-timeout: 300000
+      so-receive-buffer-size: 160
+      so-send-buffer-size: 160
+      routing-service-name: routing-service # is default
+```
+
+tcpip-palett2.yml
+```yaml
+owms:
+  tenant: ZILE
+  driver:
+    server:
+      port: 30002
+      so-timeout: 300000
+      so-receive-buffer-size: 160
+      so-send-buffer-size: 160
+      routing-service-name: routing-service # is default
+```
+
+# Configuration
+
+The most important configuration properties of the driver component are the following.
+
+Property | Description
+-------- | ---
+owms.tenant | The tenant defined the branch in the Git repository to look up configuration. It is also used to separate log files per tenant. Call it after your project name
+owms.driver.server.port | The unique port number the driver receives connections on. Multiple driver instances must have different port numbers.
+owms.driver.server.so-timeout | Socket timeout wheth the socket is closed after idle time, see [Spring Integration Reference](https://docs.spring.io/spring-integration/docs/4.3.9.RELEASE/reference/html/ip.html#connection-factories)
+owms.driver.server.so-receive-buffer-size | The expected telegram size of the receive buffer, by default OSIP telegrams have a length of 160 chars
+owms.driver.server.so-send-buffer-size | The expected telegram size of the send buffer, by default OSIP telegrams have a length of 160 chars
+owms.driver.server.routing-service-name | Most OSIP telegrams require to contact the routing service for further action. This is the Spring application name of the TMS Routing Service how it can be discovered from the service registry.
+
+# Build and Release
 
 ```
 $ mvn clean deploy -Prelease,gpg
