@@ -21,14 +21,12 @@
  */
 package org.openwms.common.comm.app;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-
 import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
 import org.openwms.common.comm.tcp.OSIPTelegramSerializer;
 import org.openwms.common.comm.transformer.tcp.HeaderAppendingTransformer;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -48,6 +46,12 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.ByteArrayMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+
+import static org.ameba.LoggingCategories.BOOT;
+
 /**
  * A DriverConfig.
  *
@@ -56,6 +60,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 class DriverConfig {
 
+    private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     public
     @LoadBalanced
     @Bean
@@ -89,6 +94,7 @@ class DriverConfig {
         res.put("owms.driver.server.so-timeout", soTimeout);
         res.put("owms.driver.server.so-receive-buffer-size", soReceiveBufferSize);
         res.put("owms.driver.server.so-send-buffer-size", soSendBufferSize);
+        BOOT_LOGGER.info("Running driver on port: [{}]", port);
         return res;
     }
 
