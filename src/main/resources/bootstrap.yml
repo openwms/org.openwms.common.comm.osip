@@ -8,16 +8,31 @@ spring:
       discovery:
         enabled: true
         service-id: openwms-config
+      username: user # need to be overridden in the cloud environment props!
+      password: sa # need to be overridden in the cloud environment props!
+      headers:
+        protocol: ${owms.cfgsrv.protocol:http}
+      enabled: false
   main:
     web-environment: false
 
 owms:
+  srv:
+    protocol: http
+    hostname: localhost
   eureka:
     url: http://user:sa@localhost:8761
   config:
     # need to be overridden in the cloud environment props!
     username: user
     password: sa
+  driver:
+    server:
+      port: 30001
+      so-timeout: 300000
+      so-receive-buffer-size: 160
+      so-send-buffer-size: 160
+      routing-service-name: routing-service # is default
 
 eureka:
   client:
@@ -30,9 +45,34 @@ eureka:
 
 ---
 spring:
+  profiles: DISTRIBUTED
+  cloud:
+    config:
+      enabled: true
+
+eureka:
+  instance:
+    hostname: ${owms.eureka.url}
+    # need to be overridden in the cloud environment props!
+    statusPageUrl: http://${eureka.instance.hostname}/info
+    healthCheckUrl: http://${eureka.instance.hostname}/health
+    homePageUrl: http://${eureka.instance.hostname}/
+
+---
+spring:
   profiles: CLOUD
   main:
-    banner-mode: off
+    banner-mode: "OFF"
+  cloud:
+    config:
+      headers:
+        protocol: ${owms.cfgsrv.protocol:https}
+      enabled: true
+
+owms:
+  srv:
+    protocol: https
+    hostname: openwms-tcpip-driver.herokuapp.com
 
 eureka:
   instance:
@@ -40,6 +80,6 @@ eureka:
     # need to be overridden in the cloud environment props!
     secure-port-enabled: true
     non-secure-port-enabled: false
-    statusPageUrl: https://${eureka.instance.hostName}/info
-    healthCheckUrl: https://${eureka.instance.hostName}/health
-    homePageUrl: https://${eureka.instance.hostName}/
+    statusPageUrl: https://${eureka.instance.hostname}/info
+    healthCheckUrl: https://${eureka.instance.hostname}/health
+    homePageUrl: https://${eureka.instance.hostname}/
