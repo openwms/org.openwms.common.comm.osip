@@ -21,6 +21,7 @@
  */
 package org.openwms.common.comm.sysu;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.core.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.function.Function;
 
 /**
@@ -70,8 +72,9 @@ class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Vo
         return null;
     }
 
-    private static class RequestVO {
+    private static class RequestVO implements Serializable {
 
+        @JsonProperty
         String locationGroupName, errorCode;
 
         RequestVO(String locationGroupName, String errorCode) {
