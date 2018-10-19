@@ -21,6 +21,7 @@
  */
 package org.openwms.common.comm.sysu;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.core.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -64,19 +67,23 @@ class HttpSystemUpdateMessageHandler implements Function<SystemUpdateMessage, Vo
         restTemplate.exchange(
                 routingServiceProtocol+"://"+routingServiceName+"/sysu",
                 HttpMethod.POST,
-                new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
+                new HttpEntity<>(new RequestVO(msg.getLocationGroupName(), msg.getErrorCode(), msg.getCreated()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
                 Void.class
         );
         return null;
     }
 
-    private static class RequestVO {
+    private static class RequestVO implements Serializable {
 
+        @JsonProperty
+        Date created;
+        @JsonProperty
         String locationGroupName, errorCode;
 
-        RequestVO(String locationGroupName, String errorCode) {
+        RequestVO(String locationGroupName, String errorCode, Date created) {
             this.locationGroupName = locationGroupName;
             this.errorCode = errorCode;
+            this.created = created;
         }
     }
 }
