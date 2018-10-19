@@ -23,11 +23,17 @@ package org.openwms.common.comm.req;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.openwms.common.comm.CommHeader;
 import org.openwms.core.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,7 +47,7 @@ import java.util.function.Function;
  */
 @Component
 @RefreshScope
-class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
+class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessage>, Void> {
 
     private final RestTemplate restTemplate;
     private final String routingServiceName;
@@ -62,24 +68,46 @@ class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
     }
 
     @Override
-    public Void apply(RequestMessage msg) {
+    public Void apply(GenericMessage<RequestMessage> msg) {
         restTemplate.exchange(
                 routingServiceProtocol+"://"+routingServiceName+"/req",
                 HttpMethod.POST,
-                new HttpEntity<>(new RequestVO(msg.getActualLocation(), msg.getBarcode()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
+                new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
                 Void.class
         );
         return null;
     }
 
+    private RequestVO getRequest(GenericMessage<RequestMessage> msg) {
+        return RequestVO.builder()
+                .actualLocation(msg.getPayload().getActualLocation())
+                .barcode(msg.getPayload().getBarcode())
+                .header(RequestVO.RequestHeaderVO.builder()
+                        .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))
+                        .sender(msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME, String.class))
+                        .sequenceNo(""+msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME, Short.class))
+                        .build())
+                .build();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     private static class RequestVO implements Serializable {
 
         @JsonProperty
         String actualLocation, barcode;
+        @JsonProperty
+        RequestHeaderVO header;
 
-        RequestVO(String actualLocation, String barcode) {
-            this.actualLocation = actualLocation;
-            this.barcode = barcode;
+        @Data
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class RequestHeaderVO {
+            @JsonProperty
+            String sender, receiver, sequenceNo;
         }
     }
 }

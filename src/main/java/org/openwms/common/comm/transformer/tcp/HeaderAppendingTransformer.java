@@ -45,7 +45,7 @@ public class HeaderAppendingTransformer {
         mha.setHeader(CommHeader.MSG_LENGTH_FIELD_NAME, headerLength(msg.getHeaders()) + msg.getPayload().asString().length());
         mha.setHeader(CommHeader.SENDER_FIELD_NAME, msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
         mha.setHeader(CommHeader.RECEIVER_FIELD_NAME, msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
-        mha.setHeader(CommHeader.SEQUENCE_FIELD_NAME, Integer.parseInt(String.valueOf(msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))) + 1);
+        mha.setHeader(CommHeader.SEQUENCE_FIELD_NAME, ""+Integer.parseInt(String.valueOf(msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))) + 1);
         return org.springframework.messaging.support.MessageBuilder.withPayload(msg.getPayload()).setHeaders(mha).build();
     }
 

@@ -5,7 +5,7 @@
  * This file is part of openwms.org.
  *
  * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
+ * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -23,6 +23,7 @@ package org.openwms.common.comm.api;
 
 import org.openwms.common.comm.Payload;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.GenericMessage;
 
 /**
  * A RespondingServiceActivator delegates incoming messages to an Application Service and response to the incoming message.
@@ -31,8 +32,7 @@ import org.springframework.messaging.Message;
  * @param <U> Type of outgoing message that is returned
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public interface RespondingServiceActivator<T extends Payload, U extends Payload> extends
-        CustomServiceActivator {
+public interface RespondingServiceActivator<T extends Payload, U extends Payload> extends CustomServiceActivator {
 
     /**
      * Wake up a service, processor or bean an that accepts incoming messages of type {@code T} and returns messages of type {@code U}.
@@ -40,5 +40,5 @@ public interface RespondingServiceActivator<T extends Payload, U extends Payload
      * @param message The message to forward
      * @return The response returned from the service
      */
-    Message<U> wakeUp(Message<T> message);
+    Message<U> wakeUp(GenericMessage<T> message);
 }

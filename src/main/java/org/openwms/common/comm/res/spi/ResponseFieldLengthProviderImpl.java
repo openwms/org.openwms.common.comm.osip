@@ -1,11 +1,11 @@
 /*
  * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright (C) 2018 Heiko Scherrer
  *
  * This file is part of openwms.org.
  *
  * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
+ * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -19,23 +19,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm.api;
+package org.openwms.common.comm.res.spi;
 
-import org.openwms.common.comm.Payload;
-import org.springframework.messaging.support.GenericMessage;
+import org.springframework.stereotype.Component;
 
 /**
- * A NotRespondingServiceActivator.
+ * A ResponseFieldLengthProviderImpl.
  *
- * @param <T> A type of incoming Payload
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public interface NotRespondingServiceActivator<T extends Payload> extends CustomServiceActivator {
+//@Profile({SpringProfiles.DEVELOPMENT_PROFILE, SpringProfiles.IT_PROFILE})
+@Component
+class ResponseFieldLengthProviderImpl implements ResponseFieldLengthProvider {
 
-    /**
-     * Wake up a service, processor or bean an that accepts incoming messages of type <tt>T</tt>.
-     *
-     * @param message The message to forward
-     */
-    void wakeUp(GenericMessage<T> message);
+    @Override
+    public int barcodeLength() {
+        return 20;
+    }
+
+    @Override
+    public int locationIdLength() {
+        return 20;
+    }
+
+    @Override
+    public int noLocationIdFields() {
+        return 5;
+    }
+
+    @Override
+    public int locationGroupNameLength() {
+        return 21;
+    }
 }

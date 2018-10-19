@@ -21,11 +21,6 @@
  */
 package org.openwms.common.comm.router;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.api.CustomServiceActivator;
@@ -34,6 +29,11 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Router;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A CommonMessageRouter collects all {@link CustomServiceActivator}s from the ApplicationContext and tries to find a suitable
@@ -45,18 +45,20 @@ import org.springframework.messaging.MessageChannel;
 @MessageEndpoint("messageRouter")
 public class CommonMessageRouter {
 
+    private final List<CustomServiceActivator> processors;
+    private Map<String, CustomServiceActivator> processorMap;
+
     @Autowired
-    private List<CustomServiceActivator> processors;
-    private final Map<String, CustomServiceActivator> processorMap = new HashMap<>();
+    public CommonMessageRouter(List<CustomServiceActivator> processors) {
+        this.processors = processors;
+    }
 
     /**
      * From all existing {@link CustomServiceActivator}s build up a Map with key equals to channelName.
      */
     @PostConstruct
     void onPostConstruct() {
-        for (CustomServiceActivator processor : processors) {
-            processorMap.put(processor.getChannelName(), processor);
-        }
+        processorMap = processors.stream().collect(Collectors.toMap(CustomServiceActivator::getChannelName, p -> p));
     }
 
     /**
