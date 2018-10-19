@@ -21,9 +21,10 @@
  */
 package org.openwms.common.comm.err;
 
-import java.util.function.Function;
-
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Function;
 
 /**
  * A ErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
@@ -33,13 +34,13 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
-class ErrorMessageHandler implements Function<ErrorMessage, Void> {
+class ErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, Void> {
 
     /**
      * Does not do anything.
      */
     @Override
-    public Void apply(ErrorMessage errorMessage) {
+    public Void apply(GenericMessage<ErrorMessage> errorMessage) {
 
         // Currently no error handling happens in the base.
         return null;

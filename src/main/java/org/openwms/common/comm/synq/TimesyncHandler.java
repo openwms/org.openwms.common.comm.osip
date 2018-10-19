@@ -22,6 +22,7 @@
 package org.openwms.common.comm.synq;
 
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ import java.util.function.Function;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
-class TimesyncHandler implements Function<Message<TimesyncRequest>, Message<TimesyncResponse>> {
+class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Message<TimesyncResponse>> {
 
     /**
      * Builds response message with the current time and the same request header to preserve header information (seq. number etc.) in post
@@ -43,7 +44,7 @@ class TimesyncHandler implements Function<Message<TimesyncRequest>, Message<Time
      * @return the response
      */
     @Override
-    public Message<TimesyncResponse> apply(Message<TimesyncRequest> timesyncRequest) {
+    public Message<TimesyncResponse> apply(GenericMessage<TimesyncRequest> timesyncRequest) {
         return MessageBuilder.createMessage(new TimesyncResponse(), timesyncRequest.getHeaders());
     }
 }
