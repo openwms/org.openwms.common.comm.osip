@@ -5,7 +5,7 @@
  * This file is part of openwms.org.
  *
  * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
+ * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -21,9 +21,19 @@
  */
 package org.openwms.common.comm.sysu;
 
+import org.openwms.common.comm.CommConstants;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
+import org.springframework.integration.dsl.amqp.Amqp;
 import org.springframework.messaging.MessageChannel;
 
 /**
@@ -39,8 +49,31 @@ class SYSUConfiguration {
      *
      * @return A DirectChannel instance
      */
-    @Bean(name = SystemUpdateServiceActivator.INPUT_CHANNEL_NAME)
+//    @Bean(name = SystemUpdateServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();
+    }
+
+    @Profile(CommConstants.ASYNCHRONOUS)
+    @Bean
+    public AsyncRabbitTemplate asyncTemplate(RabbitTemplate rabbitTemplate,
+            SimpleMessageListenerContainer replyContainer) {
+        return new AsyncRabbitTemplate(rabbitTemplate, replyContainer);
+    }
+
+    @Profile(CommConstants.ASYNCHRONOUS)
+    @Bean
+    public SimpleMessageListenerContainer replyContainer(CachingConnectionFactory ccf) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(ccf);
+        container.setQueueNames("sps01sysu");
+        return container;
+    }
+
+//    @Bean
+    public IntegrationFlow amqpOutbound(AmqpTemplate amqpTemplate) {
+        return IntegrationFlows
+                .from(getMessageChannel())
+                .handle(Amqp.outboundAdapter(amqpTemplate).routingKey("sps01sysu")) // default exchange - route to queue 'foo'
+                .get();
     }
 }

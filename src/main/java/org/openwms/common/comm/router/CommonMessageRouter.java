@@ -53,9 +53,6 @@ public class CommonMessageRouter {
         this.processors = processors;
     }
 
-    /**
-     * From all existing {@link CustomServiceActivator}s build up a Map with key equals to channelName.
-     */
     @PostConstruct
     void onPostConstruct() {
         processorMap = processors.stream().collect(Collectors.toMap(CustomServiceActivator::getChannelName, p -> p));

@@ -34,7 +34,6 @@ public final class CommConstants {
     public static final int TELEGRAM_LENGTH = 160;
     /** Used as suffix to create channels dynamically. */
     public static final String CHANNEL_SUFFIX = "MessageInputChannel";
-    public static final String DEFAULT_HTTP_SERVICE_ACCESS = "DEFAULT_HTTP_SERVICE_ACCESS";
 
     /** The character String used to pad LocationGroup fields till the defined length. */
     public static final char LOCGROUP_FILLER_CHARACTER = '_';
@@ -47,6 +46,10 @@ public final class CommConstants {
     public static final String LOG_TENANT = "Tenant";
     /** Logging category to log telegrams only. */
     public static final String CORE_INTEGRATION_MESSAGING = "CORE_INTEGRATION_MESSAGING";
+
+    // Spring Profiles
+    public static final String ASYNCHRONOUS = "ASYNCHRONOUS";
+    public static final String SYNCHRONOUS = "SYNCHRONOUS";
 
     private CommConstants() {
     }
