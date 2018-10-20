@@ -45,7 +45,7 @@ import java.util.function.Function;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Profile("!"+ CommConstants.DEFAULT_HTTP_SERVICE_ACCESS)
+@Profile(CommConstants.SYNCHRONOUS)
 @Component
 class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
 

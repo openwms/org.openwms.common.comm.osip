@@ -21,6 +21,8 @@
  */
 package org.openwms.common.comm.app;
 
+import org.openwms.common.comm.res.ResponseMessage;
+import org.openwms.common.comm.res.ResponseMessageServiceActivator;
 import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
 import org.openwms.common.comm.tcp.OSIPTelegramSerializer;
 import org.openwms.common.comm.transformer.tcp.HeaderAppendingTransformer;
@@ -33,9 +35,11 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.HttpMethod;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
+import org.springframework.integration.dsl.http.Http;
 import org.springframework.integration.ip.tcp.TcpInboundGateway;
 import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
@@ -80,7 +84,8 @@ class DriverConfig {
         return new CustomTcpMessageMapper(byteArrayMessageConverter, mapMessageConverter);
     }
 
-    /** We need to put this property resolving bean in between, because CGLIB is used to build a proxy around refreshscope beans. Doing
+    /**
+     * We need to put this property resolving bean in between, because CGLIB is used to build a proxy around refreshscope beans. Doing
      * this for the tcpip factory does not work
      */
     @Bean
@@ -173,6 +178,28 @@ class DriverConfig {
     IntegrationFlow outboundFlow(HeaderAppendingTransformer headerAppendingTransformer) {
         return IntegrationFlows.from("outboundChannel")
                 .transform(headerAppendingTransformer)
+                .channel("enrichedOutboundChannel")
+                .get();
+    }
+
+    /*~ ----------------- Inbound ------------------ */
+    @Bean
+    MessageChannel resInChannel() {
+        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+    }
+
+    @Bean
+    MessageChannel resOutChannel() {
+        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+    }
+
+    @Bean
+    public IntegrationFlow httpPostAtms(ResponseMessageServiceActivator responseMessageServiceActivator) {
+        return IntegrationFlows.from(Http.inboundGateway("/res")
+                .requestMapping(m -> m.methods(HttpMethod.POST))
+                .requestPayloadType(ResponseMessage.class))
+                .channel("resInChannel")
+                .transform(responseMessageServiceActivator)
                 .channel("enrichedOutboundChannel")
                 .get();
     }

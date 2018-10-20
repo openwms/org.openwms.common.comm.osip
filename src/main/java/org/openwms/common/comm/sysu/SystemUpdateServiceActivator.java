@@ -38,6 +38,7 @@ import java.util.function.Function;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+//@Profile(CommConstants.SYNCHRONOUS)
 @MessageEndpoint("systemupdateServiceActivator")
 class SystemUpdateServiceActivator implements NotRespondingServiceActivator<SystemUpdateMessage> {
 
