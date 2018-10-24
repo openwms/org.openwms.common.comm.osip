@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+
 /**
  * A CommonMessageTransformer transforms incoming OSIP telegram structures to {@link Payload}s.
  *
@@ -85,9 +87,9 @@ public class TelegramTransformer<T extends Payload> {
         MDC.put(CommConstants.LOG_TENANT, tenant);
         MessageMapper<T> mapper = mappersMap.get(telegramType);
         if (mapper == null) {
-            LOGGER.error("No mapper found for telegram type ", TCPCommConstants.getTelegramType(telegram));
-            throw new MessageMismatchException("Not mapper found for telegram type "
-                    + TCPCommConstants.getTelegramType(telegram));
+            LOGGER.error("No mapper found for telegram type [{}]", TCPCommConstants.getTelegramType(telegram));
+            throw new MessageMismatchException(format("No mapper found for telegram type [%s]",
+                     TCPCommConstants.getTelegramType(telegram)));
         }
         return mapper.mapTo(telegram, headers);
     }

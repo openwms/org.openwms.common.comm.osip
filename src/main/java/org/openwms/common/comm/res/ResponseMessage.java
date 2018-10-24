@@ -24,6 +24,7 @@ package org.openwms.common.comm.res;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.ParserUtils;
 import org.openwms.common.comm.Payload;
@@ -42,6 +43,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Data
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseMessage extends Payload implements Serializable {
@@ -81,16 +83,9 @@ public class ResponseMessage extends Payload implements Serializable {
 
     @Override
     public String asString() {
-        return IDENTIFIER + barcode + actualLocation + targetLocation + targetLocationGroup;
+        return IDENTIFIER + barcode + actualLocation + ParserUtils.nullableLocation(targetLocation) + ParserUtils.nullableLocationGroup(targetLocationGroup)+ getErrorCode() + ParserUtils.asString(super.getCreated());
     }
 
-    /**
-     * A Builder.
-     *
-     * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
-     * @version $Revision: $
-     * @since 0.1
-     */
     public static class Builder {
 
         private final ResponseMessage responseMessage;

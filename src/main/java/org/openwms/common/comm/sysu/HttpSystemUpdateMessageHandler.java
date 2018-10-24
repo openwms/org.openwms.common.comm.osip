@@ -26,9 +26,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openwms.common.comm.CommConstants;
+import org.ameba.annotation.Measured;
 import org.openwms.core.SecurityUtils;
+import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -45,8 +47,9 @@ import java.util.function.Function;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Profile(CommConstants.SYNCHRONOUS)
+@Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
+@RefreshScope
 class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
 
     private final RestTemplate restTemplate;
@@ -67,6 +70,7 @@ class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
         this.routingServicePassword = routingServicePassword;
     }
 
+    @Measured
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> msg) {
         restTemplate.exchange(

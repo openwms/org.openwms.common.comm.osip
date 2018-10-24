@@ -32,6 +32,16 @@ public class MessageMismatchException extends MessageProcessingException {
      * Create a new MessageMismatchException.
      *
      * @param message Detail message
+     * @param cause Cause to be propagated
+     */
+    public MessageMismatchException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Create a new MessageMismatchException.
+     *
+     * @param message Detail message
      */
     public MessageMismatchException(String message) {
         super(message);

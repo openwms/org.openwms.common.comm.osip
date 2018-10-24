@@ -47,10 +47,6 @@ public final class CommConstants {
     /** Logging category to log telegrams only. */
     public static final String CORE_INTEGRATION_MESSAGING = "CORE_INTEGRATION_MESSAGING";
 
-    // Spring Profiles
-    public static final String ASYNCHRONOUS = "ASYNCHRONOUS";
-    public static final String SYNCHRONOUS = "SYNCHRONOUS";
-
     private CommConstants() {
     }
 }

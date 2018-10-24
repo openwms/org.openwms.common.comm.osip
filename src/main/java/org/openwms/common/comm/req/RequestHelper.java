@@ -1,6 +1,6 @@
 /*
  * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright (C) 2018 Heiko Scherrer
  *
  * This file is part of openwms.org.
  *
@@ -19,31 +19,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.req;
+
+import org.openwms.common.comm.CommHeader;
+import org.springframework.messaging.support.GenericMessage;
 
 /**
- * A MessageProcessingException is a general exception that indicates a fault situation during message processing.
+ * A RequestHelper.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class MessageProcessingException extends RuntimeException {
+class RequestHelper {
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     * @param cause Cause to be propagated
-     */
-    public MessageProcessingException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     */
-    public MessageProcessingException(String message) {
-        super(message);
+    static RequestVO getRequest(GenericMessage<RequestMessage> msg) {
+        return RequestVO.builder()
+                .actualLocation(msg.getPayload().getActualLocation())
+                .barcode(msg.getPayload().getBarcode())
+                .header(RequestVO.RequestHeaderVO.builder()
+                        .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))
+                        .sender(msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME, String.class))
+                        .sequenceNo(""+msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME, Short.class))
+                        .build())
+                .build();
     }
 }
