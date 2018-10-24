@@ -25,6 +25,7 @@ import org.ameba.annotation.EnableAspects;
 import org.ameba.app.SolutionApp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * A DriverStarter is the starter class of the SpringBoot application that
@@ -36,6 +37,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
+@ImportResource("classpath:META-INF/spring/spring-integration-context.xml")
 @EnableAspects
 public class DriverStarter {
 

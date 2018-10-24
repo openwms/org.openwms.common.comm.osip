@@ -22,6 +22,7 @@
 package org.openwms.common.comm.router;
 
 import org.openwms.common.comm.CommConstants;
+import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.api.CustomServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * A CommonMessageRouter collects all {@link CustomServiceActivator}s from the ApplicationContext and tries to find a suitable
@@ -67,6 +70,10 @@ public class CommonMessageRouter {
      */
     @Router(inputChannel = "transformerOutputChannel", defaultOutputChannel = "commonExceptionChannel")
     public MessageChannel resolve(Message<Payload> message) {
-        return processorMap.get(message.getPayload().getMessageIdentifier() + CommConstants.CHANNEL_SUFFIX).getChannel();
+        MessageChannel result = processorMap.get(message.getPayload().getMessageIdentifier() + CommConstants.CHANNEL_SUFFIX).getChannel();
+        if (result == null) {
+            throw new MessageProcessingException(format("No processor for message of type [%s] registered", message.getPayload().getMessageIdentifier()));
+        }
+        return result;
     }
 }

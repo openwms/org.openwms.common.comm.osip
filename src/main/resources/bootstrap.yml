@@ -27,6 +27,8 @@ owms:
     username: user
     password: sa
   driver:
+    osip:
+      sync-field: "###"
     server:
       port: 30001
       so-timeout: 300000

@@ -19,40 +19,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm.res;
+package org.openwms.common.comm.tcp;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openwms.common.comm.CommHeader;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.openwms.common.comm.Payload;
 
 /**
- * A ResponseHeader.
+ * A OSIPSerializer.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ResponseHeader {
+public interface OSIPSerializer<T extends Payload> {
 
-    @JsonProperty
-    private String sender, receiver;
-    @JsonProperty
-    private short sequenceNo;
+    /**
+     * Subclasses have to return an unique, case-sensitive message identifier.
+     *
+     * @return The message TYPE field (see OSIP specification)
+     */
+    String getMessageIdentifier();
 
-    public Map<String, Object> getAll() {
-        Map<String, Object> result = new HashMap<>(3);
-        result.put(CommHeader.SENDER_FIELD_NAME, sender);
-        result.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
-        result.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
-        return Collections.unmodifiableMap(result);
-    }
+    /**
+     *
+     * @param obj
+     */
+    String serialize(T obj);
 }

@@ -21,17 +21,25 @@
  */
 package org.openwms.common.comm.synq;
 
-import java.io.Serializable;
-import java.util.Date;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.openwms.common.comm.ParserUtils;
 import org.openwms.common.comm.Payload;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A TimesyncResponse.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+@Data
+@Builder
+@Slf4j
+@AllArgsConstructor
 class TimesyncResponse extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
@@ -42,6 +50,7 @@ class TimesyncResponse extends Payload implements Serializable {
      * Create a new CommonMessage.
      */
     TimesyncResponse() {
+        super();
         senderTimer = new Date();
     }
 

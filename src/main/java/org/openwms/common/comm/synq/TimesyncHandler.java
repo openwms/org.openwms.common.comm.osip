@@ -21,11 +21,13 @@
  */
 package org.openwms.common.comm.synq;
 
+import org.openwms.common.comm.CommHeader;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -45,6 +47,16 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Messa
      */
     @Override
     public Message<TimesyncResponse> apply(GenericMessage<TimesyncRequest> timesyncRequest) {
-        return MessageBuilder.createMessage(new TimesyncResponse(), timesyncRequest.getHeaders());
+
+        TimesyncResponse payload = TimesyncResponse.builder().senderTimer(new Date()).build();
+        payload.getHeader().setReceiver((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
+        payload.getHeader().setSender((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        payload.getHeader().setSequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))));
+        Message<TimesyncResponse> result = MessageBuilder
+                .withPayload(payload)
+                .setReplyChannelName("outboundChannel")
+                .copyHeaders(timesyncRequest.getHeaders())
+                .build();
+        return result;
     }
 }
