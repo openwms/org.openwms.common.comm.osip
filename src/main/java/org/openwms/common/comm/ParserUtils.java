@@ -74,4 +74,18 @@ public final class ParserUtils {
     public static String padLeft(String s, int n, String chr) {
         return String.format("%1$" + n + "s", s).replace(" ", chr);
     }
+
+    public static String nullableLocation(String location) {
+        if (location == null || location.isEmpty()) {
+            return padLeft("", 20, "*");
+        }
+        return location;
+    }
+
+    public static String nullableLocationGroup(String locationGroup) {
+        if (locationGroup == null || locationGroup.isEmpty()) {
+            return padLeft("", 21, "*");
+        }
+        return locationGroup;
+    }
 }
