@@ -21,6 +21,8 @@
  */
 package org.openwms.common.comm;
 
+import org.openwms.common.comm.res.ResponseHeader;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -32,12 +34,20 @@ import java.util.Objects;
  */
 public abstract class Payload implements Serializable {
 
+    private ResponseHeader header;
     private String errorCode;
     private Date created;
 
     public static final short ERROR_CODE_LENGTH = 8;
     public static final short DATE_LENGTH = 14;
     public static final int MESSAGE_IDENTIFIER_LENGTH = 4;
+
+    public ResponseHeader getHeader() {
+        if (header == null) {
+            this.header = new ResponseHeader();
+        }
+        return header;
+    }
 
     /**
      * Subclasses have to return an unique, case-sensitive message identifier.

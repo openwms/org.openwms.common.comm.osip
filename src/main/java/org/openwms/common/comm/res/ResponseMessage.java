@@ -51,7 +51,6 @@ public class ResponseMessage extends Payload implements Serializable {
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "RES_";
 
-    private ResponseHeader header;
     private String barcode;
     private String actualLocation;
     private String targetLocation;
