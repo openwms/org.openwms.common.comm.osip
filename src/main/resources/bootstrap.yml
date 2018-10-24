@@ -42,7 +42,6 @@ eureka:
   instance:
     secure-port-enabled: false
     non-secure-port-enabled: true
-
 ---
 spring:
   profiles: DISTRIBUTED

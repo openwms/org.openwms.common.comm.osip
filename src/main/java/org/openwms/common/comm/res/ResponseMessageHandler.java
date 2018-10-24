@@ -1,6 +1,6 @@
 /*
  * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright (C) 2018 Heiko Scherrer
  *
  * This file is part of openwms.org.
  *
@@ -19,31 +19,35 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.res;
+
+import org.ameba.annotation.Measured;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.stereotype.Component;
 
 /**
- * A MessageProcessingException is a general exception that indicates a fault situation during message processing.
+ * A ResponseMessageHandler.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class MessageProcessingException extends RuntimeException {
+@Component
+class ResponseMessageHandler {
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     * @param cause Cause to be propagated
-     */
-    public MessageProcessingException(String message, Throwable cause) {
-        super(message, cause);
+    private final MessageChannel channel;
+
+    ResponseMessageHandler(@Qualifier("outboundChannel") MessageChannel channel) {
+        this.channel = channel;
     }
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     */
-    public MessageProcessingException(String message) {
-        super(message);
+    @Measured
+    public void handleRES(ResponseMessage res) {
+        System.out.println(res.asString());
+        channel.send(MessageBuilder
+                .withPayload(res)
+                .copyHeaders(res.getHeader().getAll())
+                //.setHeader(MessageHeaders.REPLY_CHANNEL, "enrichedOutboundChannel")
+                .build());
     }
 }

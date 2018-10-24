@@ -22,29 +22,28 @@
 package org.openwms.common.comm.req;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openwms.common.comm.CommHeader;
+import org.ameba.annotation.Measured;
 import org.openwms.core.SecurityUtils;
+import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.Serializable;
 import java.util.function.Function;
+
+import static org.openwms.common.comm.req.RequestHelper.getRequest;
 
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+@Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
 @RefreshScope
 class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessage>, Void> {
@@ -67,6 +66,10 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
         this.routingServicePassword = routingServicePassword;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Measured
     @Override
     public Void apply(GenericMessage<RequestMessage> msg) {
         restTemplate.exchange(
@@ -76,38 +79,5 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
                 Void.class
         );
         return null;
-    }
-
-    private RequestVO getRequest(GenericMessage<RequestMessage> msg) {
-        return RequestVO.builder()
-                .actualLocation(msg.getPayload().getActualLocation())
-                .barcode(msg.getPayload().getBarcode())
-                .header(RequestVO.RequestHeaderVO.builder()
-                        .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))
-                        .sender(msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME, String.class))
-                        .sequenceNo(""+msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME, Short.class))
-                        .build())
-                .build();
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    private static class RequestVO implements Serializable {
-
-        @JsonProperty
-        String actualLocation, barcode;
-        @JsonProperty
-        RequestHeaderVO header;
-
-        @Data
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @Builder
-        public static class RequestHeaderVO {
-            @JsonProperty
-            String sender, receiver, sequenceNo;
-        }
     }
 }

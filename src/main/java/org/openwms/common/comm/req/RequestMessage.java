@@ -21,28 +21,32 @@
  */
 package org.openwms.common.comm.req;
 
-import static org.openwms.common.comm.ParserUtils.asDate;
-
-import java.text.ParseException;
-
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.ParserUtils;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.req.spi.RequestFieldLengthProvider;
+
+import java.io.Serializable;
+import java.text.ParseException;
+
+import static org.openwms.common.comm.ParserUtils.asDate;
 
 /**
  * A RequestMessage requests an order for a TransportUnit with id <tt>Barcode</tt> on a particular location <tt>actualLocation</tt>.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class RequestMessage extends Payload {
+public class RequestMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "REQ_";
-
     private String barcode;
     private String actualLocation;
     private String targetLocation;
+
+
+    public RequestMessage() {
+    }
 
     /**
      * {@inheritDoc}
@@ -52,21 +56,30 @@ public class RequestMessage extends Payload {
         return IDENTIFIER;
     }
 
-    String getBarcode() {
+    public String getBarcode() {
         return barcode;
     }
 
-    String getActualLocation() {
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public String getActualLocation() {
         return actualLocation;
     }
 
-    /**
-     * A Builder.
-     *
-     * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
-     * @version $Revision: $
-     * @since 0.1
-     */
+    public void setActualLocation(String actualLocation) {
+        this.actualLocation = actualLocation;
+    }
+
+    public String getTargetLocation() {
+        return targetLocation;
+    }
+
+    public void setTargetLocation(String targetLocation) {
+        this.targetLocation = targetLocation;
+    }
+
     public static class Builder {
 
         private final RequestMessage requestMessage;

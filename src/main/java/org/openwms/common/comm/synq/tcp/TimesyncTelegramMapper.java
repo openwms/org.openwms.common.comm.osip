@@ -55,17 +55,21 @@ class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {
      */
     @Override
     public Message<TimesyncRequest> mapTo(String telegram, Map<String, Object> headers) {
-        TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+        }
         int startSendertime = LENGTH_HEADER + forType().length();
         TimesyncRequest request = new TimesyncRequest();
         try {
             request.setSenderTimer(asDate(telegram.substring(startSendertime, startSendertime + DATE_LENGTH)));
             GenericMessage<TimesyncRequest> result =
                     new GenericMessage<>(request, CommonMessageFactory.createHeaders(telegram, headers));
-            LOGGER.debug("Transformed telegram into TimesyncRequest message: [{}]", result);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into TimesyncRequest message: [{}]", result);
+            }
             return result;
         } catch (ParseException e) {
-            throw new MessageMismatchException(e.getMessage());
+            throw new MessageMismatchException(e.getMessage(), e);
         }
     }
 

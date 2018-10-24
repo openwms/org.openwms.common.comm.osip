@@ -3,3 +3,25 @@ eureka:
     healthcheck:
       enabled: true
 
+---
+spring:
+  profiles: SYNCHRONOUS
+
+server:
+  port: 30000
+
+---
+spring:
+  profiles: ASYNCHRONOUS
+  main:
+    web-environment: false
+
+owms:
+  driver:
+    sysu:
+      queue-name: sysu
+    req:
+      queue-name: req
+    res:
+      queue-name: res
+      exchange-mapping: res.*

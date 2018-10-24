@@ -26,6 +26,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openwms.common.comm.CommHeader;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A ResponseHeader.
@@ -39,4 +44,12 @@ import lombok.NoArgsConstructor;
 class ResponseHeader {
     @JsonProperty
     private String sender, receiver, sequenceNo;
+
+    public Map<String, Object> getAll() {
+        Map<String, Object> result = new HashMap<>(3);
+        result.put(CommHeader.SENDER_FIELD_NAME, sender);
+        result.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
+        result.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
+        return Collections.unmodifiableMap(result);
+    }
 }

@@ -68,7 +68,7 @@ public abstract class Payload implements Serializable {
      * @return {@literal true} if errorCode is set, otherwise {@literal false}
      */
     public boolean hasErrorCode() {
-        return errorCode != null;
+        return errorCode != null && !errorCode.isEmpty();
     }
 
     /**

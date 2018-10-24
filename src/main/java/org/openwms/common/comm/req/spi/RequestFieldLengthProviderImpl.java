@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-//@Profile({SpringProfiles.DEVELOPMENT_PROFILE, SpringProfiles.IT_PROFILE})
 @Component
 class RequestFieldLengthProviderImpl implements RequestFieldLengthProvider{
 
