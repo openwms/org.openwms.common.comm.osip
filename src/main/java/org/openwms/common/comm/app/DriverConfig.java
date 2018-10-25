@@ -23,7 +23,6 @@ package org.openwms.common.comm.app;
 
 import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
 import org.openwms.common.comm.tcp.OSIPTelegramSerializer;
-import org.openwms.common.comm.transformer.tcp.HeaderAppendingTransformer;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
-import org.springframework.integration.ip.tcp.TcpInboundGateway;
 import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
@@ -114,15 +112,6 @@ class DriverConfig {
         return connectionFactory;
     }
 
-    //@Bean
-    TcpInboundGateway inboundAdapter(AbstractConnectionFactory tcpConnectionFactory) {
-        TcpInboundGateway gate = new TcpInboundGateway();
-        gate.setConnectionFactory(tcpConnectionFactory);
-        gate.setRequestChannel(inboundChannel());
-        gate.setReplyChannel(enrichedOutboundChannel());
-        return gate;
-    }
-
     /*~ --------------- MessageChannels ------------ */
     @Bean
     MessageChannel commonExceptionChannel() {
@@ -169,13 +158,4 @@ class DriverConfig {
                 .route("messageRouter")
                 .get();
     }
-
-    @Bean
-    IntegrationFlow outboundFlow(HeaderAppendingTransformer headerAppendingTransformer) {
-        return IntegrationFlows.from("outboundChannel")
-                //.transform(headerAppendingTransformer)
-                .channel(enrichedOutboundChannel())
-                .get();
-    }
-
 }
