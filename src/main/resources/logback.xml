@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="false" scanPeriod="30 seconds">
 
-    <property name="LOG_PATH" value="/tmp/owms"/>
+    <conversionRule conversionWord="tid" converterClass="org.ameba.logging.ThreadIdProvider" />
+    <variable scope="context" name="mdcPattern" value="%replace(;%X{MSGKEY};%X{MSGDATA}){';+( |$)', ''}" />
+
+    <property name="LOG_TEMP" value="/tmp/owms"/>
     <property name="MODULE_NAME" value="COMMON"/>
     <property name="SERVICE_NAME" value="COMMON-Comm"/>
 
     <include resource="logback-appenders.xml"/>
     <include resource="logback-loggers.xml"/>
 
-    <variable scope="context" name="mdcPattern" value="%replace(;%X{MSGKEY};%X{MSGDATA}){';+( |$)', ''}"/>
-    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
-
-    <logger name="org.openwms" level="DEBUG"/>
     <logger name="com.netflix.discovery" level="OFF"/>
+    <logger name="org.dozer" level="ERROR" />
     <logger name="org.springframework" level="WARN"/>
+    <logger name="org.openwms" level="DEBUG"/>
 
     <logger name="MEASURED" level="INFO">
         <appender-ref ref="STDOUT"/>

@@ -29,6 +29,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
@@ -59,9 +62,14 @@ class SynchronousReplyConfig {
     }
 
     @Bean
+    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        return new MappingJackson2HttpMessageConverter();
+    }
+
+    @Bean
     public IntegrationFlow httpPostAtms(ResponseMessageServiceActivator responseMessageServiceActivator) {
         return IntegrationFlows.from(Http.inboundGateway("/res")
-                .requestMapping(m -> m.methods(HttpMethod.POST))
+                .requestMapping(m -> m.methods(HttpMethod.POST)).messageConverters(mappingJackson2HttpMessageConverter(), new ByteArrayHttpMessageConverter(), new StringHttpMessageConverter())
                 .requestPayloadType(ResponseMessage.class))
                 .channel("resInChannel")
                 .transform(responseMessageServiceActivator)

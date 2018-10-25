@@ -54,7 +54,7 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Messa
         payload.getHeader().setSequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))));
         Message<TimesyncResponse> result = MessageBuilder
                 .withPayload(payload)
-                .setReplyChannelName("outboundChannel")
+                .setReplyChannelName("inboundChannel")
                 .copyHeaders(timesyncRequest.getHeaders())
                 .build();
         return result;
