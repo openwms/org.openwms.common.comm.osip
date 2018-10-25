@@ -23,6 +23,7 @@ package org.openwms.common.comm.app;
 
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -30,6 +31,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 
 /**
  * A AsynConfig.
@@ -44,6 +46,15 @@ class AsynConfig {
     @Bean
     MessageConverter jsonConverter() {
         return new Jackson2JsonMessageConverter();
+    }
+
+
+    @Bean
+    public StatefulRetryOperationsInterceptor interceptor() {
+        return RetryInterceptorBuilder.stateful()
+                .maxAttempts(3)
+                .backOffOptions(1000, 2.0, 10000) // initialInterval, multiplier, maxInterval
+                .build();
     }
 
     @Bean

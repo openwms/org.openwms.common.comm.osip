@@ -34,6 +34,9 @@ class RequestHelper {
     static RequestVO getRequest(GenericMessage<RequestMessage> msg) {
         return RequestVO.builder()
                 .actualLocation(msg.getPayload().getActualLocation())
+                .targetLocation(msg.getPayload().getTargetLocation())
+                .errorCode(msg.getPayload().getErrorCode())
+                .created(msg.getPayload().getCreated())
                 .barcode(msg.getPayload().getBarcode())
                 .header(RequestVO.RequestHeaderVO.builder()
                         .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))

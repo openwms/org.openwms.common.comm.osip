@@ -79,7 +79,7 @@ public final class ParserUtils {
         if (location == null || location.isEmpty()) {
             return padLeft("", 20, "*");
         }
-        return location;
+        return location.replace("/", "");
     }
 
     public static String nullableLocationGroup(String locationGroup) {
