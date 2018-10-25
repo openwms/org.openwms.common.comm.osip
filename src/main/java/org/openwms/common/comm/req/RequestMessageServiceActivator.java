@@ -21,7 +21,6 @@
  */
 package org.openwms.common.comm.req;
 
-import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.NotRespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,6 @@ class RequestMessageServiceActivator implements NotRespondingServiceActivator<Re
      * {@inheritDoc}
      */
     @Override
-    @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
     public void wakeUp(GenericMessage<RequestMessage> message) {
         handler.apply(message);

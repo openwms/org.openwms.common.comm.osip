@@ -47,6 +47,11 @@ eureka:
   instance:
     secure-port-enabled: false
     non-secure-port-enabled: true
+    metadata-map:
+      username: user
+      password: ${security.user.password}
+      protocol: http
+      config-protocol: http # The protocol used to access the config server
 ---
 spring:
   profiles: DISTRIBUTED
@@ -61,22 +66,6 @@ eureka:
     statusPageUrl: http://${eureka.instance.hostname}/info
     healthCheckUrl: http://${eureka.instance.hostname}/health
     homePageUrl: http://${eureka.instance.hostname}/
-
----
-spring:
-  profiles: SYNC
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${owms.eureka.url}/eureka
-  instance:
-    metadata-map:
-      username: user
-      password: ${security.user.password}
-      protocol: http
-      config-protocol: http # The protocol used to access the config server
-    appname: sps01
 
 ---
 spring:
