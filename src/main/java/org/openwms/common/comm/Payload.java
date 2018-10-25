@@ -87,7 +87,7 @@ public abstract class Payload implements Serializable {
      * @param errorCode
      *            The errorCode to set.
      */
-    protected void setErrorCode(String errorCode) {
+    public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
@@ -97,9 +97,6 @@ public abstract class Payload implements Serializable {
      * @return the created.
      */
     public Date getCreated() {
-        if (created == null) {
-            created = new Date();
-        }
         return created;
     }
 

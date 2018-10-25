@@ -24,7 +24,6 @@ package org.openwms.common.comm.res;
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommHeader;
 import org.springframework.integration.annotation.MessageEndpoint;
-import org.springframework.integration.annotation.Transformer;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
@@ -37,14 +36,13 @@ import org.springframework.messaging.support.MessageBuilder;
 public class ResponseMessageServiceActivator {
 
     @Measured
-    @Transformer(inputChannel = "resInChannel", outputChannel = "enrichedOutboundChannel")
-    public Message<ResponseMessage> upCase(ResponseMessage in) {
-        System.out.println("message received: " + in.asString());
+    public Message<ResponseMessage> transform(ResponseMessage in) {
         return MessageBuilder
                 .withPayload(in)
                 .setHeader(CommHeader.RECEIVER_FIELD_NAME, in.getHeader().getReceiver())
                 .setHeader(CommHeader.SENDER_FIELD_NAME, in.getHeader().getSender())
                 .setHeader(CommHeader.SEQUENCE_FIELD_NAME, in.getHeader().getSequenceNo())
+                .setReplyChannelName("outboundChannel")
                 .build();
     }
 

@@ -28,6 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A RequestVO.
@@ -41,9 +42,13 @@ import java.io.Serializable;
 public class RequestVO implements Serializable {
 
     @JsonProperty
-    String actualLocation, barcode;
+    String actualLocation, targetLocation, targetLocationGroup, barcode;
     @JsonProperty
     RequestHeaderVO header;
+    @JsonProperty
+    String errorCode;
+    @JsonProperty
+    Date created;
 
     @Data
     @NoArgsConstructor

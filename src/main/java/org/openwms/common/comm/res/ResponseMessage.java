@@ -21,10 +21,6 @@
  */
 package org.openwms.common.comm.res;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.ParserUtils;
 import org.openwms.common.comm.Payload;
@@ -42,10 +38,6 @@ import static org.openwms.common.comm.ParserUtils.asDate;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Data
-@Slf4j
-@NoArgsConstructor
-@AllArgsConstructor
 public class ResponseMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
@@ -82,7 +74,44 @@ public class ResponseMessage extends Payload implements Serializable {
 
     @Override
     public String asString() {
-        return IDENTIFIER + barcode + actualLocation + ParserUtils.nullableLocation(targetLocation) + ParserUtils.nullableLocationGroup(targetLocationGroup)+ getErrorCode() + ParserUtils.asString(super.getCreated());
+        return IDENTIFIER + barcode +
+                ParserUtils.nullableLocation(actualLocation) +
+                ParserUtils.nullableLocation(targetLocation) +
+                ParserUtils.nullableLocationGroup(targetLocationGroup) +
+                getErrorCode() +
+                ParserUtils.asString(super.getCreated());
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public String getActualLocation() {
+        return actualLocation;
+    }
+
+    public void setActualLocation(String actualLocation) {
+        this.actualLocation = actualLocation;
+    }
+
+    public String getTargetLocation() {
+        return targetLocation;
+    }
+
+    public void setTargetLocation(String targetLocation) {
+        this.targetLocation = targetLocation;
+    }
+
+    public String getTargetLocationGroup() {
+        return targetLocationGroup;
+    }
+
+    public void setTargetLocationGroup(String targetLocationGroup) {
+        this.targetLocationGroup = targetLocationGroup;
     }
 
     public static class Builder {

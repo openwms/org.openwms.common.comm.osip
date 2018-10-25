@@ -100,7 +100,7 @@ class DriverConfig {
     }
 
     /*~ ---------------- TCP/IP stuff ------------- */
-    @Bean
+    @Bean("tcpServerConnectionFactory")
     @DependsOn("propertyHolder")
     AbstractConnectionFactory tcpConnectionFactory(Map<String, Integer> propertyHolder,
                                                    TcpMessageMapper customTcpMessageMapper) {
@@ -114,7 +114,7 @@ class DriverConfig {
         return connectionFactory;
     }
 
-    @Bean
+    //@Bean
     TcpInboundGateway inboundAdapter(AbstractConnectionFactory tcpConnectionFactory) {
         TcpInboundGateway gate = new TcpInboundGateway();
         gate.setConnectionFactory(tcpConnectionFactory);
@@ -136,12 +136,12 @@ class DriverConfig {
 
     @Bean
     MessageChannel outboundChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.direct().get();//executor(Executors.newCachedThreadPool()).get();
     }
 
     @Bean
     MessageChannel enrichedOutboundChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.direct().get();//executor(Executors.newCachedThreadPool()).get();
     }
     /*~ --------- Serializer / Deserializer -------- */
     @Bean
@@ -173,7 +173,7 @@ class DriverConfig {
     @Bean
     IntegrationFlow outboundFlow(HeaderAppendingTransformer headerAppendingTransformer) {
         return IntegrationFlows.from("outboundChannel")
-                .transform(headerAppendingTransformer)
+                //.transform(headerAppendingTransformer)
                 .channel(enrichedOutboundChannel())
                 .get();
     }

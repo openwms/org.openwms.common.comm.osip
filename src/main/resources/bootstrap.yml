@@ -35,6 +35,9 @@ owms:
       so-receive-buffer-size: 160
       so-send-buffer-size: 160
       routing-service-name: routing-service # is default
+    client:
+      hostname: localhost
+      port: 30002
 
 eureka:
   client:

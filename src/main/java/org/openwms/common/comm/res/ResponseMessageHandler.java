@@ -21,33 +21,36 @@
  */
 package org.openwms.common.comm.res;
 
-import org.ameba.annotation.Measured;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.stereotype.Component;
+import org.springframework.messaging.MessageHeaders;
 
 /**
  * A ResponseMessageHandler.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Component
+@MessageEndpoint("responseMessageHandler")
 class ResponseMessageHandler {
 
     private final MessageChannel channel;
 
-    ResponseMessageHandler(@Qualifier("outboundChannel") MessageChannel channel) {
+    ResponseMessageHandler(@Qualifier("enrichedOutboundChannel") MessageChannel channel) {
         this.channel = channel;
     }
 
-    @Measured
     public void handleRES(ResponseMessage res) {
-        System.out.println(res.asString());
-        channel.send(MessageBuilder
-                .withPayload(res)
-                .copyHeaders(res.getHeader().getAll())
-                //.setHeader(MessageHeaders.REPLY_CHANNEL, "enrichedOutboundChannel")
-                .build());
+        MessagingTemplate template = new MessagingTemplate();
+        Message<ResponseMessage> message =
+                MessageBuilder
+                        .withPayload(res)
+                        .copyHeaders(res.getHeader().getAll())
+                .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
+                .build();
+        template.send(channel, message);
     }
 }
