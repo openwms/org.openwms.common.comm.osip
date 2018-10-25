@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.GenericMessage;
 
 import java.util.function.Function;
 
@@ -46,7 +47,7 @@ class RequestMessageServiceActivator implements NotRespondingServiceActivator<Re
     @Autowired
     private ApplicationContext ctx;
     @Autowired
-    private Function<RequestMessage, Void> handler;
+    private Function<GenericMessage<RequestMessage>, Void> handler;
 
     /**
      * {@inheritDoc}
@@ -54,7 +55,7 @@ class RequestMessageServiceActivator implements NotRespondingServiceActivator<Re
     @Override
     @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
-    public void wakeUp(RequestMessage message) {
+    public void wakeUp(GenericMessage<RequestMessage> message) {
         handler.apply(message);
     }
 

@@ -15,8 +15,6 @@ spring:
       headers:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: false
-  main:
-    web-environment: false
 
 owms:
   srv:
@@ -29,12 +27,17 @@ owms:
     username: user
     password: sa
   driver:
+    osip:
+      sync-field: "###"
     server:
       port: 30001
       so-timeout: 300000
       so-receive-buffer-size: 160
       so-send-buffer-size: 160
       routing-service-name: routing-service # is default
+    client:
+      hostname: localhost
+      port: 30002
 
 eureka:
   client:
@@ -44,7 +47,6 @@ eureka:
   instance:
     secure-port-enabled: false
     non-secure-port-enabled: true
-
 ---
 spring:
   profiles: DISTRIBUTED
@@ -59,6 +61,22 @@ eureka:
     statusPageUrl: http://${eureka.instance.hostname}/info
     healthCheckUrl: http://${eureka.instance.hostname}/health
     homePageUrl: http://${eureka.instance.hostname}/
+
+---
+spring:
+  profiles: SYNC
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${owms.eureka.url}/eureka
+  instance:
+    metadata-map:
+      username: user
+      password: ${security.user.password}
+      protocol: http
+      config-protocol: http # The protocol used to access the config server
+    appname: sps01
 
 ---
 spring:

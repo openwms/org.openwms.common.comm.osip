@@ -21,16 +21,18 @@
  */
 package org.openwms.common.comm;
 
-import static org.openwms.common.comm.ParserUtils.padLeft;
+import lombok.Builder;
 
 import java.io.Serializable;
+
+import static org.openwms.common.comm.ParserUtils.padLeft;
 
 /**
  * A CommHeader represents the header part of a CommMessage.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
- * @since 0.2
  */
+@Builder
 public class CommHeader implements Serializable {
 
     private String sync;
@@ -191,7 +193,7 @@ public class CommHeader implements Serializable {
 
     @Override
     public String toString() {
-        return sync + messageLength + sender + receiver + padLeft(String.valueOf(sequenceNo), LENGTH_SEQUENCE_NO_FIELD, "0");
+        return sync + padLeft(String.valueOf(messageLength), CommHeader.LENGTH_MESSAGE_LENGTH_FIELD, "0") + sender + receiver + padLeft(String.valueOf(sequenceNo), LENGTH_SEQUENCE_NO_FIELD, "0");
     }
 
     public String asStruct() {

@@ -19,23 +19,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm.api;
-
-import org.openwms.common.comm.Payload;
-import org.springframework.messaging.support.GenericMessage;
+package org.openwms.common.comm.res.spi;
 
 /**
- * A NotRespondingServiceActivator.
+ * A ResponseFieldLengthProvider.
  *
- * @param <T> A type of incoming Payload
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public interface NotRespondingServiceActivator<T extends Payload> extends CustomServiceActivator {
+public interface ResponseFieldLengthProvider {
 
-    /**
-     * Wake up a service, processor or bean an that accepts incoming messages of type <tt>T</tt>.
-     *
-     * @param message The message to forward
-     */
-    void wakeUp(GenericMessage<T> message);
+    int barcodeLength();
+
+    int locationIdLength();
+
+    int noLocationIdFields();
+
+    int locationGroupNameLength();
 }

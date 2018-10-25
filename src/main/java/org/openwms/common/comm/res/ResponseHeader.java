@@ -1,6 +1,6 @@
 /*
  * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright (C) 2018 Heiko Scherrer
  *
  * This file is part of openwms.org.
  *
@@ -19,31 +19,40 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.res;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.openwms.common.comm.CommHeader;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * A MessageProcessingException is a general exception that indicates a fault situation during message processing.
+ * A ResponseHeader.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class MessageProcessingException extends RuntimeException {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ResponseHeader {
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     * @param cause Cause to be propagated
-     */
-    public MessageProcessingException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    @JsonProperty
+    private String sender, receiver;
+    @JsonProperty
+    private short sequenceNo;
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     */
-    public MessageProcessingException(String message) {
-        super(message);
+    public Map<String, Object> getAll() {
+        Map<String, Object> result = new HashMap<>(3);
+        result.put(CommHeader.SENDER_FIELD_NAME, sender);
+        result.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
+        result.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
+        return Collections.unmodifiableMap(result);
     }
 }

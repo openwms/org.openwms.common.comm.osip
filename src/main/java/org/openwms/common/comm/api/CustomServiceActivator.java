@@ -5,7 +5,7 @@
  * This file is part of openwms.org.
  *
  * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
+ * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -26,21 +26,21 @@ import org.springframework.messaging.MessageChannel;
 
 /**
  * A CustomServiceActivator.
- * 
+ *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 public interface CustomServiceActivator {
 
     /**
      * The input-channel instance that is used by the processor to process messages from.
-     * 
+     *
      * @return The encapsulated MessageChannel instance.
      */
     MessageChannel getChannel();
 
     /**
      * Returns the unique name of the MessageChannel that is used as input-channel for the processing messages.
-     * 
+     *
      * @return Expected to be the unique name of the message concatenated with a suffix, defined in {@link CommConstants#CHANNEL_SUFFIX}
      */
     String getChannelName();

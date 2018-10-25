@@ -5,7 +5,7 @@
  * This file is part of openwms.org.
  *
  * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
+ * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
  *
@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.GenericMessage;
 
 import java.util.function.Function;
 
@@ -43,10 +44,14 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = SystemUpdateMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
 
+    private final Function<GenericMessage<SystemUpdateMessage>, Void> handler;
+    private final ApplicationContext ctx;
+
     @Autowired
-    private ApplicationContext ctx;
-    @Autowired
-    private Function<SystemUpdateMessage, Void> handler;
+    public SystemUpdateServiceActivator(Function<GenericMessage<SystemUpdateMessage>, Void> handler, ApplicationContext ctx) {
+        this.handler = handler;
+        this.ctx = ctx;
+    }
 
     /**
      * {@inheritDoc}
@@ -54,7 +59,7 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
     @Override
     @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
-    public void wakeUp(SystemUpdateMessage message) {
+    public void wakeUp(GenericMessage<SystemUpdateMessage> message) {
         handler.apply(message);
     }
 
@@ -65,7 +70,6 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
     public MessageChannel getChannel() {
         return ctx.getBean(INPUT_CHANNEL_NAME, MessageChannel.class);
     }
-
 
     /**
      * {@inheritDoc}
