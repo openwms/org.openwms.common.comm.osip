@@ -82,6 +82,5 @@ public class PayloadSerializer<T extends Payload> implements Serializer<T> {
         os.write(padRight(res, CommConstants.TELEGRAM_LENGTH, CommConstants.TELEGRAM_FILLER_CHARACTER).getBytes(Charset.defaultCharset()));
         os.write(CRLF);
         os.flush();
-
     }
 }

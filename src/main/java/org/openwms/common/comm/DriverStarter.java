@@ -37,7 +37,7 @@ import org.springframework.context.annotation.ImportResource;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
-@ImportResource("classpath:META-INF/spring/spring-integration-context.xml")
+@ImportResource({"classpath:META-INF/spring/spring-integration-context.xml"})
 @EnableAspects
 public class DriverStarter {
 

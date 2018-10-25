@@ -23,6 +23,7 @@ package org.openwms.common.comm.req;
 
 
 import org.ameba.annotation.Measured;
+import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,12 +73,11 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     @Measured
     @Override
     public Void apply(GenericMessage<RequestMessage> msg) {
-        restTemplate.exchange(
-                routingServiceProtocol+"://"+routingServiceName+"/req",
-                HttpMethod.POST,
-                new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
-                Void.class
-        );
-        return null;
+        try {
+            restTemplate.exchange(routingServiceProtocol + "://" + routingServiceName + "/req", HttpMethod.POST, new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)), Void.class);
+            return null;
+        } catch (Exception e) {
+            throw new MessageProcessingException(e.getMessage(), e);
+        }
     }
 }
