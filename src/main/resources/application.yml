@@ -25,3 +25,5 @@ owms:
     res:
       queue-name: res
       exchange-mapping: res.*
+    upd:
+      queue-name: upd
