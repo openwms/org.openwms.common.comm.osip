@@ -34,20 +34,19 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 
 /**
- * A AsynConfig.
+ * A AsyncConfig.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 @EnableRabbit
-class AsynConfig {
+class AsyncConfig {
 
     @Bean
     MessageConverter jsonConverter() {
         return new Jackson2JsonMessageConverter();
     }
-
 
     @Bean
     public StatefulRetryOperationsInterceptor interceptor() {
