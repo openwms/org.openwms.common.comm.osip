@@ -8,41 +8,20 @@
     <include resource="logback-appenders.xml"/>
     <include resource="logback-loggers.xml"/>
 
-    <variable scope="context" name="mdcPattern"
-              value="%replace(;%X{MSGKEY};%X{MSGDATA}){';+( |$)', ''}"/>
+    <variable scope="context" name="mdcPattern" value="%replace(;%X{MSGKEY};%X{MSGDATA}){';+( |$)', ''}"/>
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
-    <appender name="SYSLOG" class="ch.qos.logback.classic.sift.SiftingAppender">
-        <discriminator>
-            <key>Tenant</key>
-            <defaultValue>BOOT</defaultValue>
-        </discriminator>
-        <sift>
-            <appender name="SYSLOG-${Tenant}" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-                <destination>openwms.mooo.com:10515</destination>
-                <keepAliveDuration>5 minutes</keepAliveDuration>
-                <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                </encoder>
-            </appender>
-        </sift>
-    </appender>
-
+    <logger name="org.openwms" level="DEBUG"/>
     <logger name="com.netflix.discovery" level="OFF"/>
     <logger name="org.springframework" level="WARN"/>
 
-    <logger name="CORE_INTEGRATION_MESSAGING" level="DEBUG"/>
-
-    <logger name="org.openwms" level="DEBUG"/>
-    <logger name="org.openwms.common.comm.synq" level="DEBUG"/>
-
-    <logger name="PRESENTATION_LAYER_ACCESS" level="DEBUG" additivity="false">
-        <appender-ref ref="TSL"/>
-        <appender-ref ref="SYSLOG"/>
+    <logger name="MEASURED" level="INFO">
+        <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="CORE_INTEGRATION_MESSAGING" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <!--appender-ref ref="SYSLOG"/-->
     </root>
 
 </configuration>

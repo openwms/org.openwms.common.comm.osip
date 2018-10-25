@@ -22,26 +22,31 @@
 package org.openwms.common.comm.req;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ameba.annotation.Measured;
 import org.openwms.core.SecurityUtils;
+import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.Serializable;
 import java.util.function.Function;
+
+import static org.openwms.common.comm.req.RequestHelper.getRequest;
 
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+@Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
 @RefreshScope
-class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
+class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessage>, Void> {
 
     private final RestTemplate restTemplate;
     private final String routingServiceName;
@@ -61,25 +66,18 @@ class HttpRequestMessageHandler implements Function<RequestMessage, Void> {
         this.routingServicePassword = routingServicePassword;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Measured
     @Override
-    public Void apply(RequestMessage msg) {
+    public Void apply(GenericMessage<RequestMessage> msg) {
         restTemplate.exchange(
                 routingServiceProtocol+"://"+routingServiceName+"/req",
                 HttpMethod.POST,
-                new HttpEntity<>(new RequestVO(msg.getActualLocation(), msg.getBarcode()), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
+                new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
                 Void.class
         );
         return null;
-    }
-
-    private static class RequestVO implements Serializable {
-
-        @JsonProperty
-        String actualLocation, barcode;
-
-        RequestVO(String actualLocation, String barcode) {
-            this.actualLocation = actualLocation;
-            this.barcode = barcode;
-        }
     }
 }

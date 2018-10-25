@@ -21,21 +21,26 @@
  */
 package org.openwms.common.comm.sysu;
 
-import static org.openwms.common.comm.ParserUtils.asDate;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.openwms.common.comm.CommConstants;
+import org.openwms.common.comm.Payload;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.Payload;
-import org.springframework.util.StringUtils;
+import static org.openwms.common.comm.ParserUtils.asDate;
 
 /**
  * A SystemUpdateMessage reflects the OSIP SYSU telegram type and is used to change the state of a {@code LocationGroup}.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+//@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SystemUpdateMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
@@ -51,8 +56,12 @@ public class SystemUpdateMessage extends Payload implements Serializable {
      *
      * @return The name
      */
-    String getLocationGroupName() {
+    public String getLocationGroupName() {
         return locationGroupName;
+    }
+
+    public void setLocationGroupName(String locationGroupName) {
+        this.locationGroupName = locationGroupName;
     }
 
     /**

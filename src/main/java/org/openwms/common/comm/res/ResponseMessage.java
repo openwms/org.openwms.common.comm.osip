@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm.req;
+package org.openwms.common.comm.res;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.ParserUtils;
@@ -32,21 +32,21 @@ import java.text.ParseException;
 import static org.openwms.common.comm.ParserUtils.asDate;
 
 /**
- * A RequestMessage requests an order for a TransportUnit with id <tt>Barcode</tt> on a particular location <tt>actualLocation</tt>.
+ * A OSIP ResponseMessage responds to an processed {@code RequestMessage}.
+ *
+ * See https://interface21-io.gitbook.io/osip/messaging-between-layer-n-and-layer-n-1#response-telegram-res_
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class RequestMessage extends Payload implements Serializable {
+public class ResponseMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
-    public static final String IDENTIFIER = "REQ_";
+    public static final String IDENTIFIER = "RES_";
+
     private String barcode;
     private String actualLocation;
     private String targetLocation;
-
-
-    public RequestMessage() {
-    }
+    private String targetLocationGroup;
 
     /**
      * {@inheritDoc}
@@ -54,6 +54,32 @@ public class RequestMessage extends Payload implements Serializable {
     @Override
     public String getMessageIdentifier() {
         return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return super.toString() + IDENTIFIER + getErrorCode() + ParserUtils.asString(super.getCreated());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    @Override
+    public String asString() {
+        return IDENTIFIER + barcode +
+                ParserUtils.nullableLocation(actualLocation) +
+                ParserUtils.nullableLocation(targetLocation) +
+                ParserUtils.nullableLocationGroup(targetLocationGroup) +
+                getErrorCode() +
+                ParserUtils.asString(super.getCreated());
     }
 
     public String getBarcode() {
@@ -80,9 +106,17 @@ public class RequestMessage extends Payload implements Serializable {
         this.targetLocation = targetLocation;
     }
 
+    public String getTargetLocationGroup() {
+        return targetLocationGroup;
+    }
+
+    public void setTargetLocationGroup(String targetLocationGroup) {
+        this.targetLocationGroup = targetLocationGroup;
+    }
+
     public static class Builder {
 
-        private final RequestMessage requestMessage;
+        private final ResponseMessage responseMessage;
         private final RequestFieldLengthProvider provider;
 
         /**
@@ -90,7 +124,7 @@ public class RequestMessage extends Payload implements Serializable {
          */
         public Builder(RequestFieldLengthProvider provider) {
             this.provider = provider;
-            this.requestMessage = new RequestMessage();
+            this.responseMessage = new ResponseMessage();
         }
 
         /**
@@ -100,7 +134,7 @@ public class RequestMessage extends Payload implements Serializable {
          * @return The builder
          */
         public Builder withBarcode(String barcode) {
-            requestMessage.barcode = barcode;
+            responseMessage.barcode = barcode;
             return this;
         }
 
@@ -113,7 +147,7 @@ public class RequestMessage extends Payload implements Serializable {
          * @return The builder
          */
         public Builder withActualLocation(String actualLocation) {
-            requestMessage.actualLocation = String.join("/",
+            responseMessage.actualLocation = String.join("/",
                     actualLocation.split("(?<=\\G.{" + provider.locationIdLength() / provider.noLocationIdFields() + "})"));
             return this;
         }
@@ -128,7 +162,7 @@ public class RequestMessage extends Payload implements Serializable {
          */
         public Builder withTargetLocation(String targetLocation) {
             if (exists(targetLocation)) {
-                requestMessage.targetLocation = String.join("/",
+                responseMessage.targetLocation = String.join("/",
                         targetLocation.split("(?<=\\G.{" + provider.locationIdLength() / provider.noLocationIdFields() + "})"));
             }
             return this;
@@ -142,7 +176,7 @@ public class RequestMessage extends Payload implements Serializable {
          */
         public Builder withErrorCode(String errorCode) {
             if (exists(errorCode)) {
-                requestMessage.setErrorCode(errorCode);
+                responseMessage.setErrorCode(errorCode);
             }
             return this;
         }
@@ -154,7 +188,7 @@ public class RequestMessage extends Payload implements Serializable {
          * @return The builder
          */
         public Builder withCreateDate(String createDate) throws ParseException {
-            requestMessage.setCreated(asDate(createDate));
+            responseMessage.setCreated(asDate(createDate));
             return this;
         }
 
@@ -163,35 +197,8 @@ public class RequestMessage extends Payload implements Serializable {
          *
          * @return The completed message
          */
-        public RequestMessage build() {
-            return requestMessage;
+        public ResponseMessage build() {
+            return responseMessage;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return super.toString() + IDENTIFIER + this.barcode + this.actualLocation + this.targetLocation +
-                getErrorCode() + ParserUtils.asString(super.getCreated());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return false;
-    }
-
-    /**
-     * todo: This needs to be extracted from the business object to an 'transformer'.
-     *
-     * @return
-     */
-    @Override
-    public String asString() {
-        return IDENTIFIER + actualLocation + targetLocation;
     }
 }

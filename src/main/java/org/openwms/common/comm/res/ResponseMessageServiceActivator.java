@@ -1,6 +1,6 @@
 /*
  * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright (C) 2018 Heiko Scherrer
  *
  * This file is part of openwms.org.
  *
@@ -19,31 +19,31 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.res;
+
+import org.ameba.annotation.Measured;
+import org.openwms.common.comm.CommHeader;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 
 /**
- * A MessageProcessingException is a general exception that indicates a fault situation during message processing.
+ * A ResController.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-public class MessageProcessingException extends RuntimeException {
+@MessageEndpoint("responseMessageServiceActivator")
+public class ResponseMessageServiceActivator {
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     * @param cause Cause to be propagated
-     */
-    public MessageProcessingException(String message, Throwable cause) {
-        super(message, cause);
+    @Measured
+    public Message<ResponseMessage> transform(ResponseMessage in) {
+        return MessageBuilder
+                .withPayload(in)
+                .setHeader(CommHeader.RECEIVER_FIELD_NAME, in.getHeader().getReceiver())
+                .setHeader(CommHeader.SENDER_FIELD_NAME, in.getHeader().getSender())
+                .setHeader(CommHeader.SEQUENCE_FIELD_NAME, in.getHeader().getSequenceNo())
+                .setReplyChannelName("outboundChannel")
+                .build();
     }
 
-    /**
-     * Create a new MessageProcessingException.
-     *
-     * @param message Detail message
-     */
-    public MessageProcessingException(String message) {
-        super(message);
-    }
 }

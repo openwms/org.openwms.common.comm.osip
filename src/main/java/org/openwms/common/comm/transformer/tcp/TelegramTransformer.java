@@ -24,6 +24,7 @@ package org.openwms.common.comm.transformer.tcp;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.api.CustomServiceActivator;
 import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.tcp.TCPCommConstants;
 import org.slf4j.Logger;
@@ -40,6 +41,9 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * A CommonMessageTransformer transforms incoming OSIP telegram structures to {@link Payload}s.
@@ -50,19 +54,19 @@ import java.util.Map;
 public class TelegramTransformer<T extends Payload> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTransformer.class);
+    private final List<MessageMapper<T>> mappers;
+    private final String tenant;
+    private Map<String, MessageMapper<T>> mappersMap;
+
     @Autowired
-    private List<MessageMapper<T>> mappers;
-    private final Map<String, MessageMapper<T>> mappersMap = new HashMap<>();
-    @Value("${owms.tenant:master}")
-    private String tenant;
-    /**
-     * Do this once to query a Map not a List.
-     */
+    public TelegramTransformer(List<MessageMapper<T>> mappers, @Value("${owms.tenant:master}") String tenant) {
+        this.mappers = mappers;
+        this.tenant = tenant;
+    }
+
     @PostConstruct
     void onPostConstruct() {
-        for (MessageMapper<T> mapper : mappers) {
-            mappersMap.put(mapper.forType(), mapper);
-        }
+        mappersMap = mappers.stream().collect(Collectors.toMap(MessageMapper::forType, m -> m));
     }
 
     /**
@@ -83,9 +87,9 @@ public class TelegramTransformer<T extends Payload> {
         MDC.put(CommConstants.LOG_TENANT, tenant);
         MessageMapper<T> mapper = mappersMap.get(telegramType);
         if (mapper == null) {
-            LOGGER.error("No mapper found for telegram type ", TCPCommConstants.getTelegramType(telegram));
-            throw new MessageMismatchException("Not mapper found for telegram type "
-                    + TCPCommConstants.getTelegramType(telegram));
+            LOGGER.error("No mapper found for telegram type [{}]", TCPCommConstants.getTelegramType(telegram));
+            throw new MessageMismatchException(format("No mapper found for telegram type [%s]",
+                     TCPCommConstants.getTelegramType(telegram)));
         }
         return mapper.mapTo(telegram, headers);
     }
