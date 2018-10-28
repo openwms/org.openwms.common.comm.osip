@@ -75,6 +75,13 @@ public final class ParserUtils {
         return String.format("%1$" + n + "s", s).replace(" ", chr);
     }
 
+    public static String nullableBarcode(String location) {
+        if (location == null || location.isEmpty()) {
+            return padLeft("", 20, "?");
+        }
+        return location.replace("/", "");
+    }
+
     public static String nullableLocation(String location) {
         if (location == null || location.isEmpty()) {
             return padLeft("", 20, "*");

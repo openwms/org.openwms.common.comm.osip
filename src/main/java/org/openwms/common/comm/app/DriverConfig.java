@@ -24,6 +24,7 @@ package org.openwms.common.comm.app;
 import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
 import org.openwms.common.comm.tcp.OSIPTelegramSerializer;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
+import org.openwms.core.SpringProfiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
@@ -84,16 +86,27 @@ class DriverConfig {
      */
     @Bean
     @RefreshScope
-    Map<String, Integer> propertyHolder(@Value("${owms.driver.server.port}") int port,
-                                             @Value("${owms.driver.server.so-timeout}") int soTimeout,
-                                             @Value("${owms.driver.server.so-receive-buffer-size}") int soReceiveBufferSize,
-                                             @Value("${owms.driver.server.so-send-buffer-size}") int soSendBufferSize) {
+    Map<String, Integer> propertyHolder(
+            @Value("${owms.driver.server.port}") int port,
+            @Value("${owms.driver.client.port}") int clientPort,
+            @Value("${owms.driver.server.so-timeout}") int soTimeout,
+            @Value("${owms.driver.server.so-receive-buffer-size}") int soReceiveBufferSize,
+            @Value("${owms.driver.server.so-send-buffer-size}") int soSendBufferSize,
+            @Value("${owms.driver.res.queue-name}") String queueName,
+            @Value("${owms.driver.res.exchange-mapping}") String exchangeMapping,
+            @Value("${owms.driver.res.routing-key}") String routingKey,
+            Environment environment
+    ) {
         Map<String, Integer> res = new HashMap<>();
         res.put("owms.driver.server.port", port);
+        res.put("owms.driver.client.port", clientPort);
         res.put("owms.driver.server.so-timeout", soTimeout);
         res.put("owms.driver.server.so-receive-buffer-size", soReceiveBufferSize);
         res.put("owms.driver.server.so-send-buffer-size", soSendBufferSize);
-        BOOT_LOGGER.info("Running driver on port: [{}]", port);
+        BOOT_LOGGER.info("Running driver on ports: [{}, {}]", port, clientPort);
+        if (environment.acceptsProfiles(SpringProfiles.ASYNCHRONOUS_PROFILE)) {
+            BOOT_LOGGER.info("> in asynchronous mode. Bound to Queue [{}], Exchange [{}] and using Routing Key [{}]", queueName, exchangeMapping, routingKey);
+        }
         return res;
     }
 

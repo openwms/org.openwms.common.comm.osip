@@ -49,7 +49,8 @@ class AmqpResponseMessageListener {
 
     @Measured
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = "${owms.driver.res.queue-name}", durable = "true"),
+            key = "${owms.driver.res.routing-key}",
+            value = @Queue(value = "${owms.driver.res.queue-name}_${owms.driver.res.routing-key}", durable = "true"),
             exchange = @Exchange(value = "${owms.driver.res.exchange-mapping}", ignoreDeclarationExceptions = "true"))
     )
     void handleRES(@Payload ResponseMessage res) {
