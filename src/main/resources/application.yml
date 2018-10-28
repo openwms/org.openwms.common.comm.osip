@@ -8,7 +8,7 @@ spring:
   profiles: "!ASYNCHRONOUS"
 
 server:
-  port: 30000
+  port: ${owms.driver.server.port-rest}
 
 ---
 spring:
@@ -25,3 +25,5 @@ owms:
     res:
       queue-name: res
       exchange-mapping: res.*
+    upd:
+      queue-name: upd

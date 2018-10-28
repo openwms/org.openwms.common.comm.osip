@@ -19,45 +19,46 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.openwms.common.comm.res;
+package org.openwms.common.comm.upd;
 
 import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
-import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Profile;
-import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
+
+import static org.openwms.common.comm.upd.HttpUpdateMessageHandler.getRequest;
+
 /**
- * A AmqpResponseMessageListener.
+ * A AmqpUpdateMessageHandler.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
-class AmqpResponseMessageListener {
+@RefreshScope
+class AmqpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>, Void> {
 
-    private final ResponseMessageHandler handler;
+    private final AmqpTemplate amqpTemplate;
+    private final String queueName;
 
-    AmqpResponseMessageListener(ResponseMessageHandler handler) {
-        this.handler = handler;
+    AmqpUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.upd.queue-name}") String queueName) {
+        this.amqpTemplate = amqpTemplate;
+        this.queueName = queueName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Measured
-    @RabbitListener(bindings = @QueueBinding(
-            key = "${owms.driver.res.routing-key}",
-            value = @Queue(value = "${owms.driver.res.queue-name}_${owms.driver.res.routing-key}", durable = "true"),
-            exchange = @Exchange(value = "${owms.driver.res.exchange-mapping}", ignoreDeclarationExceptions = "true"))
-    )
-    void handleRES(@Payload ResponseMessage res) {
-        try {
-            handler.handleRES(res);
-        } catch (Exception e) {
-            throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
-        }
+    @Override
+    public Void apply(GenericMessage<UpdateMessage> updateMessageGenericMessage) {
+        amqpTemplate.convertAndSend(queueName, getRequest(updateMessageGenericMessage));
+        return null;
     }
 }
