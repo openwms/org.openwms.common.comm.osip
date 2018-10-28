@@ -74,7 +74,8 @@ public class ResponseMessage extends Payload implements Serializable {
 
     @Override
     public String asString() {
-        return IDENTIFIER + barcode +
+        return IDENTIFIER +
+                ParserUtils.nullableBarcode(barcode) +
                 ParserUtils.nullableLocation(actualLocation) +
                 ParserUtils.nullableLocation(targetLocation) +
                 ParserUtils.nullableLocationGroup(targetLocationGroup) +
