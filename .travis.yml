@@ -7,7 +7,7 @@ services:
 - docker
 
 after_success:
-- docker build -t openwms/org.openwms.common.comm:$TRAVIS_BUILD_NUMBER .
+- docker build -t openwms/org.openwms.common.comm:latest .
 
 deploy:
   provider: script
