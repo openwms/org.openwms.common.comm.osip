@@ -6,6 +6,13 @@ jdk:
 services:
 - docker
 
+addons:
+  sonarcloud:
+    organization: "openwms-github"
+
+script:
+- sonar-scanner
+
 after_success:
 - docker build -t openwms/org.openwms.common.comm:latest .
 
