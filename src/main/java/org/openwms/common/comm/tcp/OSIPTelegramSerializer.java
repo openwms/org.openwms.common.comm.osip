@@ -1,28 +1,25 @@
 /*
- * openwms.org, the Open Warehouse Management System.
- * Copyright (C) 2014 Heiko Scherrer
+ * Copyright 2018 Heiko Scherrer
  *
- * This file is part of openwms.org.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * openwms.org is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * openwms.org is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software. If not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.openwms.common.comm.tcp;
 
-import static org.openwms.common.comm.ParserUtils.padLeft;
-import static org.openwms.common.comm.ParserUtils.padRight;
+import org.openwms.common.comm.CommConstants;
+import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.MessageMismatchException;
+import org.openwms.common.comm.Payload;
+import org.springframework.core.serializer.Serializer;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -31,11 +28,9 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.CommHeader;
-import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
-import org.springframework.core.serializer.Serializer;
+import static java.lang.String.format;
+import static org.openwms.common.comm.ParserUtils.padLeft;
+import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
  * An OSIPTelegramSerializer is able to read OSIP telegram structures from an InputStream (deserialization) and can also serialize Object
@@ -61,7 +56,7 @@ public class OSIPTelegramSerializer implements Serializer<Map<?, ?>> {
                         padLeft(String.valueOf(headers.get(CommHeader.SEQUENCE_FIELD_NAME)), CommHeader.LENGTH_SEQUENCE_NO_FIELD, "0"));
         String s = header + ((Payload) map.get("payload")).asString();
         if (s.length() > CommConstants.TELEGRAM_LENGTH) {
-            throw new MessageMismatchException("Defined telegram length exceeded, size is" + s.length());
+            throw new MessageMismatchException(format("Defined telegram length exceeded, size is [%d]", s.length()));
         }
         os.write(padRight(s, CommConstants.TELEGRAM_LENGTH, CommConstants.TELEGRAM_FILLER_CHARACTER).getBytes(Charset.defaultCharset()));
         os.write(CRLF);
