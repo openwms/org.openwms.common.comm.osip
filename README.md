@@ -6,6 +6,20 @@ implementation is aware of multiple tenants (e.g. projects) and may run in the c
 to instantiate multiple instances of the same driver component at one time. Each instance must have it's own configuration, in particular
 TCP/IP port settings. A project (tenant) may have multiple drivers deployed, with all running on different ports.
 
+# Resources
+
+Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wiki)
+
+[![Build status][travis-image]][travis-url]
+[![License][license-image]][license-url]
+[![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
+[![Join the chat at https://gitter.im/openwms/org.openwms](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openwms/org.openwms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[travis-image]: https://img.shields.io/travis/openwms/org.openwms.common.comm.svg?style=flat-square
+[travis-url]: https://travis-ci.com/openwms/org.openwms.common.comm
+[license-image]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+[license-url]: LICENSE
+
 # Requirements
 
 ## Functional Requirements
