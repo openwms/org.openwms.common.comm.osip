@@ -27,6 +27,7 @@ class RequestHelper {
 
     static RequestVO getRequest(GenericMessage<RequestMessage> msg) {
         return RequestVO.builder()
+                .type("REQ_")
                 .actualLocation(msg.getPayload().getActualLocation())
                 .targetLocation(msg.getPayload().getTargetLocation())
                 .errorCode(msg.getPayload().getErrorCode())
