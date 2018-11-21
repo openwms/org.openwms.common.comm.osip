@@ -60,6 +60,7 @@ class HttpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
 
     static UpdateVO getRequest(GenericMessage<UpdateMessage> msg) {
         return UpdateVO.builder()
+                .type("UPD_")
                 .barcode(msg.getPayload().getBarcode())
                 .actualLocation(msg.getPayload().getActualLocation())
                 .errorCode(msg.getPayload().getErrorCode())

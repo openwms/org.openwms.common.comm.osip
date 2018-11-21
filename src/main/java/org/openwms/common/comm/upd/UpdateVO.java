@@ -36,7 +36,7 @@ import java.util.Date;
 class UpdateVO implements Serializable {
 
     @JsonProperty
-    String actualLocation, barcode;
+    String type, actualLocation, barcode;
     @JsonProperty
     UpdateVO.UpdateHeaderVO header;
     @JsonProperty

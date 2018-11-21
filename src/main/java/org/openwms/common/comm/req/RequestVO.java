@@ -36,7 +36,7 @@ import java.util.Date;
 public class RequestVO implements Serializable {
 
     @JsonProperty
-    String actualLocation, targetLocation, targetLocationGroup, barcode;
+    String type, actualLocation, targetLocation, targetLocationGroup, barcode;
     @JsonProperty
     RequestHeaderVO header;
     @JsonProperty
