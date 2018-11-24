@@ -18,12 +18,14 @@ spring:
 
 owms:
   driver:
-    sysu:
-      queue-name: sysu
+    locu:
+      queue-name: locu
     req:
       queue-name: req
     res:
       queue-name: res
       exchange-mapping: res.*
+    sysu:
+      queue-name: sysu
     upd:
       queue-name: upd
