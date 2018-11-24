@@ -67,7 +67,7 @@ public class SystemUpdateMessage extends Payload implements Serializable {
      */
     @Override
     public boolean isWithoutReply() {
-        return false;
+        return true;
     }
 
 

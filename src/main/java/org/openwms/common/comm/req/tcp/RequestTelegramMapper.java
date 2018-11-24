@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 
 /**
@@ -53,7 +54,7 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
     public Message<RequestMessage> mapTo(String telegram, Map<String, Object> headers) {
         TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         if (provider == null) {
-            throw new RuntimeException("Telegram handling " + RequestMessage.IDENTIFIER + " not supported");
+            throw new RuntimeException(format("Telegram handling [%s] not supported", RequestMessage.IDENTIFIER));
         }
         int startPayload = LENGTH_HEADER + forType().length();
         int startActualLocation = startPayload + provider.barcodeLength();
@@ -71,7 +72,7 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
                     .withCreateDate(telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH)).build();
             return new GenericMessage<>(message, CommonMessageFactory.createHeaders(telegram, headers));
         } catch (ParseException e) {
-            throw new MessageMismatchException(e.getMessage());
+            throw new MessageMismatchException(e.getMessage(), e);
         }
     }
 

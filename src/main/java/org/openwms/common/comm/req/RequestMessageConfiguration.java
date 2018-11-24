@@ -15,24 +15,23 @@
  */
 package org.openwms.common.comm.req;
 
+import org.openwms.core.SpringProfiles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A RequestMessageConfiguration creates beans dynamically without the use of XML.
+ * A RequestMessageConfiguration creates the beans used in asynchronous mode
+ * dynamically without the use of XML.
  * 
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 class RequestMessageConfiguration {
 
-    /**
-     * Create a MessageChannel with the proper name dynamically.
-     * 
-     * @return A DirectChannel instance
-     */
     @Bean(name = RequestMessageServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();

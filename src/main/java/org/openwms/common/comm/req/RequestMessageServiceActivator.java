@@ -17,7 +17,6 @@ package org.openwms.common.comm.req;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.NotRespondingServiceActivator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -37,10 +36,13 @@ class RequestMessageServiceActivator implements NotRespondingServiceActivator<Re
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = RequestMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
 
-    @Autowired
-    private ApplicationContext ctx;
-    @Autowired
-    private Function<GenericMessage<RequestMessage>, Void> handler;
+    private final ApplicationContext ctx;
+    private final Function<GenericMessage<RequestMessage>, Void> handler;
+
+    RequestMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<RequestMessage>, Void> handler) {
+        this.ctx = ctx;
+        this.handler = handler;
+    }
 
     /**
      * {@inheritDoc}
