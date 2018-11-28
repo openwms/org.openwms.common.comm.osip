@@ -39,11 +39,13 @@ import static org.openwms.common.comm.req.RequestHelper.getRequest;
 class AmqpRequestMessageHandler implements Function<GenericMessage<RequestMessage>, Void> {
 
     private final AmqpTemplate amqpTemplate;
-    private final String queueName;
+    private final String exchangeName;
+    private final String routingKey;
 
-    AmqpRequestMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.req.queue-name}") String queueName) {
+    AmqpRequestMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.req.exchange-name}") String exchangeName, @Value("${owms.driver.req.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
-        this.queueName = queueName;
+        this.exchangeName = exchangeName;
+        this.routingKey = routingKey;
     }
 
     /**
@@ -52,7 +54,7 @@ class AmqpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     @Measured
     @Override
     public Void apply(GenericMessage<RequestMessage> requestMessageGenericMessage) {
-        amqpTemplate.convertAndSend(queueName, getRequest(requestMessageGenericMessage));
+        amqpTemplate.convertAndSend(exchangeName, routingKey, getRequest(requestMessageGenericMessage));
         return null;
     }
 

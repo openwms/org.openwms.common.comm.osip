@@ -55,6 +55,7 @@ class LocationUpdateTelegramMapper implements MessageMapper<LocationUpdateMessag
         try {
             return new GenericMessage<>(
                     new LocationUpdateMessage.Builder()
+                            .withType(LocationUpdateMessage.IDENTIFIER)
                             .withLocationGroupName(telegram.substring(startLocationGroup, startLocation))
                             .withLocation(telegram.substring(startLocation, startErrorCode))
                             .withErrorCode(telegram.substring(startErrorCode, startCreateDate))

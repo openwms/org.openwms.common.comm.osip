@@ -37,11 +37,13 @@ import java.util.function.Function;
 class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
 
     private final AmqpTemplate amqpTemplate;
-    private final String queueName;
+    private final String exchangeName;
+    private final String routingKey;
 
-    AmqpSystemUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.sysu.queue-name}") String queueName) {
+    AmqpSystemUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.sysu.exchange-name}") String exchangeName, @Value("${owms.driver.sysu.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
-        this.queueName = queueName;
+        this.exchangeName = exchangeName;
+        this.routingKey = routingKey;
     }
 
     /**
@@ -50,7 +52,7 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
     @Measured
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> systemUpdateMessageGenericMessage) {
-        amqpTemplate.convertAndSend(queueName, systemUpdateMessageGenericMessage.getPayload());
+        amqpTemplate.convertAndSend(exchangeName, routingKey, systemUpdateMessageGenericMessage.getPayload());
         return null;
     }
 }
