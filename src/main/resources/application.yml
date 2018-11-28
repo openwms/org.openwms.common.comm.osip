@@ -19,13 +19,18 @@ spring:
 owms:
   driver:
     locu:
-      queue-name: locu
+      exchange-name: osip
+      routing-key: osip.locu.received
     req:
-      queue-name: req
+      exchange-name: osip
+      routing-key: osip.req.received
     res:
       queue-name: res
-      exchange-mapping: res.*
+      exchange-name: osip
+      routing-key: tcpip-driver
     sysu:
-      queue-name: sysu
+      exchange-name: osip
+      routing-key: osip.sysu.received
     upd:
-      queue-name: upd
+      exchange-name: osip
+      routing-key: osip.upd.received

@@ -87,7 +87,7 @@ class DriverConfig {
             @Value("${owms.driver.server.so-receive-buffer-size}") int soReceiveBufferSize,
             @Value("${owms.driver.server.so-send-buffer-size}") int soSendBufferSize,
             @Value("${owms.driver.res.queue-name}") String queueName,
-            @Value("${owms.driver.res.exchange-mapping}") String exchangeMapping,
+            @Value("${owms.driver.res.exchange-name}") String exchangeMapping,
             @Value("${owms.driver.res.routing-key}") String routingKey,
             Environment environment
     ) {

@@ -39,11 +39,13 @@ import static org.openwms.common.comm.upd.HttpUpdateMessageHandler.getRequest;
 class AmqpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>, Void> {
 
     private final AmqpTemplate amqpTemplate;
-    private final String queueName;
+    private final String exchangeName;
+    private final String routingKey;
 
-    AmqpUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.upd.queue-name}") String queueName) {
+    AmqpUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.upd.exchange-name}") String exchangeName, @Value("${owms.driver.upd.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
-        this.queueName = queueName;
+        this.exchangeName = exchangeName;
+        this.routingKey = routingKey;
     }
 
     /**
@@ -52,7 +54,7 @@ class AmqpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
     @Measured
     @Override
     public Void apply(GenericMessage<UpdateMessage> updateMessageGenericMessage) {
-        amqpTemplate.convertAndSend(queueName, getRequest(updateMessageGenericMessage));
+        amqpTemplate.convertAndSend(exchangeName, routingKey, getRequest(updateMessageGenericMessage));
         return null;
     }
 }

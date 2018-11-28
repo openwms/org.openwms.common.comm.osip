@@ -16,6 +16,8 @@
 package org.openwms.common.comm.req;
 
 import org.openwms.core.SpringProfiles;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,7 +27,7 @@ import org.springframework.messaging.MessageChannel;
 /**
  * A RequestMessageConfiguration creates the beans used in asynchronous mode
  * dynamically without the use of XML.
- * 
+ *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
@@ -35,5 +37,10 @@ class RequestMessageConfiguration {
     @Bean(name = RequestMessageServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();
+    }
+
+    @Bean("reqExchange")
+    DirectExchange directExchange(@Value("${owms.driver.req.exchange-name}") String exchangeName) {
+        return new DirectExchange(exchangeName);
     }
 }

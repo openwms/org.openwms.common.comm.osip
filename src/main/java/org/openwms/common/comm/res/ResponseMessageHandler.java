@@ -37,12 +37,12 @@ class ResponseMessageHandler {
         this.channel = channel;
     }
 
-    public void handleRES(ResponseMessage res) {
+    public void handle(ResponseMessage msg) {
         MessagingTemplate template = new MessagingTemplate();
         Message<ResponseMessage> message =
                 MessageBuilder
-                        .withPayload(res)
-                        .copyHeaders(res.getHeader().getAll())
+                        .withPayload(msg)
+                        .copyHeaders(msg.getHeader().getAll())
                 .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
                 .build();
         template.send(channel, message);

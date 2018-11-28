@@ -15,7 +15,11 @@
  */
 package org.openwms.common.comm.locu;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.Payload;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -28,6 +32,8 @@ import static org.openwms.common.comm.ParserUtils.asDate;
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
+@AllArgsConstructor
+@NoArgsConstructor
 public class LocationUpdateMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
@@ -68,6 +74,29 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         return null;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocationGroupName() {
+        return locationGroupName;
+    }
+
+    public void setLocationGroupName(String locationGroupName) {
+        this.locationGroupName = locationGroupName;
+    }
 
     public static final class Builder {
         private String errorCode;
@@ -95,12 +124,12 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         }
 
         public Builder withLocation(String val) {
-            location = val;
+            location = String.join("/", val.split("(?<=\\G.{" + 4 + "})"));;
             return this;
         }
 
         public Builder withLocationGroupName(String val) {
-            locationGroupName = val;
+            locationGroupName = StringUtils.trimTrailingCharacter(val, CommConstants.LOCGROUP_FILLER_CHARACTER);
             return this;
         }
 

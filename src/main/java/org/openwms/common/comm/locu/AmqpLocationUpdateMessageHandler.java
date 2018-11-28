@@ -37,11 +37,13 @@ import java.util.function.Function;
 class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<LocationUpdateMessage>, Void> {
 
     private final AmqpTemplate amqpTemplate;
-    private final String queueName;
+    private final String exchangeName;
+    private final String routingKey;
 
-    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.locu.queue-name}") String queueName) {
+    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.locu.exchange-name}") String exchangeName, @Value("${owms.driver.locu.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
-        this.queueName = queueName;
+        this.exchangeName = exchangeName;
+        this.routingKey = routingKey;
     }
 
     /**
@@ -50,7 +52,7 @@ class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<Locati
     @Measured
     @Override
     public Void apply(GenericMessage<LocationUpdateMessage> locationUpdateMessage) {
-        amqpTemplate.convertAndSend(queueName, locationUpdateMessage);
+        amqpTemplate.convertAndSend(exchangeName, routingKey, locationUpdateMessage.getPayload());
         return null;
     }
 }
