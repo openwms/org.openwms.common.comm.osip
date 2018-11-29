@@ -54,7 +54,7 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
     public Message<RequestMessage> mapTo(String telegram, Map<String, Object> headers) {
         TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         if (provider == null) {
-            throw new RuntimeException(format("Telegram handling [%s] not supported", RequestMessage.IDENTIFIER));
+            throw new MessageMismatchException(format("Telegram handling [%s] not supported", RequestMessage.IDENTIFIER));
         }
         int startPayload = LENGTH_HEADER + forType().length();
         int startActualLocation = startPayload + provider.barcodeLength();
