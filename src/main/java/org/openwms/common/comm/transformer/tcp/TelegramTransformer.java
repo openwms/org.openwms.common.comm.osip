@@ -49,7 +49,7 @@ public class TelegramTransformer<T extends Payload> {
     private final String tenant;
     private Map<String, MessageMapper<T>> mappersMap;
 
-    public TelegramTransformer(List<MessageMapper<T>> mappers, @Value("${owms.tenant:master}") String tenant) {
+    public TelegramTransformer(List<MessageMapper<T>> mappers, @Value("${owms.tenant:spring.application.name}") String tenant) {
         this.mappers = mappers;
         this.tenant = tenant;
     }
