@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.req;
+package org.openwms.common.comm.locu;
 
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.DirectExchange;
@@ -25,22 +25,22 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A RequestMessageConfiguration creates the beans used in asynchronous mode
+ * A LocationUpdateMessageConfiguration creates the beans used in asynchronous mode
  * dynamically without the use of XML.
- *
+ * 
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
-class RequestMessageConfiguration {
+class LocationUpdateMessageConfiguration {
 
-    @Bean(name = RequestMessageServiceActivator.INPUT_CHANNEL_NAME)
+    @Bean(name = LocationUpdateMessageServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();
     }
 
-    @Bean("reqExchange")
-    DirectExchange directExchange(@Value("${owms.driver.req.exchange-name}") String exchangeName) {
+    @Bean("locuExchange")
+    DirectExchange directExchange(@Value("${owms.driver.locu.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

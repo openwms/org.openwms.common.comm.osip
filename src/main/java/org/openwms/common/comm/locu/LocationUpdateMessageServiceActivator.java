@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.req;
+package org.openwms.common.comm.locu;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.api.NotRespondingServiceActivator;
@@ -26,20 +26,19 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A RequestMessageServiceActivator takes incoming {@link RequestMessage}s and delegates them to an application POJO.
- * 
+ * A LocationUpdateMessageServiceActivator.
+ *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@MessageEndpoint("requestmessageServiceActivator")
-class RequestMessageServiceActivator implements NotRespondingServiceActivator<RequestMessage> {
+@MessageEndpoint
+public class LocationUpdateMessageServiceActivator implements NotRespondingServiceActivator<LocationUpdateMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
-    static final String INPUT_CHANNEL_NAME = RequestMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
-
+    static final String INPUT_CHANNEL_NAME = LocationUpdateMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
     private final ApplicationContext ctx;
-    private final Function<GenericMessage<RequestMessage>, Void> handler;
+    private final Function<GenericMessage<LocationUpdateMessage>, Void> handler;
 
-    RequestMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<RequestMessage>, Void> handler) {
+    public LocationUpdateMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<LocationUpdateMessage>, Void> handler) {
         this.ctx = ctx;
         this.handler = handler;
     }
@@ -49,7 +48,7 @@ class RequestMessageServiceActivator implements NotRespondingServiceActivator<Re
      */
     @Override
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
-    public void wakeUp(GenericMessage<RequestMessage> message) {
+    public void wakeUp(GenericMessage<LocationUpdateMessage> message) {
         handler.apply(message);
     }
 
