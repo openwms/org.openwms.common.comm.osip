@@ -18,9 +18,6 @@ package org.openwms.common.comm.res;
 import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -42,14 +39,10 @@ class AmqpResponseMessageListener {
     }
 
     @Measured
-    @RabbitListener(bindings = @QueueBinding(
-            key = "${owms.driver.res.routing-key}",
-            value = @Queue(value = "${owms.driver.res.queue-name}_${owms.driver.res.routing-key}", durable = "true"),
-            exchange = @Exchange(value = "${owms.driver.res.exchange-mapping}", ignoreDeclarationExceptions = "true"))
-    )
-    void handleRES(@Payload ResponseMessage res) {
+    @RabbitListener(queues = "${owms.driver.res.queue-name}_${owms.driver.res.routing-key}")
+    void handle(@Payload ResponseMessage res) {
         try {
-            handler.handleRES(res);
+            handler.handle(res);
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }

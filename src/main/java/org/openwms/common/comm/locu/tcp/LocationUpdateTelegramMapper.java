@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.req.tcp;
+package org.openwms.common.comm.locu.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.api.MessageMapper;
-import org.openwms.common.comm.req.RequestMessage;
-import org.openwms.common.comm.req.spi.RequestFieldLengthProvider;
+import org.openwms.common.comm.locu.LocationUpdateMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
@@ -32,45 +30,38 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 
 /**
- * A RequestTelegramMapper tries to map a telegram String to a {@link RequestMessage}.
+ * A LocationUpdateTelegramMapper.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
-class RequestTelegramMapper implements MessageMapper<RequestMessage> {
+class LocationUpdateTelegramMapper implements MessageMapper<LocationUpdateMessage> {
 
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
-    @Autowired(required = false)
-    private RequestFieldLengthProvider provider;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Message<RequestMessage> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<LocationUpdateMessage> mapTo(String telegram, Map<String, Object> headers) {
         TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
-        if (provider == null) {
-            throw new MessageMismatchException(format("Telegram handling [%s] not supported", RequestMessage.IDENTIFIER));
-        }
-        int startPayload = LENGTH_HEADER + forType().length();
-        int startActualLocation = startPayload + provider.barcodeLength();
-        int startTargetLocation = startActualLocation + provider.locationIdLength();
-        int startErrorCode = startTargetLocation + provider.locationIdLength();
+        int startLocationGroup = LENGTH_HEADER + forType().length();
+        int startLocation = startLocationGroup + 20;
+        int startErrorCode = startLocation + 20;
         int startCreateDate = startErrorCode + Payload.ERROR_CODE_LENGTH;
-
-        RequestMessage message;
         try {
-            message = new RequestMessage.Builder(provider)
-                    .withBarcode(telegram.substring(startPayload, startActualLocation))
-                    .withActualLocation(telegram.substring(startActualLocation, startTargetLocation))
-                    .withTargetLocation(telegram.substring(startTargetLocation, startErrorCode))
-                    .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
-                    .withCreateDate(telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH)).build();
-            return new GenericMessage<>(message, CommonMessageFactory.createHeaders(telegram, headers));
+            return new GenericMessage<>(
+                    new LocationUpdateMessage.Builder()
+                            .withType(LocationUpdateMessage.IDENTIFIER)
+                            .withLocationGroupName(telegram.substring(startLocationGroup, startLocation))
+                            .withLocation(telegram.substring(startLocation, startErrorCode))
+                            .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
+                            .withCreated(telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH)).build()
+                    , CommonMessageFactory.createHeaders(telegram, headers)
+            );
         } catch (ParseException e) {
             throw new MessageMismatchException(e.getMessage(), e);
         }
@@ -81,6 +72,6 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
      */
     @Override
     public String forType() {
-        return RequestMessage.IDENTIFIER;
+        return LocationUpdateMessage.IDENTIFIER;
     }
 }

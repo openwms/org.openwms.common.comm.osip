@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.sysu;
+package org.openwms.common.comm.locu;
 
 import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
@@ -27,20 +27,20 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * A AmqpSystemUpdateMessageHandler.
+ * A AmqpLocationUpdateMessageHandler.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
 @RefreshScope
-class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
+class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<LocationUpdateMessage>, Void> {
 
     private final AmqpTemplate amqpTemplate;
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpSystemUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.sysu.exchange-name}") String exchangeName, @Value("${owms.driver.sysu.routing-key}") String routingKey) {
+    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.locu.exchange-name}") String exchangeName, @Value("${owms.driver.locu.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;
@@ -51,8 +51,8 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
      */
     @Measured
     @Override
-    public Void apply(GenericMessage<SystemUpdateMessage> systemUpdateMessageGenericMessage) {
-        amqpTemplate.convertAndSend(exchangeName, routingKey, systemUpdateMessageGenericMessage.getPayload());
+    public Void apply(GenericMessage<LocationUpdateMessage> locationUpdateMessage) {
+        amqpTemplate.convertAndSend(exchangeName, routingKey, locationUpdateMessage.getPayload());
         return null;
     }
 }
