@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
 
 import static org.openwms.common.comm.ParserUtils.asDate;
 
@@ -98,15 +99,39 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         this.locationGroupName = locationGroupName;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        LocationUpdateMessage that = (LocationUpdateMessage) o;
+        return Objects.equals(type, that.type) && Objects.equals(location, that.location) && Objects.equals(locationGroupName, that.locationGroupName);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, location, locationGroupName);
+    }
+
     public static final class Builder {
         private String errorCode;
         private Date created;
         private String type;
         private String location;
         private String locationGroupName;
-
-        public Builder() {
-        }
 
         public Builder withErrorCode(String val) {
             errorCode = val;
@@ -124,7 +149,7 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         }
 
         public Builder withLocation(String val) {
-            location = String.join("/", val.split("(?<=\\G.{" + 4 + "})"));;
+            location = String.join("/", val.split("(?<=\\G.{" + 4 + "})"));
             return this;
         }
 
