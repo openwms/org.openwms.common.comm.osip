@@ -47,7 +47,8 @@ class ResponseMessageConfiguration {
             @Value("${owms.driver.res.queue-name}_${owms.driver.res.routing-key}") String queueName,
             @Value("${owms.driver.res.routing-key}") String routingKey
     ) {
-        return BindingBuilder.bind(queue(queueName))
+        return BindingBuilder
+                .bind(queue(queueName))
                 .to(directExchange(exchangeName))
                 .with(routingKey);
     }

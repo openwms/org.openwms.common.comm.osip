@@ -15,28 +15,36 @@
  */
 package org.openwms.common.comm.err;
 
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageHeaders;
 
 /**
- * A ErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
- * dependency. The error handling functionality must be implemented in the actual project, because the OSIP specification does not make
- * any requirements nor assumptions to error handling.
+ * A ErrorMessageHandler.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Component
-class ErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, Void> {
+@MessageEndpoint
+class ErrorMessageHandler {
 
-    /**
-     * Does not do anything.
-     */
-    @Override
-    public Void apply(GenericMessage<ErrorMessage> errorMessage) {
+    private final MessageChannel channel;
 
-        // Currently no error handling happens in the base.
-        return null;
+    ErrorMessageHandler(@Qualifier("enrichedOutboundChannel") MessageChannel channel) {
+        this.channel = channel;
+    }
+
+    public void handle(ErrorMessage msg) {
+        MessagingTemplate template = new MessagingTemplate();
+        Message<ErrorMessage> message =
+                MessageBuilder
+                        .withPayload(msg)
+                        .copyHeaders(msg.getHeader().getAll())
+                .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
+                .build();
+        template.send(channel, message);
     }
 }
