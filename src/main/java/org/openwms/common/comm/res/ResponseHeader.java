@@ -22,7 +22,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openwms.common.comm.CommHeader;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +46,6 @@ public class ResponseHeader {
         result.put(CommHeader.SENDER_FIELD_NAME, sender);
         result.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
         result.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
-        return Collections.unmodifiableMap(result);
+        return result;
     }
 }
