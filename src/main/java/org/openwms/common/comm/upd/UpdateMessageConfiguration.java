@@ -30,7 +30,6 @@ import org.springframework.messaging.MessageChannel;
  * 
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
-@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 class UpdateMessageConfiguration {
 
@@ -39,6 +38,7 @@ class UpdateMessageConfiguration {
         return new DirectChannel();
     }
 
+    @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("updExchange")
     DirectExchange directExchange(@Value("${owms.driver.upd.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
