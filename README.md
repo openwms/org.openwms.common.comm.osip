@@ -16,13 +16,16 @@ Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wik
 
 [![Build status][travis-image]][travis-url]
 [![License][license-image]][license-url]
-[![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
+[![Sonar](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
+[![Quality][codacy-image]][codacy-url]
 [![Join the chat at https://gitter.im/openwms/org.openwms](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openwms/org.openwms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [travis-image]: https://img.shields.io/travis/openwms/org.openwms.common.comm.svg?style=flat-square
 [travis-url]: https://travis-ci.com/openwms/org.openwms.common.comm
 [license-image]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
 [license-url]: LICENSE
+[codacy-image]: https://img.shields.io/codacy/grade/01c5633a8bd047b2b01c6075d49f5592.svg?style=flat-square
+[codacy-url]: https://www.codacy.com/app/openwms/org.openwms.common.comm
 
 # Requirements
 
