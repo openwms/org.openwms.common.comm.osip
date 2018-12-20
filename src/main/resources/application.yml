@@ -18,6 +18,10 @@ spring:
 
 owms:
   driver:
+    err:
+      queue-name: err
+      exchange-name: osip
+      routing-key: tcpip-driver
     locu:
       exchange-name: osip
       routing-key: osip.locu.received

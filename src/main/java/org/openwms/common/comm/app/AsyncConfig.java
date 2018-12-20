@@ -56,5 +56,4 @@ class AsyncConfig {
         rabbitTemplate.setMessageConverter(jsonConverter());
         return rabbitTemplate;
     }
-
 }

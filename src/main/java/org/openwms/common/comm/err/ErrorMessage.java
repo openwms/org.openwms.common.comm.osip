@@ -34,6 +34,11 @@ public class ErrorMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "ERR_";
+    private String type;
+
+    public String getType() {
+        return IDENTIFIER;
+    }
 
     /**
      * {@inheritDoc}
@@ -41,6 +46,23 @@ public class ErrorMessage extends Payload implements Serializable {
     @Override
     public String getMessageIdentifier() {
         return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String asString() {
+        return IDENTIFIER + getErrorCode() +
+                ParserUtils.asString(super.getCreated());
     }
 
     /**
@@ -101,22 +123,5 @@ public class ErrorMessage extends Payload implements Serializable {
         public ErrorMessage build() {
             return message;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String asString() {
-        return IDENTIFIER + getErrorCode() +
-                ParserUtils.asString(super.getCreated());
     }
 }
