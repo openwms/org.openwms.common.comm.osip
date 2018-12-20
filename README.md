@@ -1,4 +1,4 @@
-# Intention
+# Purpose
 
 This standalone and runnable Spring Boot application is an implementation of the [OSIP specification](https://interface21-io.gitbook.io/osip/)
 that communicates with the OSIP TCP/IP message format with subsystems like PLC or
