@@ -9,8 +9,8 @@ spring:
         service-id: openwms-config
       retry:
         max-attempts: 120
-      username: user # need to be overridden in the cloud environment props!
-      password: sa # need to be overridden in the cloud environment props!
+      username: user
+      password: sa
       headers:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: true
@@ -21,8 +21,8 @@ owms:
     hostname: localhost
   eureka:
     url: http://user:sa@localhost:8761
+    zone: ${owms.eureka.url}/eureka/
   config:
-    # need to be overridden in the cloud environment props!
     username: user
     password: sa
   driver:
@@ -45,17 +45,20 @@ owms:
 
 eureka:
   client:
-    serviceUrl:
-      # need to be overridden in the cloud environment props!
-      defaultZone: ${owms.eureka.url}/eureka
+    instance-info-replication-interval-seconds: 10 # default is 30
+    service-url:
+      defaultZone: ${owms.eureka.zone}  # Must be camelCase
   instance:
     secure-port-enabled: false
     non-secure-port-enabled: true
     metadata-map:
-      username: user
-      password: ${security.user.password}
-      protocol: http
       config-protocol: http # The protocol used to access the config server
+      username: ${spring.security.user.name:user}
+      password: ${spring.security.user.password}
+      protocol: ${owms.srv.protocol}
+      zone: ${owms.eureka.zone}
+    hostname: ${owms.srv.hostname}
+
 ---
 spring:
   profiles: DISTRIBUTED
@@ -65,11 +68,9 @@ spring:
 
 eureka:
   instance:
-    hostname: ${owms.eureka.url}
-    # need to be overridden in the cloud environment props!
-    statusPageUrl: http://${eureka.instance.hostname}/info
-    healthCheckUrl: http://${eureka.instance.hostname}/health
-    homePageUrl: http://${eureka.instance.hostname}/
+    statusPageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/info
+    healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}/health
+    homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/
 
 ---
 spring:
@@ -89,10 +90,8 @@ owms:
 
 eureka:
   instance:
-    hostname: openwms-tcpip-driver.herokuapp.com
-    # need to be overridden in the cloud environment props!
     secure-port-enabled: true
     non-secure-port-enabled: false
-    statusPageUrl: https://${eureka.instance.hostname}/info
-    healthCheckUrl: https://${eureka.instance.hostname}/health
-    homePageUrl: https://${eureka.instance.hostname}/
+    statusPageUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/info
+    healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/health
+    homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/
