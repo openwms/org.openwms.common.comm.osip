@@ -43,7 +43,7 @@ class AsyncConfig {
     }
 
     @Bean
-    public StatefulRetryOperationsInterceptor interceptor() {
+    StatefulRetryOperationsInterceptor interceptor() {
         return RetryInterceptorBuilder.stateful()
                 .maxAttempts(3)
                 .backOffOptions(1000, 2.0, 10000) // initialInterval, multiplier, maxInterval
