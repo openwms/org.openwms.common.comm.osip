@@ -105,7 +105,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
         int port = Optional.ofNullable(inbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
-        connectionFactory.setDeserializer(byteArraySerializer());
+        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
         connectionFactory.setMapper(customTcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
 
@@ -130,7 +130,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
         int port = Optional.ofNullable(outbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
-        connectionFactory.setDeserializer(byteArraySerializer());
+        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
         connectionFactory.setMapper(customTcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
 
@@ -183,7 +183,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
     private AbstractClientConnectionFactory createClientConnectionFactory(String clientHostname, int clientPort, TcpMessageMapper tcpMessageMapper, PayloadSerializer payloadSerializer) {
         TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
         connectionFactory.setSerializer(payloadSerializer);
-        //connectionFactory.setSerializer(byteArraySerializer());
+        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
         //connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.start();
         return connectionFactory;
@@ -277,7 +277,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
 
     /*~ --------- Serializer / Deserializer -------- */
     @Bean
-    ByteArrayCrLfSerializer byteArraySerializer() {
+    ByteArrayCrLfSerializer byteArrayCrLfSerializer() {
         return new ByteArrayCrLfSerializer();
     }
 
