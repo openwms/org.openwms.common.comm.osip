@@ -17,12 +17,11 @@ package org.openwms.common.comm.synq;
 
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.api.RespondingServiceActivator;
+import org.openwms.common.comm.api.NotRespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
 
@@ -34,16 +33,16 @@ import java.util.function.Function;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @MessageEndpoint("timesyncServiceActivator")
-class TimesyncServiceActivator implements RespondingServiceActivator<TimesyncRequest, TimesyncResponse> {
+class TimesyncServiceActivator implements NotRespondingServiceActivator<TimesyncRequest> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = TimesyncRequest.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
 
-    private final Function<GenericMessage<TimesyncRequest>, Message<TimesyncResponse>> handler;
+    private final Function<GenericMessage<TimesyncRequest>, Void> handler;
     private final ApplicationContext ctx;
 
     @Autowired
-    public TimesyncServiceActivator(Function<GenericMessage<TimesyncRequest>, Message<TimesyncResponse>> handler, ApplicationContext ctx) {
+    public TimesyncServiceActivator(Function<GenericMessage<TimesyncRequest>, Void> handler, ApplicationContext ctx) {
         this.handler = handler;
         this.ctx = ctx;
     }
@@ -70,7 +69,7 @@ class TimesyncServiceActivator implements RespondingServiceActivator<TimesyncReq
     @Override
     @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
-    public Message<TimesyncResponse> wakeUp(GenericMessage<TimesyncRequest> message) {
-        return handler.apply(message);
+    public void wakeUp(GenericMessage<TimesyncRequest> message) {
+        handler.apply(message);
     }
 }
