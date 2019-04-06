@@ -35,20 +35,20 @@ import org.springframework.context.annotation.Profile;
 class ResponseMessageConfiguration {
 
     @Bean("resExchange")
-    DirectExchange directExchange(@Value("${owms.driver.res.exchange-name}") String exchangeName) {
+    DirectExchange directExchange(@Value("${owms.driver.osip.res.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 
     @Bean("resQueue")
-    Queue queue(@Value("${owms.driver.res.queue-name}_${owms.driver.res.routing-key}") String queueName) {
+    Queue queue(@Value("${owms.driver.osip.res.queue-name}_${owms.driver.osip.res.routing-key}") String queueName) {
         return new Queue(queueName);
     }
 
     @Bean("resBinding")
     Binding binding(
-            @Value("${owms.driver.res.exchange-name}") String exchangeName,
-            @Value("${owms.driver.res.queue-name}_${owms.driver.res.routing-key}") String queueName,
-            @Value("${owms.driver.res.routing-key}") String routingKey
+            @Value("${owms.driver.osip.res.exchange-name}") String exchangeName,
+            @Value("${owms.driver.osip.res.queue-name}_${owms.driver.osip.res.routing-key}") String queueName,
+            @Value("${owms.driver.osip.res.routing-key}") String routingKey
     ) {
         return BindingBuilder
                 .bind(queue(queueName))

@@ -69,7 +69,7 @@ class TimesyncServiceActivator implements RespondingServiceActivator<TimesyncReq
      */
     @Override
     @Measured
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "enrichedOutboundChannel")
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
     public Message<TimesyncResponse> wakeUp(GenericMessage<TimesyncRequest> message) {
         return handler.apply(message);
     }

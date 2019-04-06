@@ -32,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @MessageEndpoint("messageTransformer")
-public class MessageTransformer<T extends Payload>{
+public class MessageTransformer<T extends Payload> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageTransformer.class);
 
@@ -46,7 +46,9 @@ public class MessageTransformer<T extends Payload>{
     @Transformer
     public Message<T> transform(Message<T> message, @Headers Map<String, Object> headers) {
         if (message == null) {
-            LOGGER.info("Received message was null, just skip");
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Received message to transform was null, just skip");
+            }
             return null;
         }
         return message;

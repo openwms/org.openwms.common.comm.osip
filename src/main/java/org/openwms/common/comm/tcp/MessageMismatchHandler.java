@@ -22,8 +22,8 @@ import org.springframework.integration.annotation.ServiceActivator;
 
 /**
  * A MessageMismatchHandler cares about incoming error telegrams on a defined error channel with name {@value MessageMismatchHandler#ERROR_CHANNEL_ID}.
- * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ *
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("mismatchServiceActivator")
 public class MessageMismatchHandler {
@@ -39,8 +39,8 @@ public class MessageMismatchHandler {
      */
     @ServiceActivator(inputChannel = ERROR_CHANNEL_ID)
     public void handle(String telegram) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Invalid telegram : " + telegram);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error("Invalid telegram : [{}]", telegram);
         }
     }
 }

@@ -42,7 +42,7 @@ class AmqpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.upd.exchange-name}") String exchangeName, @Value("${owms.driver.upd.routing-key}") String routingKey) {
+    AmqpUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.upd.exchange-name}") String exchangeName, @Value("${owms.driver.osip.upd.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;

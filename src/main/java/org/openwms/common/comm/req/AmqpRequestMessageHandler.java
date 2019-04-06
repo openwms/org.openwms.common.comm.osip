@@ -42,7 +42,7 @@ class AmqpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpRequestMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.req.exchange-name}") String exchangeName, @Value("${owms.driver.req.routing-key}") String routingKey) {
+    AmqpRequestMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.req.exchange-name}") String exchangeName, @Value("${owms.driver.osip.req.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;

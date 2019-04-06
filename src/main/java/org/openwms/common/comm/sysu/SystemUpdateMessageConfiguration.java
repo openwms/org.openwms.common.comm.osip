@@ -40,7 +40,7 @@ class SystemUpdateMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("sysuExchange")
-    DirectExchange directExchange(@Value("${owms.driver.sysu.exchange-name}") String exchangeName) {
+    DirectExchange directExchange(@Value("${owms.driver.osip.sysu.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

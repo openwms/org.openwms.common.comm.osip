@@ -40,7 +40,7 @@ class RequestMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("reqExchange")
-    DirectExchange directExchange(@Value("${owms.driver.req.exchange-name}") String exchangeName) {
+    DirectExchange directExchange(@Value("${owms.driver.osip.req.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

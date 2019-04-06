@@ -40,7 +40,7 @@ class LocationUpdateMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("locuExchange")
-    DirectExchange directExchange(@Value("${owms.driver.locu.exchange-name}") String exchangeName) {
+    DirectExchange directExchange(@Value("${owms.driver.osip.locu.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

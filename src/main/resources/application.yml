@@ -8,7 +8,7 @@ spring:
   profiles: "!ASYNCHRONOUS"
 
 server:
-  port: ${owms.driver.server.port-rest}
+  port: ${owms.driver.connections.port-rest}
 
 ---
 spring:
@@ -18,23 +18,24 @@ spring:
 
 owms:
   driver:
-    err:
-      queue-name: err
-      exchange-name: osip
-      routing-key: tcpip-driver
-    locu:
-      exchange-name: osip
-      routing-key: osip.locu.received
-    req:
-      exchange-name: osip
-      routing-key: osip.req.received
-    res:
-      queue-name: res
-      exchange-name: osip
-      routing-key: tcpip-driver
-    sysu:
-      exchange-name: osip
-      routing-key: osip.sysu.received
-    upd:
-      exchange-name: osip
-      routing-key: osip.upd.received
+    osip:
+      err:
+        exchange-name: osip
+        queue-name: err
+        routing-key: tcpip-driver
+      locu:
+        exchange-name: osip
+        routing-key: osip.locu.received
+      req:
+        exchange-name: osip
+        routing-key: osip.req.received
+      res:
+        exchange-name: osip
+        queue-name: res
+        routing-key: tcpip-driver
+      sysu:
+        exchange-name: osip
+        routing-key: osip.sysu.received
+      upd:
+        exchange-name: osip
+        routing-key: osip.upd.received
