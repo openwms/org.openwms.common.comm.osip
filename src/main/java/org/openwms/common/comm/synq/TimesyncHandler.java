@@ -16,7 +16,9 @@
 package org.openwms.common.comm.synq;
 
 import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.app.Channels;
 import org.springframework.context.event.EventListener;
+import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.support.MessageBuilder;
@@ -33,9 +35,14 @@ import java.util.function.Function;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
-class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Message<TimesyncResponse>> {
+class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {
 
     private String connectionId;
+    private final Channels channels;
+
+    TimesyncHandler(Channels channels) {
+        this.channels = channels;
+    }
 
     @EventListener
     public void onMessage(TcpConnectionOpenEvent event) {
@@ -53,11 +60,10 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Messa
      * @return the response
      */
     @Override
-    public Message<TimesyncResponse> apply(GenericMessage<TimesyncRequest> timesyncRequest) {
-
+    public Void apply(GenericMessage<TimesyncRequest> timesyncRequest) {
         TimesyncResponse payload = TimesyncResponse.builder().senderTimer(new Date()).build();
-        payload.getHeader().setReceiver((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
-        payload.getHeader().setSender((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        payload.getHeader().setReceiver((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        payload.getHeader().setSender((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
         payload.getHeader().setSequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))));
         Message<TimesyncResponse> result = MessageBuilder
                 .withPayload(payload)
@@ -65,6 +71,10 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Messa
                 .copyHeaders(timesyncRequest.getHeaders())
                 .setHeader(IpHeaders.CONNECTION_ID, connectionId)
                 .build();
-        return result;
+        MessagingTemplate template = new MessagingTemplate();
+
+        template.send(channels.getOutboundChannel((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME)), result);
+
+        return null;
     }
 }

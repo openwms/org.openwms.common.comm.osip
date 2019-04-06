@@ -37,5 +37,4 @@ class TimesyncConfiguration {
     public MessageChannel getMessageChannel() {
         return new DirectChannel();
     }
-
 }

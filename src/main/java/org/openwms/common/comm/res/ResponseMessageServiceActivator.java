@@ -39,5 +39,4 @@ public class ResponseMessageServiceActivator {
                 .setReplyChannelName("outboundChannel")
                 .build();
     }
-
 }
