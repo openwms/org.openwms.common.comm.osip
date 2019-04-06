@@ -47,22 +47,22 @@ public class ErrorMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("errExchange")
-    DirectExchange directExchange(@Value("${owms.driver.err.exchange-name}") String exchangeName) {
+    DirectExchange directExchange(@Value("${owms.driver.osip.err.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("errQueue")
-    Queue queue(@Value("${owms.driver.err.queue-name}_${owms.driver.err.routing-key}") String queueName) {
+    Queue queue(@Value("${owms.driver.osip.err.queue-name}_${owms.driver.osip.err.routing-key}") String queueName) {
         return new Queue(queueName);
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("errBinding")
     Binding binding(
-            @Value("${owms.driver.err.exchange-name}") String exchangeName,
-            @Value("${owms.driver.err.queue-name}_${owms.driver.res.routing-key}") String queueName,
-            @Value("${owms.driver.err.routing-key}") String routingKey
+            @Value("${owms.driver.osip.err.exchange-name}") String exchangeName,
+            @Value("${owms.driver.osip.err.queue-name}_${owms.driver.osip.res.routing-key}") String queueName,
+            @Value("${owms.driver.osip.err.routing-key}") String routingKey
     ) {
         return BindingBuilder
                 .bind(queue(queueName))

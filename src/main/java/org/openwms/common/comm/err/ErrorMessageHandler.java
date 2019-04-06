@@ -15,13 +15,16 @@
  */
 package org.openwms.common.comm.err;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.app.Channels;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
+
+import java.util.Map;
 
 /**
  * A ErrorMessageHandler.
@@ -31,13 +34,14 @@ import org.springframework.messaging.MessageHeaders;
 @MessageEndpoint
 class ErrorMessageHandler {
 
-    private final MessageChannel channel;
+    private final Channels channels;
 
-    ErrorMessageHandler(@Qualifier("enrichedOutboundChannel") MessageChannel channel) {
-        this.channel = channel;
+    ErrorMessageHandler(Channels channels) {
+        this.channels = channels;
     }
 
-    public void handle(ErrorMessage msg) {
+    public void handle(ErrorMessage msg, Map<String, String> headers) {
+        MessageChannel channel = channels.getOutboundChannel(headers.get(CommHeader.RECEIVER_FIELD_NAME));
         MessagingTemplate template = new MessagingTemplate();
         Message<ErrorMessage> message =
                 MessageBuilder

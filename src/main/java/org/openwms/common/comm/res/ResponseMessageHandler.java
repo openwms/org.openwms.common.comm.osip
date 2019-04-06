@@ -15,13 +15,16 @@
  */
 package org.openwms.common.comm.res;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.app.Channels;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
+
+import java.util.Map;
 
 /**
  * A ResponseMessageHandler.
@@ -31,13 +34,14 @@ import org.springframework.messaging.MessageHeaders;
 @MessageEndpoint("responseMessageHandler")
 class ResponseMessageHandler {
 
-    private final MessageChannel channel;
+    private final Channels channels;
 
-    ResponseMessageHandler(@Qualifier("enrichedOutboundChannel") MessageChannel channel) {
-        this.channel = channel;
+    ResponseMessageHandler(Channels channels) {
+        this.channels = channels;
     }
 
-    public void handle(ResponseMessage msg) {
+    public void handle(ResponseMessage msg, Map<String, String> headers) {
+        MessageChannel channel = channels.getOutboundChannel(headers.get(CommHeader.RECEIVER_FIELD_NAME));
         MessagingTemplate template = new MessagingTemplate();
         Message<ResponseMessage> message =
                 MessageBuilder

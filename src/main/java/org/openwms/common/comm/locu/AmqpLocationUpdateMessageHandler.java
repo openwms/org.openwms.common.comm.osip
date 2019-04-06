@@ -40,7 +40,7 @@ class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<Locati
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.locu.exchange-name}") String exchangeName, @Value("${owms.driver.locu.routing-key}") String routingKey) {
+    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.locu.exchange-name}") String exchangeName, @Value("${owms.driver.osip.locu.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;

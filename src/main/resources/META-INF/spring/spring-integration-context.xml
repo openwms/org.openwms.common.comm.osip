@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:int="http://www.springframework.org/schema/integration"
-       xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
-       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xmlns:int-ip="http://www.springframework.org/schema/integration/ip"
-       xsi:schemaLocation="http://www.springframework.org/schema/integration/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+       xsi:schemaLocation="/amqp http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
 		http://www.springframework.org/schema/integration/ip http://www.springframework.org/schema/integration/ip/spring-integration-ip.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration
 		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-        >
+>
 
     <int-ip:tcp-inbound-channel-adapter channel="inboundChannel" connection-factory="tcpServerConnectionFactory" />
 
-    <int-ip:tcp-connection-factory id="client" type="client" host="${owms.driver.client.hostname}" port="${owms.driver.client.port}" serializer="payloadSerializer" />
+    <int-ip:tcp-connection-factory id="clientConnectionFactory" type="server" host="${owms.driver.client.hostname}" port="${owms.driver.client.port}" serializer="payloadSerializer" />
 
-    <int-ip:tcp-outbound-channel-adapter channel="enrichedOutboundChannel" connection-factory="client" />
+    <int-ip:tcp-outbound-channel-adapter channel="enrichedOutboundChannel" connection-factory="clientConnectionFactory" client-mode="false" />
+    <int-ip:tcp-inbound-channel-adapter channel="enrichedOutboundChannel" connection-factory="clientConnectionFactory" />
 
 </beans>

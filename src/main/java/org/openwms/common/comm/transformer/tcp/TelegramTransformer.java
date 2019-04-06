@@ -37,9 +37,13 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 /**
- * A CommonMessageTransformer transforms incoming OSIP telegram structures to {@link Payload}s.
+ * A TelegramTransformer transforms incoming String telegram structures to {@link Payload}s.
+ * Therefor it delegates to an appropriate MessageMapper instance that is able to map the
+ * incoming telegram String into a supported Java message type. This mechanism can be
+ * easily extended by putting new bean instances of {@link MessageMapper} to the classpath.
  *
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @see MessageMapper
  */
 @MessageEndpoint("telegramTransformer")
 public class TelegramTransformer<T extends Payload> {

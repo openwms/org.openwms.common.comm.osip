@@ -16,6 +16,9 @@
 package org.openwms.common.comm.synq;
 
 import org.openwms.common.comm.CommHeader;
+import org.springframework.context.event.EventListener;
+import org.springframework.integration.ip.IpHeaders;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
@@ -31,6 +34,16 @@ import java.util.function.Function;
  */
 @Component
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Message<TimesyncResponse>> {
+
+    private String connectionId;
+
+    @EventListener
+    public void onMessage(TcpConnectionOpenEvent event) {
+        if ("clientConnectionFactory".equals(event.getConnectionFactoryName())) {
+            connectionId = event.getConnectionId();
+            System.out.println("Opened connection " + connectionId);
+        }
+    }
 
     /**
      * Builds response message with the current time and the same request header to preserve header information (seq. number etc.) in post
@@ -50,6 +63,7 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Messa
                 .withPayload(payload)
                 .setReplyChannelName("inboundChannel")
                 .copyHeaders(timesyncRequest.getHeaders())
+                .setHeader(IpHeaders.CONNECTION_ID, connectionId)
                 .build();
         return result;
     }

@@ -28,20 +28,40 @@ owms:
   driver:
     osip:
       sync-field: "###"
-    server:
-      port: 30001
+    routing-service:
+      name: routing-service # is default
+      protocol: http # default: http
+      username: user # default: user
+      password: sa # default: sa
+    connections:
+      hostname: localhost
       port-rest: 30008
       so-timeout: 300000
       so-receive-buffer-size: 160
       so-send-buffer-size: 160
-      routing-service:
-        name: routing-service # is default
-        protocol: http # default: http
-        username: user # default: user
-        password: sa # default: sa
-    client:
-      hostname: localhost
-      port: 30002
+      identified-by-field: "RECV"
+      subsystems:
+      - name: SUBS1
+        inbound:
+          mode: server
+          port: 30001
+          so-timeout: 300000
+          so-receive-buffer-size: 200
+        outbound:
+          mode: client
+          hostname: ${owms.driver.connections.hostname}
+          port: 30002
+          so-send-buffer-size: 200
+          identified-by-field: "RECV"
+          identified-by-value: "SUBS1"
+      - name: SUBS2
+        inbound:
+          mode: client
+          port: 30012
+        outbound:
+          mode: server
+          port: 30011
+          identified-by-value: "SUBS2"
 
 eureka:
   client:
