@@ -18,6 +18,8 @@ package org.openwms.common.comm.tcp;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.common.comm.Payload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.serializer.Serializer;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static org.openwms.common.comm.CommConstants.CORE_INTEGRATION_MESSAGING;
 import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
@@ -41,6 +44,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 @Component
 public class PayloadSerializer<T extends Payload> implements Serializer<T> {
 
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CORE_INTEGRATION_MESSAGING);
     private static final byte[] CRLF = "\r\n".getBytes();
     private final List<OSIPSerializer<T>> serializers;
     private Map<String, OSIPSerializer<T>> serializersMap;
@@ -67,6 +71,9 @@ public class PayloadSerializer<T extends Payload> implements Serializer<T> {
         }
 
         String res = serializer.serialize(obj);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Outgoing: [{}]", res);
+        }
 
         os.write(padRight(res, CommConstants.TELEGRAM_LENGTH, CommConstants.TELEGRAM_FILLER_CHARACTER).getBytes(Charset.defaultCharset()));
         os.write(CRLF);

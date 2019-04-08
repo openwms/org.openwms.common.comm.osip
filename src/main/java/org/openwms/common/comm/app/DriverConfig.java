@@ -75,11 +75,6 @@ class DriverConfig implements ApplicationEventPublisherAware {
         applicationContext.getBeanFactory().registerSingleton(beanName, singletonObject);
     }
 
-    @Bean
-    TcpMessageMapper customTcpMessageMapper(ByteArrayMessageConverter byteArrayMessageConverter, MapMessageConverter mapMessageConverter) {
-        return new CustomTcpMessageMapper(byteArrayMessageConverter, mapMessageConverter);
-    }
-
     /*~ ---------------- TCP/IP stuff -------------
     @Bean("tcpServerConnectionFactory")
     @DependsOn({"propertyHolder", "clientConnectionFactory"})
@@ -287,6 +282,12 @@ class DriverConfig implements ApplicationEventPublisherAware {
     }
 
     /*~ ----------------   Converter---------------- */
+    @Bean
+    TcpMessageMapper customTcpMessageMapper(ByteArrayMessageConverter byteArrayMessageConverter, MapMessageConverter mapMessageConverter) {
+        CustomTcpMessageMapper messageMapper = new CustomTcpMessageMapper(mapMessageConverter);
+        return messageMapper;
+    }
+
     @Bean
     ByteArrayMessageConverter byteArrayMessageConverter() {
         return new ByteArrayMessageConverter();

@@ -16,17 +16,17 @@
 package org.openwms.common.comm.synq;
 
 import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.app.Channels;
-import org.springframework.context.event.EventListener;
+import org.openwms.common.comm.app.TimeProvider;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.ip.IpHeaders;
-import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.integration.support.MutableMessageHeaders;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.function.Function;
 
 /**
@@ -37,19 +37,12 @@ import java.util.function.Function;
 @Component
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {
 
-    private String connectionId;
     private final Channels channels;
+    private final TimeProvider timeProvider;
 
-    TimesyncHandler(Channels channels) {
+    TimesyncHandler(Channels channels, TimeProvider timeProvider) {
         this.channels = channels;
-    }
-
-    @EventListener
-    public void onMessage(TcpConnectionOpenEvent event) {
-        if ("clientConnectionFactory".equals(event.getConnectionFactoryName())) {
-            connectionId = event.getConnectionId();
-            System.out.println("Opened connection " + connectionId);
-        }
+        this.timeProvider = timeProvider;
     }
 
     /**
@@ -61,20 +54,21 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void>
      */
     @Override
     public Void apply(GenericMessage<TimesyncRequest> timesyncRequest) {
-        TimesyncResponse payload = TimesyncResponse.builder().senderTimer(new Date()).build();
+        TimesyncResponse payload = TimesyncResponse.builder().senderTimer(timeProvider.now()).build();
         payload.getHeader().setReceiver((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
         payload.getHeader().setSender((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
         payload.getHeader().setSequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))));
+        MessageHeaders headers = new MutableMessageHeaders(CommonMessageFactory.getOSIPHeaders(timesyncRequest));
+        Object sender = headers.get(CommHeader.SENDER_FIELD_NAME);
+        headers.put(CommHeader.SENDER_FIELD_NAME, headers.get(CommHeader.RECEIVER_FIELD_NAME));
+        headers.put(CommHeader.RECEIVER_FIELD_NAME, sender);
         Message<TimesyncResponse> result = MessageBuilder
                 .withPayload(payload)
                 .setReplyChannelName("inboundChannel")
-                .copyHeaders(timesyncRequest.getHeaders())
-                .setHeader(IpHeaders.CONNECTION_ID, connectionId)
+                .copyHeaders(headers)
                 .build();
         MessagingTemplate template = new MessagingTemplate();
-
         template.send(channels.getOutboundChannel((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME)), result);
-
         return null;
     }
 }

@@ -29,7 +29,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
-import org.springframework.integration.dsl.http.Http;
+import org.springframework.integration.http.dsl.Http;
 import org.springframework.messaging.MessageChannel;
 
 import java.util.concurrent.Executors;

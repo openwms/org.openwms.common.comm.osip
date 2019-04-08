@@ -31,11 +31,17 @@ import java.util.List;
 @ConfigurationProperties(prefix = "owms.driver.connections")
 public class Connections {
 
-    private String hostname;
-    private Integer soTimeout;
+    /** The hostname to connect to in client mode. */
+    private String hostname = "localhost";
+    /** Socket timeout in [ms], the idle time when to close the connection. */
+    private Integer soTimeout = 30000;
+    /** The size of the receive buffer for tcp/ip connections. */
     private Integer soReceiveBufferSize = CommConstants.TELEGRAM_LENGTH;
+    /** The size of the send buffer for tcp/ip connections. */
     private Integer soSendBufferSize = CommConstants.TELEGRAM_LENGTH;
-    private String identifiedByField;
+    /** The field name in the message that identifies the message receiver. */
+    private String identifiedByField = "RECV";
+    /** All subsystems. */
     private List<Subsystem> subsystems = new ArrayList<>();
 
     public String getHostname() {

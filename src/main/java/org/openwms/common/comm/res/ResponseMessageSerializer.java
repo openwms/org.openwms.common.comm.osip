@@ -18,14 +18,9 @@ package org.openwms.common.comm.res;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.app.Connections;
-import org.openwms.common.comm.app.Subsystem;
+import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.tcp.OSIPSerializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.openwms.common.comm.ParserUtils.padRight;
@@ -38,14 +33,10 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 @Component
 public class ResponseMessageSerializer implements OSIPSerializer<ResponseMessage> {
 
-    private final String syncField;
-    private final Connections connections;
-    private Map<String, Subsystem> subsystemMap;
+    private final Driver driver;
 
-    public ResponseMessageSerializer(@Value("${owms.driver.osip.sync-field}") String syncField, Connections connections) {
-        this.syncField = syncField;
-        this.connections = connections;
-        this.subsystemMap = connections.getSubsystems().stream().collect(Collectors.toMap(Subsystem::getName, s->s));
+    public ResponseMessageSerializer(Driver driver) {
+        this.driver = driver;
     }
 
     /**
@@ -61,19 +52,18 @@ public class ResponseMessageSerializer implements OSIPSerializer<ResponseMessage
      */
     @Override
     public String serialize(ResponseMessage obj) {
-        Subsystem subsystem = subsystemMap.get(obj.getHeader().getReceiver());
-        int maxTelegramLength = subsystem.getOutbound().getSoSendBufferSize() == null ? connections.getSoSendBufferSize() : subsystem.getOutbound().getSoSendBufferSize();
+        short maxTelegramLength = driver.getOsip().getTelegramLength();
         CommHeader header = CommHeader.builder()
-                .sync(syncField)
-                .messageLength((short) maxTelegramLength)
+                .sync(driver.getOsip().getSyncField())
+                .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())
                 .receiver(obj.getHeader().getReceiver())
                 .sequenceNo(obj.getHeader().getSequenceNo()+1)
                 .build();
         String s = header + obj.asString();
         if (s.length() > maxTelegramLength) {
-            throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.connections.so-send-buffer-size=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
+            throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.osip.telegram-length=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
         }
-        return padRight(s, CommConstants.TELEGRAM_LENGTH, CommConstants.TELEGRAM_FILLER_CHARACTER);
+        return padRight(s, maxTelegramLength, CommConstants.TELEGRAM_FILLER_CHARACTER);
     }
 }
