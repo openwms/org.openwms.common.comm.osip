@@ -17,9 +17,9 @@ package org.openwms.common.comm.locu.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.locu.LocationUpdateMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 /**
  * A LocationUpdateTelegramMapper.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class LocationUpdateTelegramMapper implements MessageMapper<LocationUpdateMessage> {

@@ -16,8 +16,8 @@
 package org.openwms.common.comm.sysu.tcp;
 
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.sysu.SystemUpdateMessage;
 import org.openwms.common.comm.sysu.spi.SystemUpdateFieldLengthProvider;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 /**
  * A SYSUTelegramMapper maps the incoming SYSU telegram String into an object representation.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class SYSUTelegramMapper implements MessageMapper<SystemUpdateMessage> {

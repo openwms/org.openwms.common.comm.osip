@@ -16,7 +16,7 @@
 package org.openwms.common.comm.locu;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.api.NotRespondingServiceActivator;
+import org.openwms.common.comm.NotRespondingServiceActivator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -28,7 +28,7 @@ import java.util.function.Function;
 /**
  * A LocationUpdateMessageServiceActivator.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint
 public class LocationUpdateMessageServiceActivator implements NotRespondingServiceActivator<LocationUpdateMessage> {

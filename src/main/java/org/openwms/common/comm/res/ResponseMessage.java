@@ -30,7 +30,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
  *
  * See https://interface21-io.gitbook.io/osip/messaging-between-layer-n-and-layer-n-1#response-telegram-res_
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public class ResponseMessage extends Payload implements Serializable {
 

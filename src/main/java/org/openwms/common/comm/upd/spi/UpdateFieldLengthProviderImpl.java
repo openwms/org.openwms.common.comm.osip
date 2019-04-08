@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 /**
  * A UpdateFieldLengthProviderImpl.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class UpdateFieldLengthProviderImpl implements UpdateFieldLengthProvider {

@@ -31,7 +31,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
 /**
  * A LocationUpdateMessage.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @AllArgsConstructor
 @NoArgsConstructor

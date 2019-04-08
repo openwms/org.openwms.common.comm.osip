@@ -17,8 +17,8 @@ package org.openwms.common.comm.err.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.err.ErrorMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 /**
  * An ErrorTelegramMapper transforms an incoming OSIP telegram string, that is expected to be an error telegram, into an ErrorMessage.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class ErrorTelegramMapper implements MessageMapper<ErrorMessage> {

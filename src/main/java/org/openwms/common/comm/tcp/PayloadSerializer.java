@@ -39,7 +39,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 /**
  * A PayloadSerializer.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 public class PayloadSerializer<T extends Payload> implements Serializer<T> {

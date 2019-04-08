@@ -65,6 +65,8 @@ public class Driver {
         private boolean enabled = true;
         /** The telegram synchronisation field determines the start of an OSIP telegram. */
         private String syncField = "###";
+        /** The timestamp pattern used in telegrams. */
+        private String datePattern = "yyyyMMddHHmmss";
         /** The expected length of OSIP telegrams. */
         private short telegramLength = 160;
 
@@ -82,6 +84,14 @@ public class Driver {
 
         public void setSyncField(String syncField) {
             this.syncField = syncField;
+        }
+
+        public String getDatePattern() {
+            return datePattern;
+        }
+
+        public void setDatePattern(String datePattern) {
+            this.datePattern = datePattern;
         }
 
         public short getTelegramLength() {

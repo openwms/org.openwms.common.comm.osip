@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.api;
+package org.openwms.common.comm;
 
-import org.openwms.common.comm.Payload;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
@@ -24,7 +23,7 @@ import org.springframework.messaging.support.GenericMessage;
  *
  * @param <T> Type of incoming message that is being processed
  * @param <U> Type of outgoing message that is returned
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface RespondingServiceActivator<T extends Payload, U extends Payload> extends CustomServiceActivator {
 

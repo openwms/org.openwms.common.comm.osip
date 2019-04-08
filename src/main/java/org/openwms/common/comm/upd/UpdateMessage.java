@@ -31,7 +31,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
 /**
  * A UpdateMessage reflects the OSIP UPD telegram type and is used to change the state of a {@code LocationGroup}.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @AllArgsConstructor
 @NoArgsConstructor

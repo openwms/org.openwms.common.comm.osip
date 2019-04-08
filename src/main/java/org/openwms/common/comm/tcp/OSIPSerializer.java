@@ -23,7 +23,7 @@ import org.openwms.common.comm.Payload;
  *
  * see https://interface21-io.gitbook.io/osip/
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface OSIPSerializer<T extends Payload> {
 

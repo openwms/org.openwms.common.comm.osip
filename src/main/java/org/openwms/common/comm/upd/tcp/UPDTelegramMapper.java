@@ -16,8 +16,8 @@
 package org.openwms.common.comm.upd.tcp;
 
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.upd.UpdateMessage;
 import org.openwms.common.comm.upd.spi.UpdateFieldLengthProvider;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 /**
  * A UPDTelegramMapper maps the incoming UPD telegram String into an object representation.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class UPDTelegramMapper implements MessageMapper<UpdateMessage> {

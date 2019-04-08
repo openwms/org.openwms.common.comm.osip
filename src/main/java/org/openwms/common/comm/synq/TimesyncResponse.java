@@ -28,7 +28,7 @@ import java.util.Date;
 /**
  * A TimesyncResponse.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Data
 @Builder

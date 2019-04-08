@@ -17,8 +17,8 @@ package org.openwms.common.comm.synq.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.synq.TimesyncRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import static org.openwms.common.comm.Payload.DATE_LENGTH;
 /**
  * A TimesyncTelegramMapper.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {

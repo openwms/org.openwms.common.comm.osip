@@ -16,7 +16,7 @@
 package org.openwms.common.comm.req;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.api.NotRespondingServiceActivator;
+import org.openwms.common.comm.NotRespondingServiceActivator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -28,7 +28,7 @@ import java.util.function.Function;
 /**
  * A RequestMessageServiceActivator takes incoming {@link RequestMessage}s and delegates them to an application POJO.
  * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("requestmessageServiceActivator")
 class RequestMessageServiceActivator implements NotRespondingServiceActivator<RequestMessage> {

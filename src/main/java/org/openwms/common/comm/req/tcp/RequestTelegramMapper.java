@@ -17,9 +17,9 @@ package org.openwms.common.comm.req.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.req.RequestMessage;
 import org.openwms.common.comm.req.spi.RequestFieldLengthProvider;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 /**
  * A RequestTelegramMapper tries to map a telegram String to a {@link RequestMessage}.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class RequestTelegramMapper implements MessageMapper<RequestMessage> {

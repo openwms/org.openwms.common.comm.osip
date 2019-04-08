@@ -28,7 +28,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
 /**
  * A RequestMessage requests an order for a TransportUnit with id <tt>Barcode</tt> on a particular location <tt>actualLocation</tt>.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public class RequestMessage extends Payload implements Serializable {
 

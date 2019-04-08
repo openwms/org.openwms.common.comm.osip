@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * A ByteArrayToStringConverter is a simple byte array to String converter; allowing the character set to be specified.
  * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @IntegrationConverter
 @Component
