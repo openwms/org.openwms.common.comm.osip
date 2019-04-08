@@ -21,10 +21,12 @@ package org.openwms.common.comm.app;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public class Subsystem {
-
+    /** Unique subsystem name, that is used to identify the receiver. */
     private String name;
-    private Inbound inbound;
-    private Outbound outbound;
+    /** All inbound connection configuration. */
+    private Inbound inbound = new Inbound();
+    /** All outbound connection configuration. */
+    private Outbound outbound = new Outbound();
 
     public String getName() {
         return name;
@@ -55,10 +57,15 @@ public class Subsystem {
     }
 
     public static class Inbound {
-        private MODE mode;
+        /** Whether the inbound connection channel is operated in client or server mode. */
+        private MODE mode = MODE.server;
+        /** The hostname to connect to in client mode. */
         private String hostname = "localhost";
+        /** The port to connect to in client mode. */
         private Integer port;
+        /** Socket timeout in [ms], the idle time when to close the connection. */
         private Integer soTimeout;
+        /** The size of the receive buffer for tcp/ip connections. */
         private Integer soReceiveBufferSize;
 
         public MODE getMode() {
@@ -103,12 +110,19 @@ public class Subsystem {
     }
 
     public static class Outbound {
-        private MODE mode;
+        /** Whether the outbound connection channel is operated in client or server mode. */
+        private MODE mode = MODE.client;
+        /** The hostname to connect to in client mode. */
         private String hostname;
+        /** The port to connect to in client mode. */
         private Integer port;
+        /** Socket timeout in [ms], the idle time when to close the connection. */
         private Integer soTimeout;
+        /** The size of the send buffer for tcp/ip connections. */
         private Integer soSendBufferSize;
+        /** The telegram field name that identifies the corresponding receiving party. */
         private String identifiedByField;
+        /** The value of the identifying field to match the corresponding receiving party. */
         private String identifiedByValue;
 
         public MODE getMode() {

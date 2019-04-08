@@ -15,10 +15,14 @@
  */
 package org.openwms.common.comm;
 
+import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.openwms.common.comm.CommHeader.PREFIX;
 
 /**
  * A CommonMessageFactory.
@@ -85,5 +89,9 @@ public final class CommonMessageFactory {
         h.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
         h.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
         return new MessageHeaders(h);
+    }
+
+    public static <T extends Payload> MessageHeaders getOSIPHeaders(Message<T> message) {
+        return new MessageHeaders(message.getHeaders().entrySet().stream().filter(e -> e.getKey().startsWith(PREFIX)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 }

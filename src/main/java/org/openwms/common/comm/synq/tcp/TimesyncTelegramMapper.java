@@ -49,8 +49,8 @@ class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {
      */
     @Override
     public Message<TimesyncRequest> mapTo(String telegram, Map<String, Object> headers) {
-        if (LOGGER.isDebugEnabled()) {
-            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         int startSendertime = LENGTH_HEADER + forType().length();
         TimesyncRequest request = new TimesyncRequest();

@@ -14,17 +14,18 @@
     <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 
     <logger name="com.netflix.discovery" level="OFF"/>
+    <logger name="com.netflix.config.sources" level="ERROR"/>
     <logger name="org.dozer" level="ERROR" />
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.openwms" level="DEBUG"/>
 
     <logger name="MEASURED" level="INFO">
-        <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="CORE_INTEGRATION_MESSAGING" level="DEBUG"/>
+    <logger name="CORE_INTEGRATION_MESSAGING" level="TRACE"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </root>
 
 </configuration>

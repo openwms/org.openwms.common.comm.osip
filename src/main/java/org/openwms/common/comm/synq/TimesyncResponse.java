@@ -34,7 +34,7 @@ import java.util.Date;
 @Builder
 @Slf4j
 @AllArgsConstructor
-class TimesyncResponse extends Payload implements Serializable {
+public class TimesyncResponse extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "SYNC";

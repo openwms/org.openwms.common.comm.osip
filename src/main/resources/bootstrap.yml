@@ -26,6 +26,7 @@ owms:
     username: user
     password: sa
   driver:
+    timezone: "Europe/Berlin"
     osip:
       sync-field: "###"
     routing-service:
@@ -35,7 +36,6 @@ owms:
       password: sa # default: sa
     connections:
       hostname: localhost
-      port-rest: 30008
       so-timeout: 300000
       so-receive-buffer-size: 160
       so-send-buffer-size: 160
@@ -45,7 +45,6 @@ owms:
         inbound:
           mode: server
           port: 30001
-          so-timeout: 300000
           so-receive-buffer-size: 200
         outbound:
           mode: client
@@ -62,7 +61,6 @@ owms:
           mode: server
           port: 30011
           identified-by-value: "SUBS2"
-
 eureka:
   client:
     instance-info-replication-interval-seconds: 10 # default is 30

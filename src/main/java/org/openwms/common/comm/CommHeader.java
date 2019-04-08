@@ -29,21 +29,22 @@ import static org.openwms.common.comm.ParserUtils.padLeft;
 @Builder
 public class CommHeader implements Serializable {
 
+    public static final String PREFIX = "osip_";
     private String sync;
     private short messageLength;
     private String sender;
     private String receiver;
     private int sequenceNo;
 
-    public static final String SYNC_FIELD_NAME = "SYNC_FIELD";
+    public static final String SYNC_FIELD_NAME = PREFIX + "sync_field";
     public static final short LENGTH_SYNC_FIELD = 3;
-    public static final String MSG_LENGTH_FIELD_NAME = "MSG_LENGTH";
+    public static final String MSG_LENGTH_FIELD_NAME = PREFIX + "msg_length";
     public static final short LENGTH_MESSAGE_LENGTH_FIELD = 5;
-    public static final String SENDER_FIELD_NAME = "SENDER";
+    public static final String SENDER_FIELD_NAME = PREFIX + "sender";
     public static final short LENGTH_SENDER_FIELD = 5;
-    public static final String RECEIVER_FIELD_NAME = "RECEIVER";
+    public static final String RECEIVER_FIELD_NAME = PREFIX + "receiver";
     public static final short LENGTH_RECEIVER_FIELD = 5;
-    public static final String SEQUENCE_FIELD_NAME = "SEQUENCENO";
+    public static final String SEQUENCE_FIELD_NAME = PREFIX + "sequenceno";
     public static final short LENGTH_SEQUENCE_NO_FIELD = 5;
     public static final short LENGTH_HEADER = LENGTH_SYNC_FIELD + LENGTH_MESSAGE_LENGTH_FIELD + LENGTH_RECEIVER_FIELD + LENGTH_SENDER_FIELD + LENGTH_SEQUENCE_NO_FIELD;
 
