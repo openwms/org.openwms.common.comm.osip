@@ -16,14 +16,13 @@
 package org.openwms.common.comm.transformer.tcp;
 
 import org.openwms.common.comm.CommConstants;
+import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.api.MessageMapper;
 import org.openwms.common.comm.tcp.TCPCommConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.messaging.Message;
@@ -38,11 +37,12 @@ import static java.lang.String.format;
 
 /**
  * A TelegramTransformer transforms incoming String telegram structures to {@link Payload}s.
- * Therefor it delegates to an appropriate MessageMapper instance that is able to map the
- * incoming telegram String into a supported Java message type. This mechanism can be
- * easily extended by putting new bean instances of {@link MessageMapper} to the classpath.
+ * Therefor it delegates to an appropriate {@link MessageMapper} instance that is able to
+ * map the incoming telegram String into a supported Java message type. This mechanism can
+ * be easily extended by putting new bean instances of {@link MessageMapper} to the
+ * classpath.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  * @see MessageMapper
  */
 @MessageEndpoint("telegramTransformer")
@@ -50,12 +50,10 @@ public class TelegramTransformer<T extends Payload> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTransformer.class);
     private final List<MessageMapper<T>> mappers;
-    private final String tenant;
     private Map<String, MessageMapper<T>> mappersMap;
 
-    public TelegramTransformer(List<MessageMapper<T>> mappers, @Value("${owms.tenant:spring.application.name}") String tenant) {
+    public TelegramTransformer(List<MessageMapper<T>> mappers) {
         this.mappers = mappers;
-        this.tenant = tenant;
     }
 
     @PostConstruct
@@ -78,7 +76,6 @@ public class TelegramTransformer<T extends Payload> {
         }
         String telegramType = TCPCommConstants.getTelegramType(telegram);
         MDC.put(CommConstants.LOG_TELEGRAM_TYPE, telegramType);
-        MDC.put(CommConstants.LOG_TENANT, tenant);
         MessageMapper<T> mapper = mappersMap.get(telegramType);
         if (mapper == null) {
             LOGGER.error("No mapper found for telegram type [{}]", TCPCommConstants.getTelegramType(telegram));

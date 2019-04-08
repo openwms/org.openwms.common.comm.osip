@@ -36,7 +36,7 @@ import static org.openwms.common.comm.req.RequestHelper.getRequest;
 /**
  * A HttpRequestMessageHandler forwards the request to the routing service.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component

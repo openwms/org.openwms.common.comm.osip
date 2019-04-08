@@ -30,7 +30,7 @@ import org.springframework.messaging.MessageChannel;
 /**
  * A ErrorMessageConfiguration is the JavaConfig for the {@link ErrorMessage} handling part.
  * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
 public class ErrorMessageConfiguration {

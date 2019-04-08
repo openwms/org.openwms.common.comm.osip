@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * A Payload is the abstract superclass of all messages sent to subsystems like PLC or ERP.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public abstract class Payload implements Serializable {
 

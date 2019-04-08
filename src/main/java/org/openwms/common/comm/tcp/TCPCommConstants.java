@@ -22,7 +22,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 /**
  * A TCPCommConstants.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public final class TCPCommConstants {
 

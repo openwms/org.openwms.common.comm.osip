@@ -16,9 +16,9 @@
 package org.openwms.common.comm;
 
 /**
- * A final CommConstants class aggregates common used data and formatting types and provides useful conversation methods.
+ * A final CommConstants class collects common used data and formatting types.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public final class CommConstants {
 
@@ -37,8 +37,6 @@ public final class CommConstants {
 
     /** Used in logging configuration to extract the telegram type. */
     public static final String LOG_TELEGRAM_TYPE = "TelegramType";
-    /** Used in logging configuration to log the current configured tenant. */
-    public static final String LOG_TENANT = "Tenant";
     /** Logging category to log telegrams only. */
     public static final String CORE_INTEGRATION_MESSAGING = "CORE_INTEGRATION_MESSAGING";
 

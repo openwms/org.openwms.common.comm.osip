@@ -13,8 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Contains telegram implementations specific to the OSIP specification.
- */
-package org.openwms.common.comm.api;
+package org.openwms.common.comm;
 
+import org.springframework.messaging.support.GenericMessage;
+
+/**
+ * A NotRespondingServiceActivator.
+ *
+ * @param <T> A type of incoming Payload
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ */
+public interface NotRespondingServiceActivator<T extends Payload> extends CustomServiceActivator {
+
+    /**
+     * Wake up a service, processor or bean an that accepts incoming messages of type <tt>T</tt>.
+     *
+     * @param message The message to forward
+     */
+    void wakeUp(GenericMessage<T> message);
+}

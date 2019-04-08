@@ -28,7 +28,7 @@ import org.springframework.messaging.MessageChannel;
  * A SystemUpdateMessageConfiguration creates the beans used in asynchronous mode
  * dynamically without the use of XML.
  * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
 class SystemUpdateMessageConfiguration {

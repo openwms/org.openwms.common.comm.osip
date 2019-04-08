@@ -30,7 +30,7 @@ import static org.openwms.common.comm.ParserUtils.asDate;
 /**
  * A SystemUpdateMessage reflects the OSIP SYSU telegram type and is used to change the state of a {@code LocationGroup}.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 //@Data
 @AllArgsConstructor
@@ -69,7 +69,6 @@ public class SystemUpdateMessage extends Payload implements Serializable {
     public boolean isWithoutReply() {
         return true;
     }
-
 
     public static final class Builder {
 

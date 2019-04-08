@@ -17,8 +17,8 @@ package org.openwms.common.comm.synq;
 
 import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.TimeProvider;
 import org.openwms.common.comm.app.Channels;
-import org.openwms.common.comm.app.TimeProvider;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.MutableMessageHeaders;
@@ -32,7 +32,7 @@ import java.util.function.Function;
 /**
  * A TimesyncHandler.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {

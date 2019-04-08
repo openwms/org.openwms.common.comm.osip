@@ -59,7 +59,7 @@ import static org.ameba.LoggingCategories.BOOT;
 /**
  * A DriverConfig.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
 @IntegrationComponentScan

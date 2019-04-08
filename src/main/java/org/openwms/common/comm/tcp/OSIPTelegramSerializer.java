@@ -36,7 +36,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
  * An OSIPTelegramSerializer is able to read OSIP telegram structures from an InputStream (deserialization) and can also serialize Object
  * structures into OSIP telegrams.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public class OSIPTelegramSerializer implements Serializer<Map<?, ?>> {
 

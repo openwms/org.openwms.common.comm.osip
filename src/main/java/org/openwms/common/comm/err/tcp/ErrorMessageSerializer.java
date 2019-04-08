@@ -29,7 +29,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 /**
  * A ErrorMessageSerializer.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
 public class ErrorMessageSerializer implements OSIPSerializer<ErrorMessage> {

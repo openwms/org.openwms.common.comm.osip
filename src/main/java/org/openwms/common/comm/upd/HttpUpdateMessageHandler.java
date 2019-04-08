@@ -33,7 +33,7 @@ import java.util.function.Function;
 /**
  * A HttpUpdateMessageHandler forwards updates to the transportUnits services to the routing service.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component

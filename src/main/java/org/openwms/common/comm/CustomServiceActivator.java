@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.api;
+package org.openwms.common.comm;
 
-import org.openwms.common.comm.CommConstants;
 import org.springframework.messaging.MessageChannel;
 
 /**
  * A CustomServiceActivator.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface CustomServiceActivator {
 

@@ -17,7 +17,7 @@ package org.openwms.common.comm.synq;
 
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.api.NotRespondingServiceActivator;
+import org.openwms.common.comm.NotRespondingServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -30,7 +30,7 @@ import java.util.function.Function;
 /**
  * A TimesyncServiceActivator is activated on SYNC telegrams and delegates
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("timesyncServiceActivator")
 class TimesyncServiceActivator implements NotRespondingServiceActivator<TimesyncRequest> {

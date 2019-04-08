@@ -24,7 +24,7 @@ import org.springframework.messaging.support.MessageBuilder;
 /**
  * A ResController.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("responseMessageServiceActivator")
 public class ResponseMessageServiceActivator {

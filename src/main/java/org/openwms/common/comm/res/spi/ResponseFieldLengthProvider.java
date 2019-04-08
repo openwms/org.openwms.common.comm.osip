@@ -18,7 +18,7 @@ package org.openwms.common.comm.res.spi;
 /**
  * A ResponseFieldLengthProvider.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface ResponseFieldLengthProvider {
 

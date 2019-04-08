@@ -31,7 +31,7 @@ import java.util.function.Function;
  * dependency. The error handling functionality must be implemented in the actual project, because the OSIP specification does not make
  * any requirements nor assumptions to error handling.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component

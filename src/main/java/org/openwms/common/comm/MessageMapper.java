@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.api;
+package org.openwms.common.comm;
 
-import org.openwms.common.comm.Payload;
 import org.springframework.messaging.Message;
 
 import java.util.Map;
@@ -23,7 +22,7 @@ import java.util.Map;
 /**
  * A MessageMapper is able to map from a String telegram to a {@link Payload}.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface MessageMapper<T> {
 

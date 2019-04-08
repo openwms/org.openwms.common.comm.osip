@@ -29,6 +29,7 @@ owms:
     timezone: "Europe/Berlin"
     osip:
       sync-field: "###"
+      date-pattern: yyyyMMddHHmmss
     routing-service:
       name: routing-service # is default
       protocol: http # default: http

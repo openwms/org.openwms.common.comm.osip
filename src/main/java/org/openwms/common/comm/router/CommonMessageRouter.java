@@ -16,9 +16,9 @@
 package org.openwms.common.comm.router;
 
 import org.openwms.common.comm.CommConstants;
+import org.openwms.common.comm.CustomServiceActivator;
 import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.api.CustomServiceActivator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Router;
@@ -37,7 +37,7 @@ import static java.lang.String.format;
  * {@link CustomServiceActivator} when an incoming message arrives. If no suitable processor is found, the message will be delegated to the
  * default exception channel.
  * 
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("messageRouter")
 public class CommonMessageRouter {

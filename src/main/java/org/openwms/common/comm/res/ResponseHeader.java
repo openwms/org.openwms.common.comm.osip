@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * A ResponseHeader.
  *
- * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Data
 @NoArgsConstructor
