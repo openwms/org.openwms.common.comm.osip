@@ -15,8 +15,8 @@
  */
 package org.openwms.common.comm.app;
 
-import org.openwms.common.comm.res.ResponseMessage;
-import org.openwms.common.comm.res.ResponseMessageServiceActivator;
+import org.openwms.common.comm.osip.res.ResponseMessage;
+import org.openwms.common.comm.osip.res.ResponseMessageServiceActivator;
 import org.openwms.core.SpringProfiles;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;

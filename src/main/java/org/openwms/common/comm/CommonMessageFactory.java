@@ -31,9 +31,6 @@ import static org.openwms.common.comm.CommHeader.PREFIX;
  */
 public final class CommonMessageFactory {
 
-    /**
-     * Hide Constructor.
-     */
     private CommonMessageFactory() {
     }
 
@@ -61,7 +58,13 @@ public final class CommonMessageFactory {
         start = end;
         end += CommHeader.LENGTH_SEQUENCE_NO_FIELD;
         short sequenceNo = Short.parseShort(telegram.substring(start, end));
-        return new CommHeader(sync, messageLength, sender, receiver, sequenceNo);
+        return new CommHeader.Builder()
+                .sync(sync)
+                .messageLength(messageLength)
+                .sender(sender)
+                .receiver(receiver)
+                .sequenceNo(sequenceNo)
+                .build();
     }
 
     public static MessageHeaders createHeaders(String telegram, Map<String, Object> headers) {

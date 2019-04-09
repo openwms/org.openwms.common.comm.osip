@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.sysu.api;
 
-import org.openwms.common.comm.sysu.SystemUpdateMessage;
+import org.openwms.common.comm.osip.sysu.SystemUpdateMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

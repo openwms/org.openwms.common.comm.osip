@@ -15,11 +15,13 @@
  */
 package org.openwms.common.comm;
 
-import org.openwms.common.comm.res.ResponseHeader;
+import org.openwms.common.comm.osip.res.ResponseHeader;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+
+import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
  * A Payload is the abstract superclass of all messages sent to subsystems like PLC or ERP.
@@ -29,12 +31,16 @@ import java.util.Objects;
 public abstract class Payload implements Serializable {
 
     private ResponseHeader header;
-    private String errorCode;
+    private String errorCode = padRight("", ERROR_CODE_LENGTH, "x");
     private Date created;
 
     public static final short ERROR_CODE_LENGTH = 8;
     public static final short DATE_LENGTH = 14;
     public static final int MESSAGE_IDENTIFIER_LENGTH = 4;
+
+    public Payload() {
+        this.created = new Date();
+    }
 
     public ResponseHeader getHeader() {
         if (header == null) {
@@ -82,7 +88,9 @@ public abstract class Payload implements Serializable {
      *            The errorCode to set.
      */
     public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+        if (!this.errorCode.equals(errorCode) && errorCode != null) {
+            this.errorCode = errorCode;
+        }
     }
 
     /**
@@ -101,7 +109,9 @@ public abstract class Payload implements Serializable {
      *            The created to set.
      */
     protected void setCreated(Date created) {
-        this.created = created;
+        if (this.created != null && this.created.equals(created)) {
+            this.created = created;
+        }
     }
 
     /**
@@ -127,10 +137,4 @@ public abstract class Payload implements Serializable {
     public int hashCode() {
         return Objects.hash(errorCode, created);
     }
-
-    /**
-     * todo: This needs to be extracted from the business object to an 'transformer'.
-     * @return
-     */
-    public abstract String asString();
 }

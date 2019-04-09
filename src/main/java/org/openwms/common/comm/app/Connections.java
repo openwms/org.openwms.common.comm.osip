@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.app;
 
-import org.openwms.common.comm.CommConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -36,9 +35,9 @@ public class Connections {
     /** Socket timeout in [ms], the idle time when to close the connection. */
     private Integer soTimeout = 30000;
     /** The size of the receive buffer for tcp/ip connections. */
-    private Integer soReceiveBufferSize = CommConstants.TELEGRAM_LENGTH;
+    private Integer soReceiveBufferSize = 160;
     /** The size of the send buffer for tcp/ip connections. */
-    private Integer soSendBufferSize = CommConstants.TELEGRAM_LENGTH;
+    private Integer soSendBufferSize = 160;
     /** The field name in the message that identifies the message receiver. */
     private String identifiedByField = "RECV";
     /** All subsystems. */
