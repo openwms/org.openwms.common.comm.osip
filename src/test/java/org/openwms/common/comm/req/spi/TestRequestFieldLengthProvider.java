@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.req.spi;
 
+import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
 import org.springframework.stereotype.Component;
 
 /**

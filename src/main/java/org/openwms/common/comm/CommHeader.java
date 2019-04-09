@@ -15,8 +15,6 @@
  */
 package org.openwms.common.comm;
 
-import lombok.Builder;
-
 import java.io.Serializable;
 
 import static org.openwms.common.comm.ParserUtils.padLeft;
@@ -26,7 +24,6 @@ import static org.openwms.common.comm.ParserUtils.padLeft;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Builder
 public class CommHeader implements Serializable {
 
     public static final String PREFIX = "osip_";
@@ -48,22 +45,12 @@ public class CommHeader implements Serializable {
     public static final short LENGTH_SEQUENCE_NO_FIELD = 5;
     public static final short LENGTH_HEADER = LENGTH_SYNC_FIELD + LENGTH_MESSAGE_LENGTH_FIELD + LENGTH_RECEIVER_FIELD + LENGTH_SENDER_FIELD + LENGTH_SEQUENCE_NO_FIELD;
 
-    /**
-     * Create a new CommHeader.
-     *
-     * @param sync The sync field
-     * @param messageLength The length of the message
-     * @param sender The sender identifier
-     * @param receiver The receiver identifier
-     * @param sequenceNo An incremental sequence number
-     */
-    public CommHeader(String sync, short messageLength, String sender, String receiver, int sequenceNo) {
-        super();
-        this.sync = sync;
-        this.messageLength = messageLength;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.sequenceNo = sequenceNo;
+    private CommHeader(Builder builder) {
+        sync = builder.sync;
+        messageLength = builder.messageLength;
+        setSender(builder.sender);
+        setReceiver(builder.receiver);
+        sequenceNo = builder.sequenceNo;
     }
 
     /**
@@ -191,13 +178,43 @@ public class CommHeader implements Serializable {
         return sync + padLeft(String.valueOf(messageLength), CommHeader.LENGTH_MESSAGE_LENGTH_FIELD, "0") + sender + receiver + padLeft(String.valueOf(sequenceNo), LENGTH_SEQUENCE_NO_FIELD, "0");
     }
 
-    public String asStruct() {
-        return "CommonHeader{" +
-                "sync='" + sync + '\'' +
-                ", messageLength=" + messageLength +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
-                ", sequenceNo=" + sequenceNo +
-                '}';
+    public static final class Builder {
+        private String sync;
+        private short messageLength;
+        private String sender;
+        private String receiver;
+        private int sequenceNo;
+
+        public Builder() {
+        }
+
+        public Builder sync(String val) {
+            sync = val;
+            return this;
+        }
+
+        public Builder messageLength(short val) {
+            messageLength = val;
+            return this;
+        }
+
+        public Builder sender(String val) {
+            sender = val;
+            return this;
+        }
+
+        public Builder receiver(String val) {
+            receiver = val;
+            return this;
+        }
+
+        public Builder sequenceNo(int val) {
+            sequenceNo = val;
+            return this;
+        }
+
+        public CommHeader build() {
+            return new CommHeader(this);
+        }
     }
 }

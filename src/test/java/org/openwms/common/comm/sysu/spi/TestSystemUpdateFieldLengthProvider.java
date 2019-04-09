@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.sysu.spi;
 
+import org.openwms.common.comm.osip.sysu.spi.SystemUpdateFieldLengthProvider;
 import org.springframework.stereotype.Component;
 
 /**

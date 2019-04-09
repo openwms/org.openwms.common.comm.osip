@@ -15,22 +15,12 @@
  */
 package org.openwms.common.comm.tcp;
 
-import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.CommHeader;
-import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
 import org.springframework.core.serializer.Serializer;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.Map;
-
-import static java.lang.String.format;
-import static org.openwms.common.comm.ParserUtils.padLeft;
-import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
  * An OSIPTelegramSerializer is able to read OSIP telegram structures from an InputStream (deserialization) and can also serialize Object
@@ -47,6 +37,7 @@ public class OSIPTelegramSerializer implements Serializer<Map<?, ?>> {
      */
     @Override
     public void serialize(Map<?, ?> map, OutputStream outputStream) throws IOException {
+        /*
         BufferedOutputStream os = new BufferedOutputStream(outputStream);
         Map<String, String> headers = (Map<String, String>) map.get("headers");
         String header = String.valueOf(headers.get(CommHeader.SYNC_FIELD_NAME)) +
@@ -61,5 +52,7 @@ public class OSIPTelegramSerializer implements Serializer<Map<?, ?>> {
         os.write(padRight(s, CommConstants.TELEGRAM_LENGTH, CommConstants.TELEGRAM_FILLER_CHARACTER).getBytes(Charset.defaultCharset()));
         os.write(CRLF);
         os.flush();
+
+         */
     }
 }

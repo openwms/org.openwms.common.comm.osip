@@ -15,7 +15,13 @@
  */
 package org.openwms.common.comm.tcp;
 
+import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.app.Driver;
+
+import static java.lang.String.format;
+import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
  * A OSIPSerializer is able to serialize OSIP messages into Strings that can be sent over
@@ -25,19 +31,45 @@ import org.openwms.common.comm.Payload;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-public interface OSIPSerializer<T extends Payload> {
+public abstract class OSIPSerializer<T extends Payload> {
+
+    private final Driver driver;
+
+    protected OSIPSerializer(Driver driver) {
+        this.driver = driver;
+    }
 
     /**
      * Subclasses have to return an unique, case-sensitive message identifier.
      *
      * @return The message TYPE field (see OSIP specification)
      */
-    String getMessageIdentifier();
+    public abstract String getMessageIdentifier();
 
     /**
      * Serialize the given object {@code obj} into a String.
      *
      * @param obj
      */
-    String serialize(T obj);
+    public String serialize(T obj) {
+        short maxTelegramLength = driver.getOsip().getTelegramLength();
+        CommHeader header = new CommHeader.Builder()
+                .sync(driver.getOsip().getSyncField())
+                .messageLength(maxTelegramLength)
+                .sender(obj.getHeader().getSender())
+                .receiver(obj.getHeader().getReceiver())
+                .sequenceNo(obj.getHeader().getSequenceNo())
+                .build();
+        String s = header + convert(obj);
+        if (s.length() > maxTelegramLength) {
+            throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.osip.telegram-length=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
+        }
+        return padRight(s, maxTelegramLength, driver.getOsip().getTelegramFiller());
+    }
+
+    protected abstract String convert(T message);
+
+    protected Driver getDriver() {
+        return driver;
+    }
 }

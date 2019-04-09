@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,23 +26,12 @@ import java.util.Date;
 public final class ParserUtils {
 
     /**
-     * Parses a String representation of a Date into a Date using the pre-defined format.
-     *
-     * @param dateString The date String to convert
-     * @return The converted date String
-     * @throws ParseException in case the dateString hasn't the expected format pattern
-     */
-    public static Date asDate(String dateString) throws ParseException {
-        return new SimpleDateFormat(CommConstants.DATE_FORMAT_PATTERN).parse(dateString);
-    }
-
-    /**
      * Returns a Date object as formatted String.
      *
      * @param date The date to format
      * @return The formatted String
      */
-    public static String asString(Date date) {
+    public static String asString3(Date date) {
         return new SimpleDateFormat(CommConstants.DATE_FORMAT_PATTERN).format(date);
     }
 

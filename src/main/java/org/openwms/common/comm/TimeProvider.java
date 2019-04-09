@@ -18,11 +18,16 @@ package org.openwms.common.comm;
 import java.util.Date;
 
 /**
- * A TimeProvider.
+ * A TimeProvider is able to provide dates and times.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public interface TimeProvider {
 
+    /**
+     * Returns the current date and time considering the configured timezone.
+     *
+     * @return Timezone aware Date
+     */
     Date now();
 }

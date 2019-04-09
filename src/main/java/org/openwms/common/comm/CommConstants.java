@@ -32,8 +32,6 @@ public final class CommConstants {
 
     /** The character String used to pad LocationGroup fields till the defined length. */
     public static final char LOCGROUP_FILLER_CHARACTER = '_';
-    /** The character String used to pad till the defined telegram length. */
-    public static final String TELEGRAM_FILLER_CHARACTER = "*";
 
     /** Used in logging configuration to extract the telegram type. */
     public static final String LOG_TELEGRAM_TYPE = "TelegramType";

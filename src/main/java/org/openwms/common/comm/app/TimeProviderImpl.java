@@ -19,7 +19,7 @@ import org.openwms.common.comm.TimeProvider;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -36,9 +36,13 @@ class TimeProviderImpl implements TimeProvider {
         this.driver = driver;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Date now() {
-        LocalDateTime ll = LocalDateTime.now(driver.getTimezone());
-        return java.util.Date.from(ll.atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(
+                ZonedDateTime.of(LocalDateTime.now(), driver.getTimezone()).toInstant()
+        );
     }
 }

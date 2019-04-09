@@ -67,6 +67,8 @@ public class Driver {
         private String syncField = "###";
         /** The timestamp pattern used in telegrams. */
         private String datePattern = "yyyyMMddHHmmss";
+        /** The character used to pad telegrams up to the defined telegram length. */
+        private String telegramFiller = "*";
         /** The expected length of OSIP telegrams. */
         private short telegramLength = 160;
 
@@ -92,6 +94,14 @@ public class Driver {
 
         public void setDatePattern(String datePattern) {
             this.datePattern = datePattern;
+        }
+
+        public String getTelegramFiller() {
+            return telegramFiller;
+        }
+
+        public void setTelegramFiller(String telegramFiller) {
+            this.telegramFiller = telegramFiller;
         }
 
         public short getTelegramLength() {
