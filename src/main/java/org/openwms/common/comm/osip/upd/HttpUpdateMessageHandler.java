@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.upd;
 
-import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommHeader;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
@@ -73,7 +72,9 @@ class HttpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
                 .build();
     }
 
-    @Measured
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Void apply(GenericMessage<UpdateMessage> msg) {
         restTemplate.exchange(

@@ -40,8 +40,14 @@ class ErrorMessageHandler {
         this.channels = channels;
     }
 
+    /**
+     * Send the incoming ErrorMessage out over TCP/IP.
+     *
+     * @param msg The ErrorMessage to send
+     * @param headers The headers to apply
+     */
     public void handle(ErrorMessage msg, Map<String, String> headers) {
-        MessageChannel channel = channels.getOutboundChannel(headers.get(CommHeader.RECEIVER_FIELD_NAME));
+        MessageChannel channel = channels.getOutboundChannel(headers.get(CommHeader.SENDER_FIELD_NAME));
         MessagingTemplate template = new MessagingTemplate();
         Message<ErrorMessage> message =
                 MessageBuilder

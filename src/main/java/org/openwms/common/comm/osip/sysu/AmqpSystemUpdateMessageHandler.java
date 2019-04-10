@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.sysu;
 
-import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +48,6 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
     /**
      * {@inheritDoc}
      */
-    @Measured
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> systemUpdateMessageGenericMessage) {
         amqpTemplate.convertAndSend(exchangeName, routingKey, systemUpdateMessageGenericMessage.getPayload());

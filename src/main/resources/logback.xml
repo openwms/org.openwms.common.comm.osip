@@ -20,6 +20,7 @@
     <logger name="org.openwms" level="DEBUG"/>
 
     <logger name="MEASURED" level="INFO">
+        <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="CORE_INTEGRATION_MESSAGING" level="TRACE"/>
 
