@@ -58,7 +58,7 @@ public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
                 .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())
                 .receiver(obj.getHeader().getReceiver())
-                .sequenceNo(obj.getHeader().getSequenceNo() + 1)
+                .sequenceNo((short) (obj.getHeader().getSequenceNo() + 1))
                 .build();
         String s = header + convert(obj);
         if (s.length() > maxTelegramLength) {

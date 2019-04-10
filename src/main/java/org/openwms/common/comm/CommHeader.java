@@ -16,6 +16,9 @@
 package org.openwms.common.comm;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.openwms.common.comm.ParserUtils.padLeft;
 
@@ -31,7 +34,7 @@ public class CommHeader implements Serializable {
     private short messageLength;
     private String sender;
     private String receiver;
-    private int sequenceNo;
+    private short sequenceNo;
 
     public static final String SYNC_FIELD_NAME = PREFIX + "sync_field";
     public static final short LENGTH_SYNC_FIELD = 3;
@@ -51,6 +54,16 @@ public class CommHeader implements Serializable {
         setSender(builder.sender);
         setReceiver(builder.receiver);
         sequenceNo = builder.sequenceNo;
+    }
+
+    public Iterable<? extends Map.Entry<String, Object>> getAll() {
+        return Arrays.asList(
+                new HashMap.SimpleEntry<>(SYNC_FIELD_NAME, sync),
+                new HashMap.SimpleEntry<>(MSG_LENGTH_FIELD_NAME, messageLength),
+                new HashMap.SimpleEntry<>(SENDER_FIELD_NAME, sender),
+                new HashMap.SimpleEntry<>(RECEIVER_FIELD_NAME, receiver),
+                new HashMap.SimpleEntry<>(SEQUENCE_FIELD_NAME, sequenceNo)
+        );
     }
 
     /**
@@ -112,7 +125,7 @@ public class CommHeader implements Serializable {
      *
      * @return the sequenceNo.
      */
-    public int getSequenceNo() {
+    public short getSequenceNo() {
         return sequenceNo;
     }
 
@@ -183,7 +196,7 @@ public class CommHeader implements Serializable {
         private short messageLength;
         private String sender;
         private String receiver;
-        private int sequenceNo;
+        private short sequenceNo;
 
         public Builder() {
         }
@@ -208,7 +221,7 @@ public class CommHeader implements Serializable {
             return this;
         }
 
-        public Builder sequenceNo(int val) {
+        public Builder sequenceNo(short val) {
             sequenceNo = val;
             return this;
         }

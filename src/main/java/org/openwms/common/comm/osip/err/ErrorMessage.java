@@ -32,6 +32,10 @@ public class ErrorMessage extends Payload implements Serializable {
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "ERR_";
 
+    public ErrorMessage() {
+        super();
+    }
+
     public String getType() {
         return IDENTIFIER;
     }
