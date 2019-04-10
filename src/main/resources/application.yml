@@ -14,15 +14,15 @@ server:
 spring:
   profiles: ASYNCHRONOUS
   main:
-    web-environment: false
+    web-application-type: none
 
 owms:
   driver:
     osip:
       err:
         exchange-name: osip
-        queue-name: err
-        routing-key: tcpip-driver
+        queue-name: osip-err-queue
+        routing-key: osip.err.received
       locu:
         exchange-name: osip
         routing-key: osip.locu.received
@@ -31,8 +31,8 @@ owms:
         routing-key: osip.req.received
       res:
         exchange-name: osip
-        queue-name: res
-        routing-key: tcpip-driver
+        queue-name: osip-res-queue
+        routing-key: osip.res.received
       sysu:
         exchange-name: osip
         routing-key: osip.sysu.received

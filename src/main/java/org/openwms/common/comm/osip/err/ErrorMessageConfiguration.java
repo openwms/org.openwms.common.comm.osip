@@ -46,27 +46,27 @@ public class ErrorMessageConfiguration {
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("errExchange")
-    DirectExchange directExchange(@Value("${owms.driver.osip.err.exchange-name}") String exchangeName) {
+    @Bean
+    DirectExchange errExchange(@Value("${owms.driver.osip.err.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("errQueue")
-    Queue queue(@Value("${owms.driver.osip.err.queue-name}") String queueName) {
+    @Bean
+    Queue errQueue(@Value("${owms.driver.osip.err.queue-name}") String queueName) {
         return new Queue(queueName);
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("errBinding")
-    Binding binding(
+    @Bean
+    Binding errBinding(
             @Value("${owms.driver.osip.err.exchange-name}") String exchangeName,
             @Value("${owms.driver.osip.err.queue-name}") String queueName,
             @Value("${owms.driver.osip.err.routing-key}") String routingKey
     ) {
         return BindingBuilder
-                .bind(queue(queueName))
-                .to(directExchange(exchangeName))
+                .bind(errQueue(queueName))
+                .to(errExchange(exchangeName))
                 .with(routingKey);
     }
 }
