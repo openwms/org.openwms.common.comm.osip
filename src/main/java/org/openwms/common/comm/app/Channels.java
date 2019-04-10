@@ -15,9 +15,13 @@
  */
 package org.openwms.common.comm.app;
 
+import org.openwms.common.comm.MessageChannelNotFoundException;
 import org.springframework.messaging.MessageChannel;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * A Channels.
@@ -26,7 +30,7 @@ import java.util.HashMap;
  */
 public class Channels {
 	
-	private HashMap<String, MessageChannel> outboundChannels;
+	private Map<String, MessageChannel> outboundChannels;
 
 	public Channels() {
 		outboundChannels = new HashMap<>();
@@ -37,6 +41,10 @@ public class Channels {
 	}
 	
 	public MessageChannel getOutboundChannel(String identifiedByField) {
-		return outboundChannels.get("enrichedOutboundChannel_" + identifiedByField);
+		MessageChannel channel = outboundChannels.get("enrichedOutboundChannel_" + identifiedByField);
+		if (channel == null) {
+			throw new MessageChannelNotFoundException(format("No MessageChannel found for identifying value [%s]", identifiedByField));
+		}
+		return channel;
 	}
 }

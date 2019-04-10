@@ -42,7 +42,9 @@ class AmqpErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, 
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpErrorMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.err.exchange-name}") String exchangeName, @Value("${owms.driver.osip.err.routing-key}") String routingKey) {
+    AmqpErrorMessageHandler(AmqpTemplate amqpTemplate,
+            @Value("${owms.driver.osip.err.exchange-name}") String exchangeName,
+            @Value("${owms.driver.osip.err.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;
@@ -54,7 +56,7 @@ class AmqpErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, 
     @Measured
     @Override
     public Void apply(GenericMessage<ErrorMessage> msg) {
-        amqpTemplate.convertAndSend(exchangeName, routingKey, msg.getPayload());
+        amqpTemplate.convertAndSend(exchangeName, routingKey, msg);
         return null;
     }
 }

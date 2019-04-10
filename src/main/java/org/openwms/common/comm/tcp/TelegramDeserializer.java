@@ -13,32 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.tcp;
 
 import org.springframework.messaging.Message;
 
 import java.util.Map;
 
 /**
- * A MessageMapper is able to map from a String telegram to a {@link Payload}.
+ * A TelegramDeserializer is able to deserialize an incoming telegram String to a known
+ * type of {@link Message}.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see Message
  */
-public interface MessageMapper<T> {
+public interface TelegramDeserializer<T> {
 
     /**
-     * Investigate the telegram String {@code telegram} and retrieve from the telegram type a subtype of {@link
-     * Payload CommonMessage}. Implementations probably throw some kind of RuntimeExceptions if no telegram
-     * type was found. An implementation can expect that the caller has checked the telegram length.
+     * Try to deserialize the {@code telegram} String into a valid {@link Message}.
+     * Implementations may throw some kind of RuntimeException if the type of telegram is
+     * not known and cannot be deserialized.
      *
-     * @param telegram The telegram String to investigate
-     * @param headers A map of the underlying protocol headers
-     * @return The mapped CommonMessage
+     * @param telegram The telegram String to deserialize
+     * @param headers A map with the headers passed along the telegram
+     * @return The deserialized telegram as Message
      */
-    Message<T> mapTo(String telegram, Map<String, Object> headers);
+    Message<T> deserialize(String telegram, Map<String, Object> headers);
 
     /**
-     * Return the telegram type, this mapper is responsible for.
+     * Return the telegram type this mapper is responsible for.
      *
      * @return the telegram type as String
      */

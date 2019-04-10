@@ -16,6 +16,7 @@
 package org.openwms.common.comm.osip.synq;
 
 import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.res.ResponseHeader;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -40,7 +41,7 @@ public class TimesyncResponse extends Payload implements Serializable {
     }
 
     private TimesyncResponse(Builder builder) {
-        super();
+        setHeader(builder.header);
         setErrorCode(builder.errorCode);
         setCreated(builder.created);
         senderTime = builder.senderTime;
@@ -71,11 +72,17 @@ public class TimesyncResponse extends Payload implements Serializable {
     }
 
     public static final class Builder {
+        private ResponseHeader header;
         private String errorCode;
         private Date created;
         private Date senderTime;
 
         public Builder() {
+        }
+
+        public Builder header(ResponseHeader val) {
+            header = val;
+            return this;
         }
 
         public Builder errorCode(String val) {

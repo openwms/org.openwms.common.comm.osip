@@ -16,12 +16,12 @@
 package org.openwms.common.comm.osip.req.tcp;
 
 import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.osip.req.RequestMessage;
 import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
-class RequestTelegramMapper implements MessageMapper<RequestMessage> {
+class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramMapper.class);
     @Autowired(required = false)
@@ -56,7 +56,7 @@ class RequestTelegramMapper implements MessageMapper<RequestMessage> {
      * {@inheritDoc}
      */
     @Override
-    public Message<RequestMessage> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<RequestMessage> deserialize(String telegram, Map<String, Object> headers) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Telegram to transform: [{}]", telegram);
         }

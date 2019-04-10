@@ -21,6 +21,7 @@ import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.app.Driver;
 
 import static java.lang.String.format;
+import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
@@ -65,6 +66,18 @@ public abstract class OSIPSerializer<T extends Payload> {
             throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.osip.telegram-length=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
         }
         return padRight(s, maxTelegramLength, driver.getOsip().getTelegramFiller());
+    }
+
+    /**
+     * A CommonMessage is able to define the type of message from the telegram String. Currently the type identifier starts directly after
+     * the header and has a length of 4 characters.
+     *
+     * @param telegram The telegram String to resolve the type for
+     * @return The telegram type as case-insensitive String
+     */
+    public static String getTelegramType(String telegram) {
+        short headerLength = LENGTH_HEADER;
+        return telegram.substring(headerLength, headerLength + Payload.MESSAGE_IDENTIFIER_LENGTH);
     }
 
     protected abstract String convert(T message);

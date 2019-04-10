@@ -16,10 +16,10 @@
 package org.openwms.common.comm.transformer.tcp;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.tcp.TCPCommConstants;
+import org.openwms.common.comm.tcp.OSIPSerializer;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -37,28 +37,28 @@ import static java.lang.String.format;
 
 /**
  * A TelegramTransformer transforms incoming String telegram structures to {@link Payload}s.
- * Therefor it delegates to an appropriate {@link MessageMapper} instance that is able to
+ * Therefor it delegates to an appropriate {@link TelegramDeserializer} instance that is able to
  * map the incoming telegram String into a supported Java message type. This mechanism can
- * be easily extended by putting new bean instances of {@link MessageMapper} to the
+ * be easily extended by putting new bean instances of {@link TelegramDeserializer} to the
  * classpath.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
- * @see MessageMapper
+ * @see TelegramDeserializer
  */
 @MessageEndpoint("telegramTransformer")
 public class TelegramTransformer<T extends Payload> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTransformer.class);
-    private final List<MessageMapper<T>> mappers;
-    private Map<String, MessageMapper<T>> mappersMap;
+    private final List<TelegramDeserializer<T>> deserializers;
+    private Map<String, TelegramDeserializer<T>> deserializersMap;
 
-    public TelegramTransformer(List<MessageMapper<T>> mappers) {
-        this.mappers = mappers;
+    public TelegramTransformer(List<TelegramDeserializer<T>> deserializers) {
+        this.deserializers = deserializers;
     }
 
     @PostConstruct
     void onPostConstruct() {
-        mappersMap = mappers.stream().collect(Collectors.toMap(MessageMapper::forType, m -> m));
+        deserializersMap = deserializers.stream().collect(Collectors.toMap(TelegramDeserializer::forType, m -> m));
     }
 
     /**
@@ -71,16 +71,17 @@ public class TelegramTransformer<T extends Payload> {
     @Transformer
     public Message<T> transform(String telegram, @Headers Map<String, Object> headers) {
         if (telegram == null || telegram.isEmpty()) {
-            LOGGER.info("Received telegram was null or of length == 0, just skip");
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Received telegram was null or of length == 0, just skip");
+            }
             return null;
         }
-        String telegramType = TCPCommConstants.getTelegramType(telegram);
+        String telegramType = OSIPSerializer.getTelegramType(telegram);
         MDC.put(CommConstants.LOG_TELEGRAM_TYPE, telegramType);
-        MessageMapper<T> mapper = mappersMap.get(telegramType);
-        if (mapper == null) {
-            LOGGER.error("No mapper found for telegram type [{}]", TCPCommConstants.getTelegramType(telegram));
-            throw new MessageMismatchException(format("No mapper found for telegram type [%s]", TCPCommConstants.getTelegramType(telegram)));
+        TelegramDeserializer<T> deserializer = deserializersMap.get(telegramType);
+        if (deserializer == null) {
+            throw new MessageMismatchException(format("No deserializer found for telegram type [%s]. Is that type supported?", OSIPSerializer.getTelegramType(telegram)));
         }
-        return mapper.mapTo(telegram, headers);
+        return deserializer.deserialize(telegram, headers);
     }
 }

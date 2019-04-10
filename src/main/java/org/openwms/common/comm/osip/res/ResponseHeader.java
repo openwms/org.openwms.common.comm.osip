@@ -33,6 +33,23 @@ public class ResponseHeader {
     @JsonProperty
     private short sequenceNo;
 
+    private ResponseHeader() {
+    }
+
+    public static ResponseHeader emptyHeader() {
+        return new ResponseHeader();
+    }
+
+    private ResponseHeader(Builder builder) {
+        setSender(builder.sender);
+        setReceiver(builder.receiver);
+        setSequenceNo(builder.sequenceNo);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public Map<String, Object> getAll() {
         Map<String, Object> result = new HashMap<>(3);
         result.put(CommHeader.SENDER_FIELD_NAME, sender);
@@ -63,5 +80,33 @@ public class ResponseHeader {
 
     public void setSequenceNo(short sequenceNo) {
         this.sequenceNo = sequenceNo;
+    }
+
+    public static final class Builder {
+        private String sender;
+        private String receiver;
+        private short sequenceNo;
+
+        private Builder() {
+        }
+
+        public Builder sender(String val) {
+            sender = val;
+            return this;
+        }
+
+        public Builder receiver(String val) {
+            receiver = val;
+            return this;
+        }
+
+        public Builder sequenceNo(short val) {
+            sequenceNo = val;
+            return this;
+        }
+
+        public ResponseHeader build() {
+            return new ResponseHeader(this);
+        }
     }
 }

@@ -42,7 +42,7 @@ owms:
       so-send-buffer-size: 160
       identified-by-field: "RECV"
       subsystems:
-      - name: SUBS1
+      - name: SPS01
         inbound:
           mode: server
           port: 30001
@@ -53,15 +53,15 @@ owms:
           port: 30002
           so-send-buffer-size: 200
           identified-by-field: "RECV"
-          identified-by-value: "SUBS1"
-      - name: SUBS2
+          identified-by-value: "SPS01"
+      - name: SPS02
         inbound:
           mode: client
           port: 30012
         outbound:
           mode: server
           port: 30011
-          identified-by-value: "SUBS2"
+          identified-by-value: "SPS02"
 eureka:
   client:
     instance-info-replication-interval-seconds: 10 # default is 30

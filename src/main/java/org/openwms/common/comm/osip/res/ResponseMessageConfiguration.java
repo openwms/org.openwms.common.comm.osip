@@ -40,14 +40,14 @@ class ResponseMessageConfiguration {
     }
 
     @Bean("resQueue")
-    Queue queue(@Value("${owms.driver.osip.res.queue-name}_${owms.driver.osip.res.routing-key}") String queueName) {
+    Queue queue(@Value("${owms.driver.osip.res.queue-name}") String queueName) {
         return new Queue(queueName);
     }
 
     @Bean("resBinding")
     Binding binding(
             @Value("${owms.driver.osip.res.exchange-name}") String exchangeName,
-            @Value("${owms.driver.osip.res.queue-name}_${owms.driver.osip.res.routing-key}") String queueName,
+            @Value("${owms.driver.osip.res.queue-name}") String queueName,
             @Value("${owms.driver.osip.res.routing-key}") String routingKey
     ) {
         return BindingBuilder
