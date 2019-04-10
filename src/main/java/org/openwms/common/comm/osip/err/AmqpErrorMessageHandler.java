@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.err;
 
-import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * A ErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
+ * A AmqpErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
  * dependency. The error handling functionality must be implemented in the actual project, because the OSIP specification does not make
  * any requirements nor assumptions to error handling.
  *
@@ -53,7 +52,6 @@ class AmqpErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, 
     /**
      * {@inheritDoc}
      */
-    @Measured
     @Override
     public Void apply(GenericMessage<ErrorMessage> msg) {
         amqpTemplate.convertAndSend(exchangeName, routingKey, msg);

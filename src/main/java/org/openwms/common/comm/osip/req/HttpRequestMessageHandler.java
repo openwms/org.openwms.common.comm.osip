@@ -16,7 +16,6 @@
 package org.openwms.common.comm.osip.req;
 
 
-import org.ameba.annotation.Measured;
 import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
@@ -64,7 +63,6 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     /**
      * {@inheritDoc}
      */
-    @Measured
     @Override
     public Void apply(GenericMessage<RequestMessage> msg) {
         try {

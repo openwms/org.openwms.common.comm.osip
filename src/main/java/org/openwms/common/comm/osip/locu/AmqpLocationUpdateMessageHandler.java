@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.locu;
 
-import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +48,6 @@ class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<Locati
     /**
      * {@inheritDoc}
      */
-    @Measured
     @Override
     public Void apply(GenericMessage<LocationUpdateMessage> locationUpdateMessage) {
         amqpTemplate.convertAndSend(exchangeName, routingKey, locationUpdateMessage.getPayload());

@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.req;
 
-import org.ameba.annotation.Measured;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +48,6 @@ class AmqpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     /**
      * {@inheritDoc}
      */
-    @Measured
     @Override
     public Void apply(GenericMessage<RequestMessage> requestMessageGenericMessage) {
         amqpTemplate.convertAndSend(exchangeName, routingKey, RequestHelper.getRequest(requestMessageGenericMessage));

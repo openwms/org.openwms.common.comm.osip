@@ -16,7 +16,6 @@
 package org.openwms.common.comm.osip.sysu;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ameba.annotation.Measured;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +59,9 @@ class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
         this.routingServicePassword = routingServicePassword;
     }
 
-    @Measured
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> msg) {
         restTemplate.exchange(
