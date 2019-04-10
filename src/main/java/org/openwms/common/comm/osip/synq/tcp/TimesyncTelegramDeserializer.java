@@ -17,10 +17,10 @@ package org.openwms.common.comm.osip.synq.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.osip.synq.TimesyncRequest;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -29,25 +29,26 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 import static org.openwms.common.comm.Payload.DATE_LENGTH;
 
 /**
- * A TimesyncTelegramMapper.
+ * A TimesyncTelegramDeserializer deserializes OSIP SYNC telegram String into
+ * {@link TimesyncRequest}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see TimesyncRequest
  */
 @Component
-class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {
+class TimesyncTelegramDeserializer implements TelegramDeserializer<TimesyncRequest> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimesyncTelegramMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimesyncTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final Driver driver;
 
-    TimesyncTelegramMapper(Driver driver) {
+    TimesyncTelegramDeserializer(Driver driver) {
         this.driver = driver;
     }
 
@@ -55,17 +56,24 @@ class TimesyncTelegramMapper implements MessageMapper<TimesyncRequest> {
      * {@inheritDoc}
      */
     @Override
-    public Message<TimesyncRequest> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<TimesyncRequest> deserialize(String telegram, Map<String, Object> headers) {
         if (TELEGRAM_LOGGER.isDebugEnabled()) {
             TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         int startSendertime = LENGTH_HEADER + forType().length();
         TimesyncRequest request = new TimesyncRequest();
         try {
-            Date parse = new SimpleDateFormat(driver.getOsip().getDatePattern()).parse(telegram.substring(startSendertime, startSendertime + DATE_LENGTH));
-            request.setSenderTimer(parse);
+            request.setSenderTimer(
+                    new SimpleDateFormat(driver
+                            .getOsip().getDatePattern())
+                            .parse(telegram.substring(startSendertime, startSendertime + DATE_LENGTH)));
+
             GenericMessage<TimesyncRequest> result =
-                    new GenericMessage<>(request, CommonMessageFactory.createHeaders(telegram, headers));
+                    new GenericMessage<>(
+                            request,
+                            CommonMessageFactory.createHeaders(telegram, headers)
+                    );
+
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Transformed telegram into TimesyncRequest message: [{}]", result);
             }

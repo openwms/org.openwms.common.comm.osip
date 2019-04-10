@@ -16,11 +16,11 @@
 package org.openwms.common.comm.osip.upd.tcp;
 
 import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.osip.upd.UpdateMessage;
 import org.openwms.common.comm.osip.upd.spi.UpdateFieldLengthProvider;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -41,7 +41,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
-class UPDTelegramMapper implements MessageMapper<UpdateMessage> {
+class UPDTelegramMapper implements TelegramDeserializer<UpdateMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UPDTelegramMapper.class);
     private final UpdateFieldLengthProvider provider;
@@ -56,7 +56,7 @@ class UPDTelegramMapper implements MessageMapper<UpdateMessage> {
      * {@inheritDoc}
      */
     @Override
-    public Message<UpdateMessage> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<UpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Telegram to transform: [{}]", telegram);
         }

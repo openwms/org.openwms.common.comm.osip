@@ -16,11 +16,11 @@
 package org.openwms.common.comm.osip.locu.tcp;
 
 import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.osip.locu.LocationUpdateMessage;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -38,7 +38,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
-class LocationUpdateTelegramMapper implements MessageMapper<LocationUpdateMessage> {
+class LocationUpdateTelegramMapper implements TelegramDeserializer<LocationUpdateMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationUpdateTelegramMapper.class);
     private final Driver driver;
@@ -51,7 +51,7 @@ class LocationUpdateTelegramMapper implements MessageMapper<LocationUpdateMessag
      * {@inheritDoc}
      */
     @Override
-    public Message<LocationUpdateMessage> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<LocationUpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Telegram to transform: [{}]", telegram);
         }

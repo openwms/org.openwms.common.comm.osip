@@ -44,9 +44,13 @@ public abstract class Payload implements Serializable {
 
     public ResponseHeader getHeader() {
         if (header == null) {
-            this.header = new ResponseHeader();
+            this.header = ResponseHeader.emptyHeader();
         }
         return header;
+    }
+
+    protected void setHeader(ResponseHeader header) {
+        this.header = header;
     }
 
     /**

@@ -19,6 +19,7 @@ import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.TimeProvider;
 import org.openwms.common.comm.app.Channels;
+import org.openwms.common.comm.osip.res.ResponseHeader;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.MutableMessageHeaders;
@@ -49,26 +50,37 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void>
      * Builds response message with the current time and the same request header to preserve header information (seq. number etc.) in post
      * transformation steps.
      *
-     * @param timesyncRequest the request
+     * @param timesyncRequest the generic technology agnostic message object
      * @return the response
      */
     @Override
     public Void apply(GenericMessage<TimesyncRequest> timesyncRequest) {
-        TimesyncResponse payload = new TimesyncResponse.Builder().senderTime(timeProvider.now()).build();
-        payload.getHeader().setReceiver((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
-        payload.getHeader().setSender((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
-        payload.getHeader().setSequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))));
+
+        TimesyncResponse payload =
+                new TimesyncResponse.Builder()
+                        .senderTime(timeProvider.now())
+                        .header(ResponseHeader.newBuilder()
+                                .receiver((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME))
+                                .sender((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME))
+                                .sequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))))
+                                .build()
+                        )
+                        .build();
+
         MessageHeaders headers = new MutableMessageHeaders(CommonMessageFactory.getOSIPHeaders(timesyncRequest));
         Object sender = headers.get(CommHeader.SENDER_FIELD_NAME);
         headers.put(CommHeader.SENDER_FIELD_NAME, headers.get(CommHeader.RECEIVER_FIELD_NAME));
         headers.put(CommHeader.RECEIVER_FIELD_NAME, sender);
-        Message<TimesyncResponse> result = MessageBuilder
-                .withPayload(payload)
-                .setReplyChannelName("inboundChannel")
-                .copyHeaders(headers)
-                .build();
-        MessagingTemplate template = new MessagingTemplate();
-        template.send(channels.getOutboundChannel((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME)), result);
+
+        Message<TimesyncResponse> result =
+                MessageBuilder
+                        .withPayload(payload)
+                        .setReplyChannelName("inboundChannel")
+                        .copyHeaders(headers)
+                        .build();
+
+        new MessagingTemplate(channels.getOutboundChannel((String) headers.get(CommHeader.RECEIVER_FIELD_NAME)))
+                .send(result);
         return null;
     }
 }

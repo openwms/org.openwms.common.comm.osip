@@ -20,8 +20,8 @@ import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Profile;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -42,10 +42,10 @@ class AmqpErrorMessageListener {
     }
 
     @Measured
-    @RabbitListener(queues = "${owms.driver.osip.err.queue-name}_${owms.driver.osip.err.routing-key}")
-    void handle(@Payload ErrorMessage msg, @Headers Map<String, String> headers) {
+    @RabbitListener(queues = "${owms.driver.osip.err.queue-name}")
+    void handle(Message<ErrorMessage> msg, @Headers Map<String, String> headers) {
         try {
-            handler.handle(msg, headers);
+            handler.handle(msg.getPayload(), headers);
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }

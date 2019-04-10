@@ -28,6 +28,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@Deprecated
 public class OSIPTelegramSerializer implements Serializer<Map<?, ?>> {
 
     private static final byte[] CRLF = "\r\n".getBytes();

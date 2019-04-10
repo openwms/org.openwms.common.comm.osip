@@ -53,7 +53,7 @@ public class ErrorMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean("errQueue")
-    Queue queue(@Value("${owms.driver.osip.err.queue-name}_${owms.driver.osip.err.routing-key}") String queueName) {
+    Queue queue(@Value("${owms.driver.osip.err.queue-name}") String queueName) {
         return new Queue(queueName);
     }
 
@@ -61,7 +61,7 @@ public class ErrorMessageConfiguration {
     @Bean("errBinding")
     Binding binding(
             @Value("${owms.driver.osip.err.exchange-name}") String exchangeName,
-            @Value("${owms.driver.osip.err.queue-name}_${owms.driver.osip.res.routing-key}") String queueName,
+            @Value("${owms.driver.osip.err.queue-name}") String queueName,
             @Value("${owms.driver.osip.err.routing-key}") String routingKey
     ) {
         return BindingBuilder

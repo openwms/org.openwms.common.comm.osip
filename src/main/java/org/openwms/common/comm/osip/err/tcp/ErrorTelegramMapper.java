@@ -17,10 +17,10 @@ package org.openwms.common.comm.osip.err.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.MessageMapper;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.app.Driver;
 import org.openwms.common.comm.osip.err.ErrorMessage;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -40,7 +40,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Component
-class ErrorTelegramMapper implements MessageMapper<ErrorMessage> {
+class ErrorTelegramMapper implements TelegramDeserializer<ErrorMessage> {
 
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final Driver driver;
@@ -53,7 +53,7 @@ class ErrorTelegramMapper implements MessageMapper<ErrorMessage> {
      * {@inheritDoc}
      */
     @Override
-    public Message<ErrorMessage> mapTo(String telegram, Map<String, Object> headers) {
+    public Message<ErrorMessage> deserialize(String telegram, Map<String, Object> headers) {
         TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         int startPayload = LENGTH_HEADER + forType().length();
         int startCreateDate = startPayload + ERROR_CODE_LENGTH;
