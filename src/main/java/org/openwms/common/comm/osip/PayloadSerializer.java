@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.tcp;
+package org.openwms.common.comm.osip;
 
 import org.openwms.common.comm.MessageProcessingException;
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.serializer.Serializer;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedOutputStream;
@@ -41,7 +39,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 public class PayloadSerializer<T extends Payload> implements Serializer<T> {
 
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CORE_INTEGRATION_MESSAGING);

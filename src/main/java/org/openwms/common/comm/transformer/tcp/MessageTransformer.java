@@ -16,7 +16,7 @@
 package org.openwms.common.comm.transformer.tcp;
 
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("messageTransformer")
-public class MessageTransformer<T extends Payload> {
+public class MessageTransformer<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageTransformer.class);
 

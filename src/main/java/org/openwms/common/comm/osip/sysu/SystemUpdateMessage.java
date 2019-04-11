@@ -16,7 +16,7 @@
 package org.openwms.common.comm.osip.sysu;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;

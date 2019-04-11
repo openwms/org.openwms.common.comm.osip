@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Heiko Scherrer
+ * Copyright 2019 Heiko Scherrer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.osip.synq;
+package org.openwms.common.comm.osip;
 
-import org.openwms.common.comm.osip.OSIP;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.messaging.MessageChannel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A TimesyncConfiguration is the JavaConfig for the {@link TimesyncRequest} handling
- * part.
+ * A OSIPComponent.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@OSIP
-@Configuration
-class TimesyncConfiguration {
-
-    @Bean(name = TimesyncServiceActivator.INPUT_CHANNEL_NAME)
-    public MessageChannel getMessageChannel() {
-        return new DirectChannel();
-    }
+@ConditionalOnExpression("${owms.driver.osip.enabled}")
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Documented
+public @interface OSIP {
 }

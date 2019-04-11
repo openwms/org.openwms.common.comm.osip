@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.req;
 
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
 
 import java.io.Serializable;

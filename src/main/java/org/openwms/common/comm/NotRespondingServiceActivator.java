@@ -21,10 +21,10 @@ import org.springframework.messaging.support.GenericMessage;
  * A NotRespondingServiceActivator is an Service Activator implementation that accepts a
  * message but does not reply with a message.
  *
- * @param <T> A type of incoming Payload
+ * @param <T> A type of incoming payload
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-public interface NotRespondingServiceActivator<T extends Payload> extends CustomServiceActivator {
+public interface NotRespondingServiceActivator<T> extends CustomServiceActivator {
 
     /**
      * Wake up a service, processor or bean that accepts incoming messages of type {@code T}.

@@ -16,23 +16,23 @@
 package org.openwms.common.comm.osip.err.tcp;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.err.ErrorMessage;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Map;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
-import static org.openwms.common.comm.Payload.DATE_LENGTH;
-import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
+import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.osip.Payload.DATE_LENGTH;
+import static org.openwms.common.comm.osip.Payload.ERROR_CODE_LENGTH;
 
 /**
  * A ErrorTelegramDeserializer deserializes OSIP ERR telegram String into
@@ -41,7 +41,7 @@ import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  * @see ErrorMessage
  */
-@Component
+@OSIPComponent
 class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorTelegramDeserializer.class);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.osip;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.openwms.common.comm.CommHeader.PREFIX;
+import static org.openwms.common.comm.osip.OSIPHeader.PREFIX;
 
 /**
  * A CommonMessageFactory.
@@ -35,30 +35,30 @@ public final class CommonMessageFactory {
     }
 
     /**
-     * Create a {@link CommHeader} from a passed telegram structure.
+     * Create a {@link OSIPHeader} from a passed telegram structure.
      *
      * @param telegram The telegram
-     * @return A {@link CommHeader} instance
+     * @return A {@link OSIPHeader} instance
      */
-    public static CommHeader createHeader(String telegram) {
-        String sync = telegram.substring(0, CommHeader.LENGTH_SYNC_FIELD);
+    public static OSIPHeader createHeader(String telegram) {
+        String sync = telegram.substring(0, OSIPHeader.LENGTH_SYNC_FIELD);
 
         int start = sync.length();
-        int end = start + CommHeader.LENGTH_MESSAGE_LENGTH_FIELD;
+        int end = start + OSIPHeader.LENGTH_MESSAGE_LENGTH_FIELD;
         short messageLength = Short.parseShort(telegram.substring(start, end));
 
         start = end;
-        end += CommHeader.LENGTH_SENDER_FIELD;
+        end += OSIPHeader.LENGTH_SENDER_FIELD;
         String sender = telegram.substring(start, end);
 
         start = end;
-        end += CommHeader.LENGTH_RECEIVER_FIELD;
+        end += OSIPHeader.LENGTH_RECEIVER_FIELD;
         String receiver = telegram.substring(start, end);
 
         start = end;
-        end += CommHeader.LENGTH_SEQUENCE_NO_FIELD;
+        end += OSIPHeader.LENGTH_SEQUENCE_NO_FIELD;
         short sequenceNo = Short.parseShort(telegram.substring(start, end));
-        return new CommHeader.Builder()
+        return new OSIPHeader.Builder()
                 .sync(sync)
                 .messageLength(messageLength)
                 .sender(sender)
@@ -68,29 +68,29 @@ public final class CommonMessageFactory {
     }
 
     public static MessageHeaders createHeaders(String telegram, Map<String, Object> headers) {
-        String sync = telegram.substring(0, CommHeader.LENGTH_SYNC_FIELD);
+        String sync = telegram.substring(0, OSIPHeader.LENGTH_SYNC_FIELD);
 
         int start = sync.length();
-        int end = start + CommHeader.LENGTH_MESSAGE_LENGTH_FIELD;
+        int end = start + OSIPHeader.LENGTH_MESSAGE_LENGTH_FIELD;
         short messageLength = Short.parseShort(telegram.substring(start, end));
 
         start = end;
-        end += CommHeader.LENGTH_SENDER_FIELD;
+        end += OSIPHeader.LENGTH_SENDER_FIELD;
         String sender = telegram.substring(start, end);
 
         start = end;
-        end += CommHeader.LENGTH_RECEIVER_FIELD;
+        end += OSIPHeader.LENGTH_RECEIVER_FIELD;
         String receiver = telegram.substring(start, end);
 
         start = end;
-        end += CommHeader.LENGTH_SEQUENCE_NO_FIELD;
+        end += OSIPHeader.LENGTH_SEQUENCE_NO_FIELD;
         short sequenceNo = Short.parseShort(telegram.substring(start, end));
         Map<String, Object> h = new HashMap<>(headers);
-        h.put(CommHeader.SYNC_FIELD_NAME, sync);
-        h.put(CommHeader.MSG_LENGTH_FIELD_NAME, messageLength);
-        h.put(CommHeader.SENDER_FIELD_NAME, sender);
-        h.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
-        h.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
+        h.put(OSIPHeader.SYNC_FIELD_NAME, sync);
+        h.put(OSIPHeader.MSG_LENGTH_FIELD_NAME, messageLength);
+        h.put(OSIPHeader.SENDER_FIELD_NAME, sender);
+        h.put(OSIPHeader.RECEIVER_FIELD_NAME, receiver);
+        h.put(OSIPHeader.SEQUENCE_FIELD_NAME, sequenceNo);
         return new MessageHeaders(h);
     }
 

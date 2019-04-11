@@ -16,10 +16,10 @@
 package org.openwms.common.comm.osip.err.tcp;
 
 import org.openwms.common.comm.TimeProvider;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPSerializer;
 import org.openwms.common.comm.osip.err.ErrorMessage;
-import org.openwms.common.comm.tcp.OSIPSerializer;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 public class ErrorMessageSerializer extends OSIPSerializer<ErrorMessage> {
 
     private final TimeProvider timeProvider;

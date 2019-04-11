@@ -18,7 +18,7 @@ package org.openwms.common.comm.router;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CustomServiceActivator;
 import org.openwms.common.comm.MessageProcessingException;
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Router;
@@ -26,6 +26,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,13 +47,15 @@ public class CommonMessageRouter {
     private Map<String, CustomServiceActivator> processorMap;
 
     @Autowired
-    public CommonMessageRouter(List<CustomServiceActivator> processors) {
+    public CommonMessageRouter(@Autowired(required = false) List<CustomServiceActivator> processors) {
         this.processors = processors;
     }
 
     @PostConstruct
     void onPostConstruct() {
-        processorMap = processors.stream().collect(Collectors.toMap(CustomServiceActivator::getChannelName, p -> p));
+        processorMap = processors == null ?
+                Collections.emptyMap() :
+                processors.stream().collect(Collectors.toMap(CustomServiceActivator::getChannelName, p -> p));
     }
 
     /**
@@ -64,10 +67,10 @@ public class CommonMessageRouter {
      */
     @Router(inputChannel = "transformerOutputChannel", defaultOutputChannel = "commonExceptionChannel")
     public MessageChannel resolve(Message<Payload> message) {
-        MessageChannel result = processorMap.get(message.getPayload().getMessageIdentifier() + CommConstants.CHANNEL_SUFFIX).getChannel();
+        CustomServiceActivator result = processorMap.get(message.getPayload().getMessageIdentifier() + CommConstants.CHANNEL_SUFFIX);
         if (result == null) {
             throw new MessageProcessingException(format("No processor for message of type [%s] registered", message.getPayload().getMessageIdentifier()));
         }
-        return result;
+        return result.getChannel();
     }
 }

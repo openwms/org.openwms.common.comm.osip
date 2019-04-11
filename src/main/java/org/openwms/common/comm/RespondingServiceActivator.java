@@ -19,16 +19,18 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
 /**
- * A RespondingServiceActivator delegates incoming messages to an Application Service and response to the incoming message.
+ * A RespondingServiceActivator is a Service Activator implementation that accepts a
+ * message and replies with a response message.
  *
  * @param <T> Type of incoming message that is being processed
  * @param <U> Type of outgoing message that is returned
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-public interface RespondingServiceActivator<T extends Payload, U extends Payload> extends CustomServiceActivator {
+public interface RespondingServiceActivator<T, U> extends CustomServiceActivator {
 
     /**
-     * Wake up a service, processor or bean an that accepts incoming messages of type {@code T} and returns messages of type {@code U}.
+     * Wake up a service, processor or bean that accepts incoming messages of type {@code T}
+     * and returns messages of type {@code U}.
      *
      * @param message The message to forward
      * @return The response returned from the service

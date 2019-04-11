@@ -15,14 +15,14 @@
  */
 package org.openwms.common.comm.osip.sysu;
 
-import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-@Component
+@OSIPComponent
 @RefreshScope
 class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
 
@@ -51,9 +51,9 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
      */
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> msg) {
-        msg.getPayload().getHeader().setReceiver((String) msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
-        msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
-        msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME));
+        msg.getPayload().getHeader().setReceiver((String) msg.getHeaders().get(OSIPHeader.RECEIVER_FIELD_NAME));
+        msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME));
+        msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME));
         amqpTemplate.convertAndSend(exchangeName, routingKey, msg.getPayload());
         return null;
     }

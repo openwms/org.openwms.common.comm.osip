@@ -18,6 +18,7 @@ package org.openwms.common.comm.osip.sysu;
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.NotRespondingServiceActivator;
+import org.openwms.common.comm.osip.OSIP;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -32,6 +33,7 @@ import java.util.function.Function;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@OSIP
 @MessageEndpoint
 class SystemUpdateServiceActivator implements NotRespondingServiceActivator<SystemUpdateMessage> {
 
@@ -52,6 +54,7 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
      * {@inheritDoc}
      */
     @Override
+    @OSIP
     @Measured
     @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
     public void wakeUp(GenericMessage<SystemUpdateMessage> message) {

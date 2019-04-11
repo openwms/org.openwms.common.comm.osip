@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.tcp;
+package org.openwms.common.comm.osip.err;
 
-import org.openwms.common.comm.CommHeader;
-import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.osip.err.ErrorCodes;
-import org.openwms.common.comm.osip.err.ErrorMessage;
+import org.ameba.annotation.Measured;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIP;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -29,6 +29,7 @@ import org.springframework.integration.annotation.ServiceActivator;
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@OSIP
 @MessageEndpoint("errorServiceActivator")
 public class CommonExceptionHandler {
 
@@ -41,12 +42,14 @@ public class CommonExceptionHandler {
      *            The incoming OSIP telegram
      * @return An {@link ErrorMessage}
      */
+    @Measured
+    @OSIP
     @ServiceActivator(inputChannel = "commonExceptionChannel", outputChannel = "outboundChannel")
     public ErrorMessage handle(String telegram) {
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Common error: " + telegram);
         }
-        CommHeader header = CommonMessageFactory.createHeader(telegram);
+        OSIPHeader header = CommonMessageFactory.createHeader(telegram);
         String sender = header.getSender();
         header.setSender(header.getReceiver());
         header.setReceiver(sender);

@@ -15,9 +15,11 @@
  */
 package org.openwms.common.comm.app;
 
+import org.openwms.core.SpringProfiles;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -25,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 class AppConfig {
 

@@ -15,18 +15,18 @@
  */
 package org.openwms.common.comm.osip.synq;
 
-import org.openwms.common.comm.CommHeader;
-import org.openwms.common.comm.CommonMessageFactory;
-import org.openwms.common.comm.ResponseHeader;
+import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.TimeProvider;
-import org.openwms.common.comm.app.Channels;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPHeader;
+import org.openwms.common.comm.osip.ResponseHeader;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.MutableMessageHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
@@ -35,7 +35,7 @@ import java.util.function.Function;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {
 
     private final Channels channels;
@@ -60,17 +60,17 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void>
                 new TimesyncResponse.Builder()
                         .senderTime(timeProvider.now())
                         .header(ResponseHeader.newBuilder()
-                                .receiver((String) timesyncRequest.getHeaders().get(CommHeader.SENDER_FIELD_NAME))
-                                .sender((String) timesyncRequest.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME))
-                                .sequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME))))
+                                .receiver((String) timesyncRequest.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME))
+                                .sender((String) timesyncRequest.getHeaders().get(OSIPHeader.RECEIVER_FIELD_NAME))
+                                .sequenceNo(Short.valueOf(String.valueOf(timesyncRequest.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME))))
                                 .build()
                         )
                         .build();
 
         MessageHeaders headers = new MutableMessageHeaders(CommonMessageFactory.getOSIPHeaders(timesyncRequest));
-        Object sender = headers.get(CommHeader.SENDER_FIELD_NAME);
-        headers.put(CommHeader.SENDER_FIELD_NAME, headers.get(CommHeader.RECEIVER_FIELD_NAME));
-        headers.put(CommHeader.RECEIVER_FIELD_NAME, sender);
+        Object sender = headers.get(OSIPHeader.SENDER_FIELD_NAME);
+        headers.put(OSIPHeader.SENDER_FIELD_NAME, headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
+        headers.put(OSIPHeader.RECEIVER_FIELD_NAME, sender);
 
         Message<TimesyncResponse> result =
                 MessageBuilder
@@ -79,7 +79,7 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void>
                         .copyHeaders(headers)
                         .build();
 
-        new MessagingTemplate(channels.getOutboundChannel((String) headers.get(CommHeader.RECEIVER_FIELD_NAME)))
+        new MessagingTemplate(channels.getOutboundChannel((String) headers.get(OSIPHeader.RECEIVER_FIELD_NAME)))
                 .send(result);
         return null;
     }

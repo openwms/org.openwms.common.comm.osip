@@ -16,22 +16,22 @@
 package org.openwms.common.comm.osip.locu.tcp;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.locu.LocationUpdateMessage;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Map;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 
 /**
  * A LocationUpdateTelegramDeserializer deserializes OSIP LOCU telegram String into
@@ -40,7 +40,7 @@ import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  * @see LocationUpdateMessage
  */
-@Component
+@OSIPComponent
 class LocationUpdateTelegramDeserializer implements TelegramDeserializer<LocationUpdateMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationUpdateTelegramDeserializer.class);

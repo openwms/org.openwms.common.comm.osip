@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@Deprecated
 public class CustomTcpMessageMapper extends TcpMessageMapper {
 
     private final MessageConverter outboundMessageConverter;

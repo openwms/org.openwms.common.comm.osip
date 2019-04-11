@@ -21,11 +21,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * A DriverStarter is the starter class of the SpringBoot application that
- * <ul>
- *     <li>acts as Eureka client for service discovery</li>
- *     <li>can handle failing communication partners with Hystrix</li>
- * </ul>
+ * A DriverStarter is the starter class of the SpringBoot application.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */

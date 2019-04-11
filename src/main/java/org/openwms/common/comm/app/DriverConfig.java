@@ -15,10 +15,12 @@
  */
 package org.openwms.common.comm.app;
 
+import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.ConfigurationException;
+import org.openwms.common.comm.config.Connections;
+import org.openwms.common.comm.config.Subsystem;
+import org.openwms.common.comm.osip.PayloadSerializer;
 import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
-import org.openwms.common.comm.tcp.OSIPTelegramSerializer;
-import org.openwms.common.comm.tcp.PayloadSerializer;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.serializer.Serializer;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegration;
@@ -149,7 +152,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
     }
 
     private void createInbound(Connections connections, Subsystem subsystem,
-            TcpMessageMapper customTcpMessageMapper, MessageChannel inboundChannel, PayloadSerializer payloadSerializer) {
+            TcpMessageMapper customTcpMessageMapper, MessageChannel inboundChannel, Serializer serializer) {
 
         Subsystem.Inbound inbound = subsystem.getInbound();
         if (inbound.getMode() == Subsystem.MODE.server) {
@@ -160,7 +163,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as server: Port [{}]", subsystem.getName(), inbound.getPort());
         } else if (inbound.getMode() == Subsystem.MODE.client) {
 
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(inbound.getHostname(), inbound.getPort(), customTcpMessageMapper, payloadSerializer);
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(inbound.getHostname(), inbound.getPort(), serializer);
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), inbound.getHostname(), inbound.getPort());
         } else {
@@ -175,16 +178,16 @@ class DriverConfig implements ApplicationEventPublisherAware {
         registerBean("channelAdapter_" + subsystem.getName() + "_inbound", channelAdapter);
     }
 
-    private AbstractClientConnectionFactory createClientConnectionFactory(String clientHostname, int clientPort, TcpMessageMapper tcpMessageMapper, PayloadSerializer payloadSerializer) {
+    private AbstractClientConnectionFactory createClientConnectionFactory(String clientHostname, int clientPort, Serializer serializer) {
         TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
-        connectionFactory.setSerializer(payloadSerializer);
+        connectionFactory.setSerializer(serializer == null ? byteArrayCrLfSerializer() : serializer);
         connectionFactory.setDeserializer(byteArrayCrLfSerializer());
         //connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.start();
         return connectionFactory;
     }
 
-    private void createOutbound(Connections connections, Subsystem subsystem, TcpMessageMapper customTcpMessageMapper, Channels channels, PayloadSerializer payloadSerializer) {
+    private void createOutbound(Connections connections, Subsystem subsystem, TcpMessageMapper customTcpMessageMapper, Channels channels, Serializer serializer) {
 
         Subsystem.Outbound outbound = subsystem.getOutbound();
         if (outbound.getMode() == Subsystem.MODE.server) {
@@ -213,7 +216,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", outbound.getIdentifiedByValue(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(outbound.getHostname(), outbound.getPort(), customTcpMessageMapper, payloadSerializer);
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(outbound.getHostname(), outbound.getPort(), serializer);
             registerBean("connectionFactory_" + subsystem.getName() + "_outbound", connectionFactory);
 
             TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
@@ -260,7 +263,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
 
     @Bean
     @DependsOn("connections")
-    Channels channels(Connections connections, TcpMessageMapper tcpMessageMapper, MessageChannel inboundChannel, PayloadSerializer payloadSerializer) {
+    Channels channels(Connections connections, TcpMessageMapper tcpMessageMapper, MessageChannel inboundChannel, @Autowired(required = false) PayloadSerializer payloadSerializer) {
         Channels channels =  new Channels();
         for(Subsystem subsystem : connections.getSubsystems()) {
             createInbound(connections, subsystem, tcpMessageMapper, inboundChannel, payloadSerializer);
@@ -274,11 +277,6 @@ class DriverConfig implements ApplicationEventPublisherAware {
     @Bean
     ByteArrayCrLfSerializer byteArrayCrLfSerializer() {
         return new ByteArrayCrLfSerializer();
-    }
-
-    @Bean
-    OSIPTelegramSerializer telegramSerializer() {
-        return new OSIPTelegramSerializer();
     }
 
     /*~ ----------------   Converter---------------- */
