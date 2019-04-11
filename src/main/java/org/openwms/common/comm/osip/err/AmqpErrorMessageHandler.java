@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.err;
 
+import org.openwms.common.comm.CommHeader;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +27,8 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * A AmqpErrorMessageHandler is the default implementation to handle {@link ErrorMessage}s but does not do anything, it's just to satisfy the
- * dependency. The error handling functionality must be implemented in the actual project, because the OSIP specification does not make
- * any requirements nor assumptions to error handling.
+ * An AmqpErrorMessageHandler is the handler function to accept {@link ErrorMessage}s and
+ * forward them for processing over AMQP.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -54,6 +54,9 @@ class AmqpErrorMessageHandler implements Function<GenericMessage<ErrorMessage>, 
      */
     @Override
     public Void apply(GenericMessage<ErrorMessage> msg) {
+        msg.getPayload().getHeader().setReceiver((String) msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
+        msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME));
         amqpTemplate.convertAndSend(exchangeName, routingKey, msg);
         return null;
     }

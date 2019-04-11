@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A UpdateMessage reflects the OSIP UPD telegram type and is used to change the state of
@@ -36,11 +38,13 @@ public class UpdateMessage extends Payload implements Serializable {
     private String barcode;
     private String actualLocation;
 
+    /*~------------ Constructors ------------*/
     private UpdateMessage(Builder builder) {
         barcode = builder.barcode;
         actualLocation = builder.actualLocation;
     }
 
+    /*~------------ Accessors ------------*/
     String getBarcode() {
         return barcode;
     }
@@ -57,6 +61,7 @@ public class UpdateMessage extends Payload implements Serializable {
         this.actualLocation = actualLocation;
     }
 
+    /*~------------ Overrides ------------*/
     /**
      * {@inheritDoc}
      */
@@ -73,7 +78,7 @@ public class UpdateMessage extends Payload implements Serializable {
         return false;
     }
 
-
+    /*~------------ Builders ------------*/
     /**
      * {@code UpdateMessage} builder static inner class.
      */
@@ -142,8 +147,41 @@ public class UpdateMessage extends Payload implements Serializable {
         }
     }
 
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
     @Override
     public String toString() {
-        return "UpdateMessage{" + "barcode='" + barcode + '\'' + ", actualLocation='" + actualLocation + '\'' + "} " + super.toString();
+        return new StringJoiner(", ", UpdateMessage.class.getSimpleName() + "[", "]").add("barcode='" + barcode + "'").add("actualLocation='" + actualLocation + "'").toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        UpdateMessage that = (UpdateMessage) o;
+        return Objects.equals(barcode, that.barcode) && Objects.equals(actualLocation, that.actualLocation);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), barcode, actualLocation);
     }
 }

@@ -21,18 +21,14 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A TimesyncConfiguration.
+ * A TimesyncConfiguration is the JavaConfig for the {@link TimesyncRequest} handling
+ * part.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
 class TimesyncConfiguration {
 
-    /**
-     * Create a MessageChannel with the proper name dynamically.
-     *
-     * @return A DirectChannel instance
-     */
     @Bean(name = TimesyncServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();

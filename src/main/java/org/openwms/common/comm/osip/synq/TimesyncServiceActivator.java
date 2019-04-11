@@ -28,11 +28,12 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A TimesyncServiceActivator is activated on SYNC telegrams and delegates
+ * A TimesyncServiceActivator implements the Service Activator pattern and delegates
+ * incoming {@link TimesyncRequest}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@MessageEndpoint("timesyncServiceActivator")
+@MessageEndpoint
 class TimesyncServiceActivator implements NotRespondingServiceActivator<TimesyncRequest> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
@@ -42,9 +43,21 @@ class TimesyncServiceActivator implements NotRespondingServiceActivator<Timesync
     private final ApplicationContext ctx;
 
     @Autowired
-    public TimesyncServiceActivator(Function<GenericMessage<TimesyncRequest>, Void> handler, ApplicationContext ctx) {
+    public TimesyncServiceActivator(
+            Function<GenericMessage<TimesyncRequest>, Void> handler,
+            ApplicationContext ctx) {
         this.handler = handler;
         this.ctx = ctx;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Measured
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
+    public void wakeUp(GenericMessage<TimesyncRequest> message) {
+        handler.apply(message);
     }
 
     /**
@@ -61,15 +74,5 @@ class TimesyncServiceActivator implements NotRespondingServiceActivator<Timesync
     @Override
     public String getChannelName() {
         return INPUT_CHANNEL_NAME;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Measured
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
-    public void wakeUp(GenericMessage<TimesyncRequest> message) {
-        handler.apply(message);
     }
 }

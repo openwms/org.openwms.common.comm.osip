@@ -111,7 +111,7 @@ public class RequestVO implements Serializable {
         this.created = created;
     }
 
-    public static class RequestHeaderVO {
+    public static class RequestHeaderVO implements Serializable {
         @JsonProperty
         String sender, receiver, sequenceNo;
 

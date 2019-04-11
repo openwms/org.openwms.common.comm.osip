@@ -13,37 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.osip.res;
+package org.openwms.common.comm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.openwms.common.comm.CommHeader;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A ResponseHeader.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-public class ResponseHeader {
+public class ResponseHeader implements Serializable {
 
     @JsonProperty
     private String sender, receiver;
     @JsonProperty
     private short sequenceNo;
 
+    /*~------------ Constructors ------------*/
     private ResponseHeader() {
-    }
-
-    public static ResponseHeader emptyHeader() {
-        return new ResponseHeader();
     }
 
     private ResponseHeader(Builder builder) {
         setSender(builder.sender);
         setReceiver(builder.receiver);
         setSequenceNo(builder.sequenceNo);
+    }
+
+    /*~------------ Methods ------------*/
+    public static ResponseHeader emptyHeader() {
+        return new ResponseHeader();
     }
 
     public static Builder newBuilder() {
@@ -58,6 +62,7 @@ public class ResponseHeader {
         return result;
     }
 
+    /*~------------ Accessors ------------*/
     public String getSender() {
         return sender;
     }
@@ -82,6 +87,7 @@ public class ResponseHeader {
         this.sequenceNo = sequenceNo;
     }
 
+    /*~------------ Builder ------------*/
     public static final class Builder {
         private String sender;
         private String receiver;
@@ -108,5 +114,26 @@ public class ResponseHeader {
         public ResponseHeader build() {
             return new ResponseHeader(this);
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ResponseHeader.class.getSimpleName() + "[", "]").add("sender='" + sender + "'").add("receiver='" + receiver + "'").add("sequenceNo=" + sequenceNo).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        ResponseHeader that = (ResponseHeader) o;
+        return sequenceNo == that.sequenceNo && Objects.equals(sender, that.sender) && Objects.equals(receiver, that.receiver);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sender, receiver, sequenceNo);
     }
 }

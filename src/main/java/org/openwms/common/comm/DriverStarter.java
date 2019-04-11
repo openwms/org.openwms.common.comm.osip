@@ -30,7 +30,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
-//@ImportResource({"classpath:META-INF/spring/spring-integration-context.xml"})
 @EnableAspects
 public class DriverStarter {
 

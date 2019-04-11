@@ -16,11 +16,13 @@
 package org.openwms.common.comm.osip.err;
 
 import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.ResponseHeader;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringJoiner;
 
 /**
  * An ErrorMessage signals any error or failure situation from an external system and to external systems.
@@ -32,30 +34,21 @@ public class ErrorMessage extends Payload implements Serializable {
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "ERR_";
 
+    /*~------------ Constructors ------------*/
     public ErrorMessage() {
         super();
     }
 
-    public String getType() {
-        return IDENTIFIER;
+    /*~------------ Accessors ------------*/
+    public ResponseHeader getHeader() {
+        return super.getHeader();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
+    public void setHeader(ResponseHeader header) {
+        super.setHeader(header);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
-    }
-
+    /*~------------ Builders ------------*/
     /**
      * A Builder.
      * 
@@ -114,5 +107,32 @@ public class ErrorMessage extends Payload implements Serializable {
         public ErrorMessage build() {
             return message;
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ErrorMessage.class.getSimpleName() + "[", "]").toString();
     }
 }

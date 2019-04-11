@@ -25,8 +25,8 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A RequestMessageConfiguration creates the beans used in asynchronous mode
- * dynamically without the use of XML.
+ * A RequestMessageConfiguration is the JavaConfig for the {@link RequestMessage} handling
+ * part.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -39,8 +39,9 @@ class RequestMessageConfiguration {
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("reqExchange")
-    DirectExchange directExchange(@Value("${owms.driver.osip.req.exchange-name}") String exchangeName) {
+    @Bean
+    DirectExchange reqExchange(
+            @Value("${owms.driver.osip.req.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

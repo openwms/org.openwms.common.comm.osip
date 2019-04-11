@@ -25,8 +25,8 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A SystemUpdateMessageConfiguration creates the beans used in asynchronous mode
- * dynamically without the use of XML.
+ * A SystemUpdateMessageConfiguration is the JavaConfig for the {@link SystemUpdateMessage}
+ * handling part.
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -39,8 +39,9 @@ class SystemUpdateMessageConfiguration {
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("sysuExchange")
-    DirectExchange directExchange(@Value("${owms.driver.osip.sysu.exchange-name}") String exchangeName) {
+    @Bean
+    DirectExchange sysuExchange(
+            @Value("${owms.driver.osip.sysu.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

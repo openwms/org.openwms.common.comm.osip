@@ -31,6 +31,17 @@ public class TimesyncRequest extends Payload implements Serializable {
     public static final String IDENTIFIER = "SYNQ";
     private Date senderTimer;
 
+    /*~------------ Accessors ------------*/
+    /**
+     * Set the time of the sending party.
+     *
+     * @param senderTimer The senderTimer
+     */
+    public void setSenderTimer(Date senderTimer) {
+        this.senderTimer = senderTimer;
+    }
+
+    /*~------------ Overrides ------------*/
     /**
      * Subclasses have to return an unique, case-sensitive message identifier.
      *
@@ -49,9 +60,5 @@ public class TimesyncRequest extends Payload implements Serializable {
     @Override
     public boolean isWithoutReply() {
         return false;
-    }
-
-    public void setSenderTimer(Date senderTimer) {
-        this.senderTimer = senderTimer;
     }
 }

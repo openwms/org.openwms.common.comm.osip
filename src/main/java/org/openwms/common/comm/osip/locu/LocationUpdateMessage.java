@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A LocationUpdateMessage.
@@ -38,6 +39,7 @@ public class LocationUpdateMessage extends Payload implements Serializable {
     private String location;
     private String locationGroupName;
 
+    /*~------------ Constructors ------------*/
     private LocationUpdateMessage(Builder builder) {
         setErrorCode(builder.errorCode);
         setCreated(builder.created);
@@ -46,22 +48,7 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         locationGroupName = builder.locationGroupName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
-    }
-
+    /*~------------ Accessors ------------*/
     public String getType() {
         return type;
     }
@@ -86,33 +73,7 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         this.locationGroupName = locationGroupName;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * Use all fields.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        if (!super.equals(o))
-            return false;
-        LocationUpdateMessage that = (LocationUpdateMessage) o;
-        return Objects.equals(type, that.type) && Objects.equals(location, that.location) && Objects.equals(locationGroupName, that.locationGroupName);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Use all fields.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), type, location, locationGroupName);
-    }
-
+    /*~------------ Builders ------------*/
     public static final class Builder {
         private String errorCode;
         private Date created;
@@ -148,5 +109,59 @@ public class LocationUpdateMessage extends Payload implements Serializable {
         public LocationUpdateMessage build() {
             return new LocationUpdateMessage(this);
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", LocationUpdateMessage.class.getSimpleName() + "[", "]").add("type='" + type + "'").add("location='" + location + "'").add("locationGroupName='" + locationGroupName + "'").toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        LocationUpdateMessage that = (LocationUpdateMessage) o;
+        return Objects.equals(type, that.type) && Objects.equals(location, that.location) && Objects.equals(locationGroupName, that.locationGroupName);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, location, locationGroupName);
     }
 }

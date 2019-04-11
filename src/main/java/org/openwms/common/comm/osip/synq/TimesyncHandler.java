@@ -17,9 +17,9 @@ package org.openwms.common.comm.osip.synq;
 
 import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.CommonMessageFactory;
+import org.openwms.common.comm.ResponseHeader;
 import org.openwms.common.comm.TimeProvider;
 import org.openwms.common.comm.app.Channels;
-import org.openwms.common.comm.osip.res.ResponseHeader;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.MutableMessageHeaders;

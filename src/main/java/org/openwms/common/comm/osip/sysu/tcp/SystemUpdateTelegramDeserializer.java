@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.sysu.tcp;
 
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.app.Driver;
@@ -37,19 +38,22 @@ import static org.openwms.common.comm.Payload.DATE_LENGTH;
 import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 
 /**
- * A SYSUTelegramMapper maps the incoming SYSU telegram String into an object representation.
+ * A SystemUpdateTelegramDeserializer deserializes OSIP SYSU telegram String into
+ * {@link SystemUpdateMessage}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see SystemUpdateMessage
  */
 @Component
-class SYSUTelegramMapper implements TelegramDeserializer<SystemUpdateMessage> {
+class SystemUpdateTelegramDeserializer implements TelegramDeserializer<SystemUpdateMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SYSUTelegramMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemUpdateTelegramDeserializer.class);
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
     private SystemUpdateFieldLengthProvider provider;
     private final Driver driver;
 
-    SYSUTelegramMapper(Driver driver) {
+    SystemUpdateTelegramDeserializer(Driver driver) {
         this.driver = driver;
     }
 
@@ -58,8 +62,8 @@ class SYSUTelegramMapper implements TelegramDeserializer<SystemUpdateMessage> {
      */
     @Override
     public Message<SystemUpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         if (provider == null) {
             throw new RuntimeException(format("Telegram handling [%s] not supported", SystemUpdateMessage.IDENTIFIER));
@@ -68,18 +72,25 @@ class SYSUTelegramMapper implements TelegramDeserializer<SystemUpdateMessage> {
         int startErrorCode = startLocationGroup + provider.lengthLocationGroupName();
         int startCreateDate = startErrorCode + ERROR_CODE_LENGTH;
 
-        SystemUpdateMessage message;
         try {
-            message = new SystemUpdateMessage.Builder()
-                    .withLocationGroupName(telegram.substring(startLocationGroup, startErrorCode))
-                    .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
-                    .withCreateDate(
-                            telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
-                            driver.getOsip().getDatePattern()
-                    ).build();
-            return new GenericMessage<>(message, CommonMessageFactory.createHeaders(telegram, headers));
+            GenericMessage<SystemUpdateMessage> result =
+                new GenericMessage<>(
+                    new SystemUpdateMessage.Builder()
+                        .withLocationGroupName(telegram.substring(startLocationGroup, startErrorCode))
+                        .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
+                        .withCreateDate(
+                                telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
+                                driver.getOsip().getDatePattern()
+                        )
+                        .build(),
+                        CommonMessageFactory.createHeaders(telegram, headers)
+                );
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into SystemUpdateMessage message: [{}]", result);
+            }
+            return result;
         } catch (ParseException e) {
-            throw new MessageMismatchException(e.getMessage());
+            throw new MessageMismatchException(e.getMessage(), e);
         }
     }
 

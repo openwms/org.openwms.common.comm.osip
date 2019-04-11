@@ -33,7 +33,8 @@ import java.util.function.Function;
 import static org.openwms.common.comm.osip.req.RequestHelper.getRequest;
 
 /**
- * A HttpRequestMessageHandler forwards the request to the routing service.
+ * An AmqpRequestMessageHandler is the handler function to accept {@link RequestMessage}s
+ * and forward them for processing over HTTP to the routing-service.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -49,10 +50,10 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     private final String routingServicePassword;
 
     HttpRequestMessageHandler(RestTemplate restTemplate,
-                              @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
-                              @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol,
-                              @Value("${owms.driver.server.routing-service.username:user}") String routingServiceUsername,
-                              @Value("${owms.driver.server.routing-service.password:sa}") String routingServicePassword) {
+            @Value("${owms.driver.routing-service.name}") String routingServiceName,
+            @Value("${owms.driver.routing-service.protocol}") String routingServiceProtocol,
+            @Value("${owms.driver.routing-service.username}") String routingServiceUsername,
+            @Value("${owms.driver.routing-service.password}") String routingServicePassword) {
         this.restTemplate = restTemplate;
         this.routingServiceName = routingServiceName;
         this.routingServiceProtocol = routingServiceProtocol;
@@ -66,7 +67,12 @@ class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessag
     @Override
     public Void apply(GenericMessage<RequestMessage> msg) {
         try {
-            restTemplate.exchange(routingServiceProtocol + "://" + routingServiceName + "/req", HttpMethod.POST, new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)), Void.class);
+            restTemplate.exchange(
+                    routingServiceProtocol + "://" + routingServiceName + "/req",
+                    HttpMethod.POST,
+                    new HttpEntity<>(getRequest(msg), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
+                    Void.class
+            );
             return null;
         } catch (Exception e) {
             throw new MessageProcessingException(e.getMessage(), e);

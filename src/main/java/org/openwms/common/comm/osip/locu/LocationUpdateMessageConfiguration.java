@@ -25,9 +25,9 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A LocationUpdateMessageConfiguration creates the beans used in asynchronous mode
- * dynamically without the use of XML.
- * 
+ * A LocationUpdateMessageConfiguration is the JavaConfig for the {@link LocationUpdateMessage}
+ * handling part.
+ *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
@@ -39,8 +39,9 @@ class LocationUpdateMessageConfiguration {
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("locuExchange")
-    DirectExchange directExchange(@Value("${owms.driver.osip.locu.exchange-name}") String exchangeName) {
+    @Bean
+    DirectExchange locuExchange(
+            @Value("${owms.driver.osip.locu.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

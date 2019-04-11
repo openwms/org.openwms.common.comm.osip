@@ -23,6 +23,7 @@ import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.amqp.support.converter.SerializerMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -63,8 +64,8 @@ class AsyncConfig {
 
     @Bean
     MessageConverter jsonConverter() {
-        OSIPJsonMessageConverter jackson2JsonMessageConverter = new OSIPJsonMessageConverter();
-        return jackson2JsonMessageConverter;
+        SerializerMessageConverter messageConverter = new SerializerMessageConverter();
+        return messageConverter;
     }
 
     @Bean

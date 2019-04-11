@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains telegram implementations specific to the OSIP specification.
+ * Contains the tcp/ip telegram driver implementations.
  */
 package org.openwms.common.comm;
 

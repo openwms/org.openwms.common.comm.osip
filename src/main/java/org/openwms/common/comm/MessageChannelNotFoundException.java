@@ -26,16 +26,6 @@ public class MessageChannelNotFoundException extends RuntimeException {
      * Create a new MessageChannelNotFoundException.
      *
      * @param message Detail message
-     * @param cause Cause to be propagated
-     */
-    public MessageChannelNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * Create a new MessageChannelNotFoundException.
-     *
-     * @param message Detail message
      */
     public MessageChannelNotFoundException(String message) {
         super(message);

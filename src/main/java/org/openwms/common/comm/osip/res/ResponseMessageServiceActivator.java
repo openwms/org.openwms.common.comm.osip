@@ -17,12 +17,14 @@ package org.openwms.common.comm.osip.res;
 
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.osip.req.RequestMessage;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
 /**
- * A ResController.
+ * A RequestMessageServiceActivator implements the Service Activator pattern and delegates
+ * incoming {@link RequestMessage}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */

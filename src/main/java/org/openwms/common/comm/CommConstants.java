@@ -22,11 +22,6 @@ package org.openwms.common.comm;
  */
 public final class CommConstants {
 
-    /** The date format used in messages. */
-    public static final String DATE_FORMAT_PATTERN = "yyyyMMddHHmmss";
-    /** Defined telegram length. Validated in Serializer! */
-    @Deprecated
-    public static final int TELEGRAM_LENGTH = 160;
     /** Used as suffix to create channels dynamically. */
     public static final String CHANNEL_SUFFIX = "MessageInputChannel";
 

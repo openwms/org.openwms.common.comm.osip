@@ -18,7 +18,6 @@ package org.openwms.common.comm.osip.sysu;
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.NotRespondingServiceActivator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -28,11 +27,12 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A SystemUpdateServiceActivator.
+ * A SystemUpdateServiceActivator implements the Service Activator pattern and delegates
+ * incoming {@link SystemUpdateMessage}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@MessageEndpoint("systemupdateServiceActivator")
+@MessageEndpoint
 class SystemUpdateServiceActivator implements NotRespondingServiceActivator<SystemUpdateMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
@@ -41,8 +41,9 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
     private final Function<GenericMessage<SystemUpdateMessage>, Void> handler;
     private final ApplicationContext ctx;
 
-    @Autowired
-    public SystemUpdateServiceActivator(Function<GenericMessage<SystemUpdateMessage>, Void> handler, ApplicationContext ctx) {
+    SystemUpdateServiceActivator(
+            Function<GenericMessage<SystemUpdateMessage>, Void> handler,
+            ApplicationContext ctx) {
         this.handler = handler;
         this.ctx = ctx;
     }
@@ -52,7 +53,7 @@ class SystemUpdateServiceActivator implements NotRespondingServiceActivator<Syst
      */
     @Override
     @Measured
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
     public void wakeUp(GenericMessage<SystemUpdateMessage> message) {
         handler.apply(message);
     }

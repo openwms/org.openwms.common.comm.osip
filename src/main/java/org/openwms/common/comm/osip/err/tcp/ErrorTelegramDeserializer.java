@@ -35,17 +35,20 @@ import static org.openwms.common.comm.Payload.DATE_LENGTH;
 import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 
 /**
- * An ErrorTelegramMapper transforms an incoming OSIP telegram string, that is expected to be an error telegram, into an ErrorMessage.
+ * A ErrorTelegramDeserializer deserializes OSIP ERR telegram String into
+ * {@link ErrorMessage}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see ErrorMessage
  */
 @Component
-class ErrorTelegramMapper implements TelegramDeserializer<ErrorMessage> {
+class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final Driver driver;
 
-    ErrorTelegramMapper(Driver driver) {
+    ErrorTelegramDeserializer(Driver driver) {
         this.driver = driver;
     }
 
@@ -54,19 +57,29 @@ class ErrorTelegramMapper implements TelegramDeserializer<ErrorMessage> {
      */
     @Override
     public Message<ErrorMessage> deserialize(String telegram, Map<String, Object> headers) {
-        TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+        }
         int startPayload = LENGTH_HEADER + forType().length();
         int startCreateDate = startPayload + ERROR_CODE_LENGTH;
         try {
-            return new GenericMessage<>(new ErrorMessage.Builder()
-                    .withErrorCode(telegram.substring(startPayload, startCreateDate))
-                    .withCreateDate(
+            GenericMessage<ErrorMessage> result =
+                new GenericMessage<>(
+                    new ErrorMessage.Builder()
+                        .withErrorCode(telegram.substring(startPayload, startCreateDate))
+                        .withCreateDate(
                             telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
                             driver.getOsip().getDatePattern()
-                    )
-                    .build(), CommonMessageFactory.createHeaders(telegram, headers));
+                        )
+                        .build(),
+                        CommonMessageFactory.createHeaders(telegram, headers)
+                );
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into ErrorMessage message: [{}]", result);
+            }
+            return result;
         } catch (ParseException e) {
-            throw new MessageMismatchException(e.getMessage());
+            throw new MessageMismatchException(e.getMessage(), e);
         }
     }
 

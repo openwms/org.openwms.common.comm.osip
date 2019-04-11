@@ -23,47 +23,35 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A SystemUpdateMessage reflects the OSIP SYSU telegram type and is used to change the state of a {@code LocationGroup}.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-//@Data
 public class SystemUpdateMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "SYSU";
     private String locationGroupName;
 
+    /*~------------ Constructors ------------*/
     private SystemUpdateMessage(Builder builder) {
         locationGroupName = builder.locationGroupName;
     }
 
+    /*~------------ Accessors ------------*/
     public String getType() {
         return IDENTIFIER;
     }
 
-    public String getLocationGroupName() {
+    String getLocationGroupName() {
         return locationGroupName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
-    }
-
+    /*~------------ Builders ------------*/
     public static final class Builder {
 
         private String locationGroupName;
@@ -93,14 +81,52 @@ public class SystemUpdateMessage extends Payload implements Serializable {
         }
     }
 
+    /*~------------ Overrides ------------*/
     /**
      * {@inheritDoc}
      */
     @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
     public String toString() {
-        return "SystemUpdateMessage{" +
-                "identifier='" + IDENTIFIER + '\'' +
-                ", locationGroup=" + locationGroupName +
-                "} with " + super.toString();
+        return new StringJoiner(", ", SystemUpdateMessage.class.getSimpleName() + "[", "]").add("locationGroupName='" + locationGroupName + "'").toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        SystemUpdateMessage that = (SystemUpdateMessage) o;
+        return Objects.equals(locationGroupName, that.locationGroupName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), locationGroupName);
     }
 }

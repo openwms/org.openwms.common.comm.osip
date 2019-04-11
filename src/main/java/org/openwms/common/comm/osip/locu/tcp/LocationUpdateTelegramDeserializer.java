@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.locu.tcp;
 
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.Payload;
@@ -33,17 +34,20 @@ import java.util.Map;
 import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 
 /**
- * A LocationUpdateTelegramMapper.
+ * A LocationUpdateTelegramDeserializer deserializes OSIP LOCU telegram String into
+ * {@link LocationUpdateMessage}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see LocationUpdateMessage
  */
 @Component
-class LocationUpdateTelegramMapper implements TelegramDeserializer<LocationUpdateMessage> {
+class LocationUpdateTelegramDeserializer implements TelegramDeserializer<LocationUpdateMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocationUpdateTelegramMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationUpdateTelegramDeserializer.class);
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final Driver driver;
 
-    LocationUpdateTelegramMapper(Driver driver) {
+    LocationUpdateTelegramDeserializer(Driver driver) {
         this.driver = driver;
     }
 
@@ -52,26 +56,31 @@ class LocationUpdateTelegramMapper implements TelegramDeserializer<LocationUpdat
      */
     @Override
     public Message<LocationUpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
         }
         int startLocationGroup = LENGTH_HEADER + forType().length();
         int startLocation = startLocationGroup + 20;
         int startErrorCode = startLocation + 20;
         int startCreateDate = startErrorCode + Payload.ERROR_CODE_LENGTH;
         try {
-            return new GenericMessage<>(
+            GenericMessage<LocationUpdateMessage> result =
+                new GenericMessage<>(
                     new LocationUpdateMessage.Builder()
-                            .withType(LocationUpdateMessage.IDENTIFIER)
-                            .withLocationGroupName(telegram.substring(startLocationGroup, startLocation))
-                            .withLocation(telegram.substring(startLocation, startErrorCode))
-                            .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
-                            .withCreated(
-                                    telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH),
-                                    driver.getOsip().getDatePattern()
-                            ).build()
-                    , CommonMessageFactory.createHeaders(telegram, headers)
-            );
+                        .withType(LocationUpdateMessage.IDENTIFIER)
+                        .withLocationGroupName(telegram.substring(startLocationGroup, startLocation))
+                        .withLocation(telegram.substring(startLocation, startErrorCode))
+                        .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
+                        .withCreated(
+                            telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH),
+                            driver.getOsip().getDatePattern()
+                        ).build(),
+                        CommonMessageFactory.createHeaders(telegram, headers)
+                );
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into LocationUpdateMessage message: [{}]", result);
+            }
+            return result;
         } catch (ParseException e) {
             throw new MessageMismatchException(e.getMessage(), e);
         }
