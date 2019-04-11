@@ -23,9 +23,11 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.amqp.support.converter.SerializerMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,9 +66,19 @@ class AsyncConfig {
         return res;
     }
 
+    @ConditionalOnExpression("'${owms.driver.serialization}'=='json'")
     @Bean
     MessageConverter messageConverter() {
+        Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
+        BOOT_LOGGER.info("Using JSON serialization over AMQP");
+        return messageConverter;
+    }
+
+    @ConditionalOnExpression("'${owms.driver.serialization}'=='barray'")
+    @Bean
+    MessageConverter serializerMessageConverter() {
         SerializerMessageConverter messageConverter = new SerializerMessageConverter();
+        BOOT_LOGGER.info("Using byte array serialization over AMQP");
         return messageConverter;
     }
 
@@ -79,7 +91,7 @@ class AsyncConfig {
     }
 
     @Bean
-    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
 
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
@@ -91,7 +103,7 @@ class AsyncConfig {
         retryTemplate.setBackOffPolicy(backOffPolicy);
         rabbitTemplate.setRetryTemplate(retryTemplate);
 
-        rabbitTemplate.setMessageConverter(messageConverter());
+        rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
 }

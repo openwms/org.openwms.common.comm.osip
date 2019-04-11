@@ -27,6 +27,7 @@ owms:
     password: sa
   driver:
     timezone: "Europe/Berlin"
+    serialization: json
     osip:
       sync-field: "###"
       date-pattern: yyyyMMddHHmmss

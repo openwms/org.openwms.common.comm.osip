@@ -31,6 +31,8 @@ public class Driver {
 
     /** Timezone. */
     private ZoneId timezone = ZoneId.of("UTC+00:00");
+    /** Serialization methods: json, barray */
+    private String serialization;
     /** OSIP protocol configuration. */
     private Osip osip;
     /** Global valid and individual connection parameters of the driver instance. */
@@ -42,6 +44,14 @@ public class Driver {
 
     public void setTimezone(ZoneId timezone) {
         this.timezone = timezone;
+    }
+
+    public String getSerialization() {
+        return serialization;
+    }
+
+    public void setSerialization(String serialization) {
+        this.serialization = serialization;
     }
 
     public Osip getOsip() {
