@@ -15,11 +15,12 @@
  */
 package org.openwms.common.comm;
 
-import org.openwms.common.comm.osip.res.ResponseHeader;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import static org.openwms.common.comm.ParserUtils.padRight;
 
@@ -30,18 +31,32 @@ import static org.openwms.common.comm.ParserUtils.padRight;
  */
 public abstract class Payload implements Serializable {
 
-    private ResponseHeader header;
-    private String errorCode = padRight("", ERROR_CODE_LENGTH, "x");
-    private Date created;
-
     public static final short ERROR_CODE_LENGTH = 8;
     public static final short DATE_LENGTH = 14;
     public static final int MESSAGE_IDENTIFIER_LENGTH = 4;
 
-    public Payload() {
-        this.created = new Date();
+    @JsonProperty("header")
+    private ResponseHeader header;
+    @JsonProperty("errorCode")
+    private String errorCode = padRight("", ERROR_CODE_LENGTH, "x");
+    @JsonProperty("created")
+    private Date created;
+
+    /*~------------ Constructors ------------*/
+    public Payload() { }
+
+    /*~------------ Methods ------------*/
+    /**
+     * Checks if the given {@code str} starts with an '*'. An optional telegram value contains '*' only.
+     *
+     * @param str to check
+     * @return true if set
+     */
+    public static boolean exists(String str) {
+        return !str.startsWith("*");
     }
 
+    /*~------------ Accessors ------------*/
     public ResponseHeader getHeader() {
         if (header == null) {
             this.header = ResponseHeader.emptyHeader();
@@ -118,14 +133,10 @@ public abstract class Payload implements Serializable {
         }
     }
 
-    /**
-     * Checks if the given {@code str} starts with an '*'. An optional telegram value contains '*' only.
-     *
-     * @param str to check
-     * @return true if set
-     */
-    public static boolean exists(String str) {
-        return !str.startsWith("*");
+    /*~------------ Overrides ------------*/
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Payload.class.getSimpleName() + "[", "]").add("header=" + header).add("errorCode='" + errorCode + "'").add("created=" + created).toString();
     }
 
     @Override

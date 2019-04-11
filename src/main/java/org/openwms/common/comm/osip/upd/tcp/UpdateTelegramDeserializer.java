@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.upd.tcp;
 
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.app.Driver;
@@ -36,18 +37,21 @@ import static org.openwms.common.comm.Payload.DATE_LENGTH;
 import static org.openwms.common.comm.Payload.ERROR_CODE_LENGTH;
 
 /**
- * A UPDTelegramMapper maps the incoming UPD telegram String into an object representation.
+ * A UpdateTelegramDeserializer deserializes OSIP SYNC telegram String into
+ * {@link UpdateMessage}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see UpdateMessage
  */
 @Component
-class UPDTelegramMapper implements TelegramDeserializer<UpdateMessage> {
+class UpdateTelegramDeserializer implements TelegramDeserializer<UpdateMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UPDTelegramMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateTelegramDeserializer.class);
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final UpdateFieldLengthProvider provider;
     private final Driver driver;
 
-    UPDTelegramMapper(UpdateFieldLengthProvider provider, Driver driver) {
+    UpdateTelegramDeserializer(UpdateFieldLengthProvider provider, Driver driver) {
         this.provider = provider;
         this.driver = driver;
     }
@@ -57,8 +61,8 @@ class UPDTelegramMapper implements TelegramDeserializer<UpdateMessage> {
      */
     @Override
     public Message<UpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         if (provider == null) {
             throw new RuntimeException(format("Telegram handling [%s] not supported", UpdateMessage.IDENTIFIER));
@@ -68,17 +72,24 @@ class UPDTelegramMapper implements TelegramDeserializer<UpdateMessage> {
         int startErrorCode = startActualLocation + provider.locationIdLength();
         int startCreateDate = startErrorCode + ERROR_CODE_LENGTH;
 
-        UpdateMessage message;
         try {
-            message = new UpdateMessage.Builder(provider)
-                    .withBarcode(telegram.substring(startPayload, startActualLocation))
-                    .withActualLocation(telegram.substring(startActualLocation, startErrorCode))
-                    .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
-                    .withCreateDate(
+            GenericMessage<UpdateMessage> result =
+                new GenericMessage<>(
+                    new UpdateMessage.Builder(provider)
+                        .withBarcode(telegram.substring(startPayload, startActualLocation))
+                        .withActualLocation(telegram.substring(startActualLocation, startErrorCode))
+                        .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
+                        .withCreateDate(
                             telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
                             driver.getOsip().getDatePattern()
-                    ).build();
-            return new GenericMessage<>(message, CommonMessageFactory.createHeaders(telegram, headers));
+                        ).build(),
+                        CommonMessageFactory.createHeaders(telegram, headers)
+                );
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into UpdateMessage message: [{}]", result);
+            }
+            return result;
         } catch (ParseException e) {
             throw new MessageMismatchException(e.getMessage(), e);
         }

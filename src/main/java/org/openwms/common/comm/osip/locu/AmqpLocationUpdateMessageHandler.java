@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.locu;
 
+import org.openwms.common.comm.CommHeader;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,8 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 /**
- * A AmqpLocationUpdateMessageHandler.
+ * An AmqpLocationUpdateMessageHandler is the handler function to accept {@link LocationUpdateMessage}s
+ * and forward them for processing over AMQP.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -39,7 +41,9 @@ class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<Locati
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.locu.exchange-name}") String exchangeName, @Value("${owms.driver.osip.locu.routing-key}") String routingKey) {
+    AmqpLocationUpdateMessageHandler(AmqpTemplate amqpTemplate,
+            @Value("${owms.driver.osip.locu.exchange-name}") String exchangeName,
+            @Value("${owms.driver.osip.locu.routing-key}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;
@@ -49,8 +53,11 @@ class AmqpLocationUpdateMessageHandler implements Function<GenericMessage<Locati
      * {@inheritDoc}
      */
     @Override
-    public Void apply(GenericMessage<LocationUpdateMessage> locationUpdateMessage) {
-        amqpTemplate.convertAndSend(exchangeName, routingKey, locationUpdateMessage.getPayload());
+    public Void apply(GenericMessage<LocationUpdateMessage> msg) {
+        msg.getPayload().getHeader().setReceiver((String) msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
+        msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME));
+        amqpTemplate.convertAndSend(exchangeName, routingKey, msg.getPayload());
         return null;
     }
 }

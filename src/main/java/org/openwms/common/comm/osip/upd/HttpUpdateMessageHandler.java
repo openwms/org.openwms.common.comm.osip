@@ -45,11 +45,12 @@ class HttpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
     private final String routingServiceUsername;
     private final String routingServicePassword;
 
-    HttpUpdateMessageHandler(RestTemplate restTemplate,
-                              @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
-                              @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol,
-                              @Value("${owms.driver.server.routing-service.username:user}") String routingServiceUsername,
-                              @Value("${owms.driver.server.routing-service.password:sa}") String routingServicePassword) {
+    HttpUpdateMessageHandler(
+            RestTemplate restTemplate,
+            @Value("${owms.driver.server.routing-service.name:routing-service}") String routingServiceName,
+            @Value("${owms.driver.server.routing-service.protocol:http}") String routingServiceProtocol,
+            @Value("${owms.driver.server.routing-service.username:user}") String routingServiceUsername,
+            @Value("${owms.driver.server.routing-service.password:sa}") String routingServicePassword) {
         this.restTemplate = restTemplate;
         this.routingServiceName = routingServiceName;
         this.routingServiceProtocol = routingServiceProtocol;

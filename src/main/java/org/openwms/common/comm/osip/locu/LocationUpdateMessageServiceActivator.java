@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.locu;
 
+import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.NotRespondingServiceActivator;
 import org.springframework.context.ApplicationContext;
@@ -26,19 +27,20 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A LocationUpdateMessageServiceActivator.
+ * A LocationUpdateMessageServiceActivator implements the Service Activator pattern and
+ * delegates incoming {@link LocationUpdateMessage}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint
-public class LocationUpdateMessageServiceActivator implements NotRespondingServiceActivator<LocationUpdateMessage> {
+class LocationUpdateMessageServiceActivator implements NotRespondingServiceActivator<LocationUpdateMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = LocationUpdateMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
     private final ApplicationContext ctx;
     private final Function<GenericMessage<LocationUpdateMessage>, Void> handler;
 
-    public LocationUpdateMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<LocationUpdateMessage>, Void> handler) {
+    LocationUpdateMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<LocationUpdateMessage>, Void> handler) {
         this.ctx = ctx;
         this.handler = handler;
     }
@@ -47,7 +49,8 @@ public class LocationUpdateMessageServiceActivator implements NotRespondingServi
      * {@inheritDoc}
      */
     @Override
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
+    @Measured
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
     public void wakeUp(GenericMessage<LocationUpdateMessage> message) {
         handler.apply(message);
     }

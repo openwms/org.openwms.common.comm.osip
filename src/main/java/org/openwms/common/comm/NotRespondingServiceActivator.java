@@ -18,7 +18,8 @@ package org.openwms.common.comm;
 import org.springframework.messaging.support.GenericMessage;
 
 /**
- * A NotRespondingServiceActivator.
+ * A NotRespondingServiceActivator is an Service Activator implementation that accepts a
+ * message but does not reply with a message.
  *
  * @param <T> A type of incoming Payload
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
@@ -26,7 +27,7 @@ import org.springframework.messaging.support.GenericMessage;
 public interface NotRespondingServiceActivator<T extends Payload> extends CustomServiceActivator {
 
     /**
-     * Wake up a service, processor or bean an that accepts incoming messages of type <tt>T</tt>.
+     * Wake up a service, processor or bean that accepts incoming messages of type {@code T}.
      *
      * @param message The message to forward
      */

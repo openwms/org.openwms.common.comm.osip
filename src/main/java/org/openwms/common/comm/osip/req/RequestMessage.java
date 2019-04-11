@@ -15,13 +15,13 @@
  */
 package org.openwms.common.comm.osip.req;
 
-import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.StringJoiner;
 
 /**
  * A RequestMessage requests an order for a TransportUnit with id <tt>Barcode</tt> on a particular location <tt>actualLocation</tt>.
@@ -36,14 +36,7 @@ public class RequestMessage extends Payload implements Serializable {
     private String actualLocation;
     private String targetLocation;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
+    /*~------------ Accessors ------------*/
     public String getBarcode() {
         return barcode;
     }
@@ -68,6 +61,34 @@ public class RequestMessage extends Payload implements Serializable {
         this.targetLocation = targetLocation;
     }
 
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", RequestMessage.class.getSimpleName() + "[", "]").add("barcode='" + barcode + "'").add("actualLocation='" + actualLocation + "'").add("targetLocation='" + targetLocation + "'").toString();
+    }
+
+    /*~------------ Builders ------------*/
     public static class Builder {
 
         private final RequestMessage requestMessage;
@@ -136,9 +157,10 @@ public class RequestMessage extends Payload implements Serializable {
         }
 
         /**
-         * Add the date of creation in an expected format as defined in {@link CommConstants#DATE_FORMAT_PATTERN}.
+         * Add the date of creation with the configured date format.
          *
          * @param createDate The creation date as String
+         * @param pattern The configured date time pattern
          * @return The builder
          */
         public Builder withCreateDate(String createDate, String pattern) throws ParseException {
@@ -154,13 +176,5 @@ public class RequestMessage extends Payload implements Serializable {
         public RequestMessage build() {
             return requestMessage;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return false;
     }
 }

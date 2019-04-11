@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.sysu;
 
+import org.openwms.common.comm.CommHeader;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,8 +50,11 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
      * {@inheritDoc}
      */
     @Override
-    public Void apply(GenericMessage<SystemUpdateMessage> systemUpdateMessageGenericMessage) {
-        amqpTemplate.convertAndSend(exchangeName, routingKey, systemUpdateMessageGenericMessage.getPayload());
+    public Void apply(GenericMessage<SystemUpdateMessage> msg) {
+        msg.getPayload().getHeader().setReceiver((String) msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME));
+        msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME));
+        msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME));
+        amqpTemplate.convertAndSend(exchangeName, routingKey, msg.getPayload());
         return null;
     }
 }

@@ -25,8 +25,8 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A UpdateMessageConfiguration creates the beans used in asynchronous mode dynamically
- * without the use of XML.
+ * A UpdateMessageConfiguration is the JavaConfig for the {@link UpdateMessage} handling
+ * part.
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
@@ -39,8 +39,9 @@ class UpdateMessageConfiguration {
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-    @Bean("updExchange")
-    DirectExchange directExchange(@Value("${owms.driver.osip.upd.exchange-name}") String exchangeName) {
+    @Bean
+    DirectExchange updExchange(
+            @Value("${owms.driver.osip.upd.exchange-name}") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
 }

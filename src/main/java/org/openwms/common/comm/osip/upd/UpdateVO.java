@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A UpdateVO.
@@ -36,6 +38,7 @@ class UpdateVO implements Serializable {
     @JsonProperty
     Date created;
 
+    /*~------------ Constructors ------------*/
     private UpdateVO(Builder builder) {
         setType(builder.type);
         setActualLocation(builder.actualLocation);
@@ -45,6 +48,7 @@ class UpdateVO implements Serializable {
         setCreated(builder.created);
     }
 
+    /*~------------ Accessors ------------*/
     public String getType() {
         return type;
     }
@@ -93,6 +97,7 @@ class UpdateVO implements Serializable {
         this.created = created;
     }
 
+    /*~------------ Inner Classes ------------*/
     static class UpdateHeaderVO {
         @JsonProperty
         String sender, receiver, sequenceNo;
@@ -156,7 +161,7 @@ class UpdateVO implements Serializable {
         }
     }
 
-
+    /*~------------ Builders ------------*/
     public static final class Builder {
         private String type;
         private String actualLocation;
@@ -201,5 +206,41 @@ class UpdateVO implements Serializable {
         public UpdateVO build() {
             return new UpdateVO(this);
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", UpdateVO.class.getSimpleName() + "[", "]").add("type='" + type + "'").add("actualLocation='" + actualLocation + "'").add("barcode='" + barcode + "'").add("header=" + header).add("errorCode='" + errorCode + "'").add("created=" + created).toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        UpdateVO updateVO = (UpdateVO) o;
+        return Objects.equals(type, updateVO.type) && Objects.equals(actualLocation, updateVO.actualLocation) && Objects.equals(barcode, updateVO.barcode) && Objects.equals(header, updateVO.header) && Objects.equals(errorCode, updateVO.errorCode) && Objects.equals(created, updateVO.created);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Include all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, actualLocation, barcode, header, errorCode, created);
     }
 }

@@ -28,18 +28,14 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 
 /**
- * A ErrorMessageConfiguration is the JavaConfig for the {@link ErrorMessage} handling part.
+ * A ErrorMessageConfiguration is the JavaConfig for the {@link ErrorMessage} handling
+ * part.
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Configuration
-public class ErrorMessageConfiguration {
+class ErrorMessageConfiguration {
 
-    /**
-     * Create a MessageChannel with the proper name dynamically.
-     * 
-     * @return An DirectChannel instance
-     */
     @Bean(name = ErrorMessageServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();

@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.req;
 
+import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.NotRespondingServiceActivator;
 import org.springframework.context.ApplicationContext;
@@ -26,29 +27,30 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A RequestMessageServiceActivator takes incoming {@link RequestMessage}s and delegates them to an application POJO.
+ * A RequestMessageServiceActivator implements the Service Activator pattern and delegates
+ * incoming {@link RequestMessage}s to the appropriate handler function.
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@MessageEndpoint("requestmessageServiceActivator")
+@MessageEndpoint
 class RequestMessageServiceActivator implements NotRespondingServiceActivator<RequestMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = RequestMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
-
-    private final ApplicationContext ctx;
     private final Function<GenericMessage<RequestMessage>, Void> handler;
+    private final ApplicationContext ctx;
 
-    RequestMessageServiceActivator(ApplicationContext ctx, Function<GenericMessage<RequestMessage>, Void> handler) {
-        this.ctx = ctx;
+    RequestMessageServiceActivator(Function<GenericMessage<RequestMessage>, Void> handler, ApplicationContext ctx) {
         this.handler = handler;
+        this.ctx = ctx;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME, outputChannel = "outboundChannel")
+    @Measured
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
     public void wakeUp(GenericMessage<RequestMessage> message) {
         handler.apply(message);
     }

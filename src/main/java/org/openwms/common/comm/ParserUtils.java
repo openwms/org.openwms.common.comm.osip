@@ -15,25 +15,12 @@
  */
 package org.openwms.common.comm;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * A ParserUtils.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 public final class ParserUtils {
-
-    /**
-     * Returns a Date object as formatted String.
-     *
-     * @param date The date to format
-     * @return The formatted String
-     */
-    public static String asString3(Date date) {
-        return new SimpleDateFormat(CommConstants.DATE_FORMAT_PATTERN).format(date);
-    }
 
     /**
      * Pad a String {@code s} with a number {@code n} of characters {@code chr}.

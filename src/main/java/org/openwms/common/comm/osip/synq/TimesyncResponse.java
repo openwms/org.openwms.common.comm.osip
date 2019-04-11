@@ -16,7 +16,7 @@
 package org.openwms.common.comm.osip.synq;
 
 import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.osip.res.ResponseHeader;
+import org.openwms.common.comm.ResponseHeader;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,9 +32,7 @@ public class TimesyncResponse extends Payload implements Serializable {
     public static final String IDENTIFIER = "SYNC";
     private Date senderTime;
 
-    /**
-     * Create a new CommonMessage.
-     */
+    /*~------------ Constructors ------------*/
     TimesyncResponse() {
         super();
         senderTime = new Date();
@@ -47,30 +45,12 @@ public class TimesyncResponse extends Payload implements Serializable {
         senderTime = builder.senderTime;
     }
 
+    /*~------------ Accessors ------------*/
     public Date getSenderTime() {
         return senderTime;
     }
 
-    /**
-     * Subclasses have to return an unique, case-sensitive message identifier.
-     *
-     * @return The message TYPE field (see OSIP specification)
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * Does this type of message needs to be replied to?
-     *
-     * @return {@literal true} no reply needed, otherwise {@literal false}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return false;
-    }
-
+    /*~------------ Builders ------------*/
     public static final class Builder {
         private ResponseHeader header;
         private String errorCode;
@@ -103,5 +83,26 @@ public class TimesyncResponse extends Payload implements Serializable {
         public TimesyncResponse build() {
             return new TimesyncResponse(this);
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * Subclasses have to return an unique, case-sensitive message identifier.
+     *
+     * @return The message TYPE field (see OSIP specification)
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * Does this type of message needs to be replied to?
+     *
+     * @return {@literal true} no reply needed, otherwise {@literal false}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return false;
     }
 }

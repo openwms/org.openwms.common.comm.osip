@@ -65,14 +65,17 @@ class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
     @Override
     public Void apply(GenericMessage<SystemUpdateMessage> msg) {
         restTemplate.exchange(
-                routingServiceProtocol+"://"+routingServiceName+"/sysu",
-                HttpMethod.POST,
-                new HttpEntity<>(new RequestVO.Builder()
-                        .locationGroupName(msg.getPayload().getLocationGroupName())
-                        .errorCode(msg.getPayload().getErrorCode())
-                        .created(msg.getPayload().getCreated())
-                        .build(), SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)),
-                Void.class
+            routingServiceProtocol+"://"+routingServiceName+"/sysu",
+            HttpMethod.POST,
+            new HttpEntity<>(
+                new RequestVO.Builder()
+                    .locationGroupName(msg.getPayload().getLocationGroupName())
+                    .errorCode(msg.getPayload().getErrorCode())
+                    .created(msg.getPayload().getCreated())
+                    .build(),
+                    SecurityUtils.createHeaders(routingServiceUsername, routingServicePassword)
+            ),
+            Void.class
         );
         return null;
     }

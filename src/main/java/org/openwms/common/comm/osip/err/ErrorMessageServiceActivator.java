@@ -18,7 +18,6 @@ package org.openwms.common.comm.osip.err;
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.NotRespondingServiceActivator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -28,22 +27,32 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A ErrorMessageServiceActivator delegates incoming {@link ErrorMessage}s to the appropriate Application Service.
+ * A ErrorMessageServiceActivator implements the Service Activator pattern and delegates
+ * incoming {@link ErrorMessage}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @MessageEndpoint("errormessageServiceActivator")
-public class ErrorMessageServiceActivator implements NotRespondingServiceActivator<ErrorMessage> {
+class ErrorMessageServiceActivator implements NotRespondingServiceActivator<ErrorMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = ErrorMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
     private final Function<GenericMessage<ErrorMessage>, Void> handler;
     private final ApplicationContext ctx;
 
-    @Autowired
-    public ErrorMessageServiceActivator(Function<GenericMessage<ErrorMessage>, Void> handler, ApplicationContext ctx) {
+    ErrorMessageServiceActivator(Function<GenericMessage<ErrorMessage>, Void> handler, ApplicationContext ctx) {
         this.handler = handler;
         this.ctx = ctx;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Measured
+    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
+    public void wakeUp(GenericMessage<ErrorMessage> message) {
+        handler.apply(message);
     }
 
     /**
@@ -60,15 +69,5 @@ public class ErrorMessageServiceActivator implements NotRespondingServiceActivat
     @Override
     public String getChannelName() {
         return INPUT_CHANNEL_NAME;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Measured
-    @ServiceActivator(inputChannel = INPUT_CHANNEL_NAME)
-    public void wakeUp(GenericMessage<ErrorMessage> message) {
-        handler.apply(message);
     }
 }

@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.osip.res;
 
-import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.Payload;
 import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
 
@@ -40,22 +39,7 @@ public class ResponseMessage extends Payload implements Serializable {
     private String targetLocation;
     private String targetLocationGroup;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
-    }
-
+    /*~------------ Accessors ------------*/
     public String getBarcode() {
         return barcode;
     }
@@ -88,6 +72,7 @@ public class ResponseMessage extends Payload implements Serializable {
         this.targetLocationGroup = targetLocationGroup;
     }
 
+    /*~------------ Builders ------------*/
     public static class Builder {
 
         private final ResponseMessage responseMessage;
@@ -156,9 +141,10 @@ public class ResponseMessage extends Payload implements Serializable {
         }
 
         /**
-         * Add the date of creation in an expected format as defined in {@link CommConstants#DATE_FORMAT_PATTERN}.
+         * Add the date of creation with the configured date format.
          *
          * @param createDate The creation date as String
+         * @param pattern The configured date time pattern
          * @return The builder
          */
         public Builder withCreateDate(String createDate, String pattern) throws ParseException {
@@ -174,5 +160,22 @@ public class ResponseMessage extends Payload implements Serializable {
         public ResponseMessage build() {
             return responseMessage;
         }
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
     }
 }
