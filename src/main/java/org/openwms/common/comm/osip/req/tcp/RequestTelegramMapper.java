@@ -15,10 +15,11 @@
  */
 package org.openwms.common.comm.osip.req.tcp;
 
-import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.req.RequestMessage;
 import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
@@ -27,20 +28,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 
 /**
  * A RequestTelegramMapper tries to map a telegram String to a {@link RequestMessage}.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramMapper.class);

@@ -15,14 +15,14 @@
  */
 package org.openwms.common.comm.osip.res.spi;
 
-import org.springframework.stereotype.Component;
+import org.openwms.common.comm.osip.OSIPComponent;
 
 /**
  * A ResponseFieldLengthProviderImpl.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 class ResponseFieldLengthProviderImpl implements ResponseFieldLengthProvider {
 
     @Override

@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.app;
 
+import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ class AsyncConfig {
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
 
     @Bean
+    @OSIP
     @RefreshScope
     Map<String, Integer> asyncBootLogger(
             @Value("${owms.driver.osip.res.queue-name}") String queueName,
@@ -63,7 +65,7 @@ class AsyncConfig {
     }
 
     @Bean
-    MessageConverter jsonConverter() {
+    MessageConverter messageConverter() {
         SerializerMessageConverter messageConverter = new SerializerMessageConverter();
         return messageConverter;
     }
@@ -89,7 +91,7 @@ class AsyncConfig {
         retryTemplate.setBackOffPolicy(backOffPolicy);
         rabbitTemplate.setRetryTemplate(retryTemplate);
 
-        rabbitTemplate.setMessageConverter(jsonConverter());
+        rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
 }

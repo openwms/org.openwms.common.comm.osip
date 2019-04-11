@@ -19,6 +19,7 @@ spring:
 owms:
   driver:
     osip:
+      enabled: true
       err:
         exchange-name: osip
         queue-name: osip-err-queue

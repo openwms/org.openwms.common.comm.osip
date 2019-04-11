@@ -16,6 +16,7 @@
 package org.openwms.common.comm.osip.sysu;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
@@ -37,7 +37,7 @@ import java.util.function.Function;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
-@Component
+@OSIPComponent
 @RefreshScope
 class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUpdateMessage>, Void> {
 

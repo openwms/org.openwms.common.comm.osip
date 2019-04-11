@@ -16,6 +16,7 @@
 package org.openwms.common.comm.app;
 
 import org.openwms.common.comm.TimeProvider;
+import org.openwms.common.comm.config.Driver;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

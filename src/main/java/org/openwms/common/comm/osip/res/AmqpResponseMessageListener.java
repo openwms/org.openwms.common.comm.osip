@@ -16,13 +16,13 @@
 package org.openwms.common.comm.osip.res;
 
 import org.ameba.annotation.Measured;
+import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
-@Component
+@OSIPComponent
 class AmqpResponseMessageListener {
 
     private final ResponseMessageHandler handler;

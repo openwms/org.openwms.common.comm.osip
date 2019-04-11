@@ -17,6 +17,7 @@ package org.openwms.common.comm.osip.req;
 
 
 import org.openwms.common.comm.MessageProcessingException;
+import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Function;
@@ -39,7 +39,7 @@ import static org.openwms.common.comm.osip.req.RequestHelper.getRequest;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
-@Component
+@OSIPComponent
 @RefreshScope
 class HttpRequestMessageHandler implements Function<GenericMessage<RequestMessage>, Void> {
 

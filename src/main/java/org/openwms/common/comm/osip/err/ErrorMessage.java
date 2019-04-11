@@ -15,8 +15,8 @@
  */
 package org.openwms.common.comm.osip.err;
 
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.ResponseHeader;
+import org.openwms.common.comm.osip.Payload;
+import org.openwms.common.comm.osip.ResponseHeader;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.StringJoiner;
 
 /**
- * An ErrorMessage signals any error or failure situation from an external system and to external systems.
+ * An ErrorMessage signals any error or failure situation from or to an external system.
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */

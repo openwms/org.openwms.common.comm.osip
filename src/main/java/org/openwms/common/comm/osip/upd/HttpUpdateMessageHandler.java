@@ -15,7 +15,8 @@
  */
 package org.openwms.common.comm.osip.upd;
 
-import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SecurityUtils;
 import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.function.Function;
@@ -35,7 +35,7 @@ import java.util.function.Function;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
-@Component
+@OSIPComponent
 @RefreshScope
 class HttpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>, Void> {
 
@@ -66,9 +66,9 @@ class HttpUpdateMessageHandler implements Function<GenericMessage<UpdateMessage>
                 .errorCode(msg.getPayload().getErrorCode())
                 .created(msg.getPayload().getCreated())
                 .header(new UpdateVO.UpdateHeaderVO.Builder()
-                        .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))
-                        .sender(msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME, String.class))
-                        .sequenceNo(""+msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME, Short.class))
+                        .receiver(msg.getHeaders().get(OSIPHeader.RECEIVER_FIELD_NAME, String.class))
+                        .sender(msg.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME, String.class))
+                        .sequenceNo(""+msg.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME, Short.class))
                         .build())
                 .build();
     }

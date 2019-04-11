@@ -15,8 +15,9 @@
  */
 package org.openwms.common.comm.osip.err;
 
-import org.openwms.common.comm.CommHeader;
-import org.openwms.common.comm.app.Channels;
+import org.openwms.common.comm.Channels;
+import org.openwms.common.comm.osip.OSIP;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -31,6 +32,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@OSIP
 @MessageEndpoint
 class ErrorMessageHandler {
 
@@ -47,7 +49,7 @@ class ErrorMessageHandler {
      * @param headers The headers to apply
      */
     public void handle(ErrorMessage msg, Map<String, String> headers) {
-        MessageChannel channel = channels.getOutboundChannel(headers.get(CommHeader.SENDER_FIELD_NAME));
+        MessageChannel channel = channels.getOutboundChannel(headers.get(OSIPHeader.SENDER_FIELD_NAME));
         MessagingTemplate template = new MessagingTemplate();
         Message<ErrorMessage> message =
                 MessageBuilder

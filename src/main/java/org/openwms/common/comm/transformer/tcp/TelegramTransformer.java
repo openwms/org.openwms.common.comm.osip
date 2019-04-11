@@ -17,18 +17,20 @@ package org.openwms.common.comm.transformer.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.tcp.OSIPSerializer;
+import org.openwms.common.comm.osip.OSIPSerializer;
+import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Headers;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,19 +48,23 @@ import static java.lang.String.format;
  * @see TelegramDeserializer
  */
 @MessageEndpoint("telegramTransformer")
-public class TelegramTransformer<T extends Payload> {
+public class TelegramTransformer<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTransformer.class);
     private final List<TelegramDeserializer<T>> deserializers;
     private Map<String, TelegramDeserializer<T>> deserializersMap;
 
-    public TelegramTransformer(List<TelegramDeserializer<T>> deserializers) {
+    public TelegramTransformer(@Autowired(required = false) List<TelegramDeserializer<T>> deserializers) {
         this.deserializers = deserializers;
     }
 
     @PostConstruct
     void onPostConstruct() {
-        deserializersMap = deserializers.stream().collect(Collectors.toMap(TelegramDeserializer::forType, m -> m));
+        deserializersMap = deserializers == null ?
+                Collections.emptyMap() :
+                deserializers
+                        .stream()
+                        .collect(Collectors.toMap(TelegramDeserializer::forType, m -> m));
     }
 
     /**

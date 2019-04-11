@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.app;
+package org.openwms.common.comm.osip;
 
-import org.openwms.common.comm.CommHeader;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -38,7 +37,7 @@ class OSIPJsonMessageConverter extends Jackson2JsonMessageConverter {
         if (objectToConvert instanceof GenericMessage) {
             GenericMessage gm = (GenericMessage) objectToConvert;
             for (Map.Entry<String, Object> entry : gm.getHeaders().entrySet()) {
-                if (entry.getKey().startsWith(CommHeader.PREFIX)) {
+                if (entry.getKey().startsWith(OSIPHeader.PREFIX)) {
                     messageProperties.setHeader(entry.getKey(), entry.getValue());
                 }
             }

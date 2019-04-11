@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.synq;
 
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 
 import java.io.Serializable;
 import java.util.Date;

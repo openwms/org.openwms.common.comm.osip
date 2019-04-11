@@ -15,12 +15,12 @@
  */
 package org.openwms.common.comm.osip.res;
 
-import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.ParserUtils;
-import org.openwms.common.comm.app.Driver;
-import org.openwms.common.comm.tcp.OSIPSerializer;
-import org.springframework.stereotype.Component;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPHeader;
+import org.openwms.common.comm.osip.OSIPSerializer;
 
 import java.text.SimpleDateFormat;
 
@@ -32,7 +32,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
 
     public ResponseMessageSerializer(Driver driver) {
@@ -53,7 +53,7 @@ public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
     @Override
     public String serialize(ResponseMessage obj) {
         short maxTelegramLength = getDriver().getOsip().getTelegramLength();
-        CommHeader header = new CommHeader.Builder()
+        OSIPHeader header = new OSIPHeader.Builder()
                 .sync(getDriver().getOsip().getSyncField())
                 .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())

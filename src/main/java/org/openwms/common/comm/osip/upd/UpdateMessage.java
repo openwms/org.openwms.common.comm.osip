@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.upd;
 
-import org.openwms.common.comm.Payload;
+import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.upd.spi.UpdateFieldLengthProvider;
 
 import java.io.Serializable;

@@ -32,9 +32,11 @@ public interface CustomServiceActivator {
     MessageChannel getChannel();
 
     /**
-     * Returns the unique name of the MessageChannel that is used as input-channel for the processing messages.
+     * Returns the unique name of the MessageChannel that is used as input-channel for the
+     * processing messages.
      *
-     * @return Expected to be the unique name of the message concatenated with a suffix, defined in {@link CommConstants#CHANNEL_SUFFIX}
+     * @return Expected to be the unique name of the message concatenated with a suffix,
+     * defined in {@link CommConstants#CHANNEL_SUFFIX}
      */
     String getChannelName();
 

@@ -16,7 +16,8 @@
 package org.openwms.common.comm.osip.res;
 
 import org.ameba.annotation.Measured;
-import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.osip.OSIP;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.common.comm.osip.req.RequestMessage;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.messaging.Message;
@@ -28,6 +29,7 @@ import org.springframework.messaging.support.MessageBuilder;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@OSIP
 @MessageEndpoint("responseMessageServiceActivator")
 public class ResponseMessageServiceActivator {
 
@@ -35,9 +37,9 @@ public class ResponseMessageServiceActivator {
     public Message<ResponseMessage> transform(ResponseMessage in) {
         return MessageBuilder
                 .withPayload(in)
-                .setHeader(CommHeader.RECEIVER_FIELD_NAME, in.getHeader().getReceiver())
-                .setHeader(CommHeader.SENDER_FIELD_NAME, in.getHeader().getSender())
-                .setHeader(CommHeader.SEQUENCE_FIELD_NAME, in.getHeader().getSequenceNo())
+                .setHeader(OSIPHeader.RECEIVER_FIELD_NAME, in.getHeader().getReceiver())
+                .setHeader(OSIPHeader.SENDER_FIELD_NAME, in.getHeader().getSender())
+                .setHeader(OSIPHeader.SEQUENCE_FIELD_NAME, in.getHeader().getSequenceNo())
                 .setReplyChannelName("outboundChannel")
                 .build();
     }

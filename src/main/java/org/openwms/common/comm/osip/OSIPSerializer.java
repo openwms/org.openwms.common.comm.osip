@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.tcp;
+package org.openwms.common.comm.osip;
 
-import org.openwms.common.comm.CommHeader;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.Payload;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
 
 import static java.lang.String.format;
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
 import static org.openwms.common.comm.ParserUtils.padRight;
+import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 
 /**
  * A OSIPSerializer is able to serialize OSIP messages into Strings that can be sent over
@@ -54,7 +52,7 @@ public abstract class OSIPSerializer<T extends Payload> {
      */
     public String serialize(T obj) {
         short maxTelegramLength = driver.getOsip().getTelegramLength();
-        CommHeader header = new CommHeader.Builder()
+        OSIPHeader header = new OSIPHeader.Builder()
                 .sync(driver.getOsip().getSyncField())
                 .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())

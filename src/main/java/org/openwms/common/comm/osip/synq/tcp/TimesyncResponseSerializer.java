@@ -15,10 +15,10 @@
  */
 package org.openwms.common.comm.osip.synq.tcp;
 
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPSerializer;
 import org.openwms.common.comm.osip.synq.TimesyncResponse;
-import org.openwms.common.comm.tcp.OSIPSerializer;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 class TimesyncResponseSerializer extends OSIPSerializer<TimesyncResponse> {
 
     public TimesyncResponseSerializer(Driver driver) {

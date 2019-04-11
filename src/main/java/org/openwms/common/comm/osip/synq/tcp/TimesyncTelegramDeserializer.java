@@ -16,23 +16,23 @@
 package org.openwms.common.comm.osip.synq.tcp;
 
 import org.openwms.common.comm.CommConstants;
-import org.openwms.common.comm.CommonMessageFactory;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.app.Driver;
+import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.osip.CommonMessageFactory;
+import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.synq.TimesyncRequest;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
-import static org.openwms.common.comm.CommHeader.LENGTH_HEADER;
-import static org.openwms.common.comm.Payload.DATE_LENGTH;
+import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
+import static org.openwms.common.comm.osip.Payload.DATE_LENGTH;
 
 /**
  * A TimesyncTelegramDeserializer deserializes OSIP SYNC telegram String into
@@ -41,7 +41,7 @@ import static org.openwms.common.comm.Payload.DATE_LENGTH;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  * @see TimesyncRequest
  */
-@Component
+@OSIPComponent
 class TimesyncTelegramDeserializer implements TelegramDeserializer<TimesyncRequest> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimesyncTelegramDeserializer.class);

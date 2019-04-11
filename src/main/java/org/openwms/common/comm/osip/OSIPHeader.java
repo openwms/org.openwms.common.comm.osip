@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.osip;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,11 +23,11 @@ import java.util.Map;
 import static org.openwms.common.comm.ParserUtils.padLeft;
 
 /**
- * A CommHeader represents the header part of a CommMessage.
+ * A OSIPHeader represents the header part of a OSIP telegram message.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-public class CommHeader implements Serializable {
+public class OSIPHeader implements Serializable {
 
     public static final String PREFIX = "osip_";
     private String sync;
@@ -53,7 +53,7 @@ public class CommHeader implements Serializable {
                     LENGTH_SENDER_FIELD +
                     LENGTH_SEQUENCE_NO_FIELD;
 
-    private CommHeader(Builder builder) {
+    private OSIPHeader(Builder builder) {
         sync = builder.sync;
         messageLength = builder.messageLength;
         setSender(builder.sender);
@@ -163,7 +163,7 @@ public class CommHeader implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        CommHeader other = (CommHeader) obj;
+        OSIPHeader other = (OSIPHeader) obj;
         if (receiver == null) {
             if (other.receiver != null) {
                 return false;
@@ -193,7 +193,7 @@ public class CommHeader implements Serializable {
 
     @Override
     public String toString() {
-        return sync + padLeft(String.valueOf(messageLength), CommHeader.LENGTH_MESSAGE_LENGTH_FIELD, "0") + sender + receiver + padLeft(String.valueOf(sequenceNo), LENGTH_SEQUENCE_NO_FIELD, "0");
+        return sync + padLeft(String.valueOf(messageLength), OSIPHeader.LENGTH_MESSAGE_LENGTH_FIELD, "0") + sender + receiver + padLeft(String.valueOf(sequenceNo), LENGTH_SEQUENCE_NO_FIELD, "0");
     }
 
     public static final class Builder {
@@ -231,8 +231,8 @@ public class CommHeader implements Serializable {
             return this;
         }
 
-        public CommHeader build() {
-            return new CommHeader(this);
+        public OSIPHeader build() {
+            return new OSIPHeader(this);
         }
     }
 }

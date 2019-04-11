@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.req;
 
-import org.openwms.common.comm.CommHeader;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.springframework.messaging.support.GenericMessage;
 
 /**
@@ -34,9 +34,9 @@ class RequestHelper {
                 .created(msg.getPayload().getCreated())
                 .barcode(msg.getPayload().getBarcode())
                 .header(new RequestVO.RequestHeaderVO.Builder()
-                        .receiver(msg.getHeaders().get(CommHeader.RECEIVER_FIELD_NAME, String.class))
-                        .sender(msg.getHeaders().get(CommHeader.SENDER_FIELD_NAME, String.class))
-                        .sequenceNo(""+msg.getHeaders().get(CommHeader.SEQUENCE_FIELD_NAME, Short.class))
+                        .receiver(msg.getHeaders().get(OSIPHeader.RECEIVER_FIELD_NAME, String.class))
+                        .sender(msg.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME, String.class))
+                        .sequenceNo(""+msg.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME, Short.class))
                         .build())
                 .build();
     }

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.app;
+package org.openwms.common.comm;
 
-import org.openwms.common.comm.MessageChannelNotFoundException;
 import org.springframework.messaging.MessageChannel;
 
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class Channels {
 		outboundChannels = new HashMap<>();
 	}
 	
-	protected void addOutboundChannel(String fullIdentifier, MessageChannel channel) {
+	public void addOutboundChannel(String fullIdentifier, MessageChannel channel) {
 		outboundChannels.put(fullIdentifier, channel);
 	}
 	

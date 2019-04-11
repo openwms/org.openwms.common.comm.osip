@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.app;
+package org.openwms.common.comm.osip;
 
+import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.MessageProcessingException;
-import org.openwms.common.comm.Payload;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Router;
 import org.springframework.messaging.Message;
@@ -32,7 +32,7 @@ import static java.lang.String.format;
 @MessageEndpoint
 class ChannelRouter {
 
-     private final Channels channels;
+    private final Channels channels;
 
     ChannelRouter(Channels channels) {
         this.channels = channels;
@@ -47,7 +47,7 @@ class ChannelRouter {
      */
     @Router(inputChannel = "outboundChannel", defaultOutputChannel = "commonExceptionChannel")
     public MessageChannel resolve(Message<Payload> message) {
-        MessageChannel result = channels.getOutboundChannel((String) message.getPayload().getHeader().getReceiver());
+        MessageChannel result = channels.getOutboundChannel(message.getPayload().getHeader().getReceiver());
         if (result == null) {
             throw new MessageProcessingException(format("No processor for message of type [%s] registered", message.getPayload().getMessageIdentifier()));
         }

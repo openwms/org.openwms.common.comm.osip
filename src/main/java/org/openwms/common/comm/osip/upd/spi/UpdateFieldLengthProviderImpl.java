@@ -15,14 +15,14 @@
  */
 package org.openwms.common.comm.osip.upd.spi;
 
-import org.springframework.stereotype.Component;
+import org.openwms.common.comm.osip.OSIPComponent;
 
 /**
  * A UpdateFieldLengthProviderImpl.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@Component
+@OSIPComponent
 class UpdateFieldLengthProviderImpl implements UpdateFieldLengthProvider {
 
     @Override

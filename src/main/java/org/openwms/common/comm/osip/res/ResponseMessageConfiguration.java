@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.res;
 
+import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -32,6 +33,7 @@ import org.springframework.context.annotation.Profile;
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
+@OSIP
 @Configuration
 class ResponseMessageConfiguration {
 

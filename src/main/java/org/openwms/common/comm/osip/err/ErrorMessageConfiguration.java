@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.err;
 
+import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -33,6 +34,7 @@ import org.springframework.messaging.MessageChannel;
  * 
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
+@OSIP
 @Configuration
 class ErrorMessageConfiguration {
 

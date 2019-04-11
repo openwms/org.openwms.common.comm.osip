@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm;
+package org.openwms.common.comm.osip;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -56,9 +56,9 @@ public class ResponseHeader implements Serializable {
 
     public Map<String, Object> getAll() {
         Map<String, Object> result = new HashMap<>(3);
-        result.put(CommHeader.SENDER_FIELD_NAME, sender);
-        result.put(CommHeader.RECEIVER_FIELD_NAME, receiver);
-        result.put(CommHeader.SEQUENCE_FIELD_NAME, sequenceNo);
+        result.put(OSIPHeader.SENDER_FIELD_NAME, sender);
+        result.put(OSIPHeader.RECEIVER_FIELD_NAME, receiver);
+        result.put(OSIPHeader.SEQUENCE_FIELD_NAME, sequenceNo);
         return result;
     }
 
