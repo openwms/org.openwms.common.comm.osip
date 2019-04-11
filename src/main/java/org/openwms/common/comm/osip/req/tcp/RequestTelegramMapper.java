@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.req.tcp;
 
+import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.osip.CommonMessageFactory;
@@ -44,6 +45,7 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramMapper.class);
+    private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
     private RequestFieldLengthProvider provider;
     private final Driver driver;
@@ -57,8 +59,8 @@ class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
      */
     @Override
     public Message<RequestMessage> deserialize(String telegram, Map<String, Object> headers) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Telegram to transform: [{}]", telegram);
+        if (TELEGRAM_LOGGER.isDebugEnabled()) {
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         if (provider == null) {
             throw new MessageMismatchException(format("Telegram handling [%s] not supported", RequestMessage.IDENTIFIER));

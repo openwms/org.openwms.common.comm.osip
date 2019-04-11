@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Implementation view package contains classes used internally by the component but not specific to the underlying transport technology.
+ * This package contains all types to handle OSIP telegrams.
  */
-package org.openwms.common.comm.impl;
+package org.openwms.common.comm.osip;

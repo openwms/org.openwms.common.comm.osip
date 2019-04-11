@@ -57,7 +57,7 @@ class LocationUpdateTelegramDeserializer implements TelegramDeserializer<Locatio
     @Override
     public Message<LocationUpdateMessage> deserialize(String telegram, Map<String, Object> headers) {
         if (TELEGRAM_LOGGER.isDebugEnabled()) {
-            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         int startLocationGroup = LENGTH_HEADER + forType().length();
         int startLocation = startLocationGroup + 20;
