@@ -37,20 +37,21 @@ import static java.lang.String.format;
 import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 
 /**
- * A RequestTelegramMapper tries to map a telegram String to a {@link RequestMessage}.
+ * A RequestTelegramDeserializer deserializes OSIP RES telegram String into {@link RequestMessage}s.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @see RequestMessage
  */
 @OSIPComponent
-class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
+class RequestTelegramDeserializer implements TelegramDeserializer<RequestMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
     private RequestFieldLengthProvider provider;
     private final Driver driver;
 
-    RequestTelegramMapper(Driver driver) {
+    RequestTelegramDeserializer(Driver driver) {
         this.driver = driver;
     }
 
@@ -71,18 +72,24 @@ class RequestTelegramMapper implements TelegramDeserializer<RequestMessage> {
         int startErrorCode = startTargetLocation + provider.locationIdLength();
         int startCreateDate = startErrorCode + Payload.ERROR_CODE_LENGTH;
 
-        RequestMessage message;
         try {
-            message = new RequestMessage.Builder(provider)
-                    .withBarcode(telegram.substring(startPayload, startActualLocation))
-                    .withActualLocation(telegram.substring(startActualLocation, startTargetLocation))
-                    .withTargetLocation(telegram.substring(startTargetLocation, startErrorCode))
-                    .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
-                    .withCreateDate(
+            GenericMessage<RequestMessage> result =
+                new GenericMessage<>(
+                    new RequestMessage.Builder(provider)
+                        .withBarcode(telegram.substring(startPayload, startActualLocation))
+                        .withActualLocation(telegram.substring(startActualLocation, startTargetLocation))
+                        .withTargetLocation(telegram.substring(startTargetLocation, startErrorCode))
+                        .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
+                        .withCreateDate(
                             telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH),
                             driver.getOsip().getDatePattern()
-                    ).build();
-            return new GenericMessage<>(message, CommonMessageFactory.createHeaders(telegram, headers));
+                        ).build(),
+                    CommonMessageFactory.createHeaders(telegram, headers)
+                );
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Transformed telegram into RequestMessage message: [{}]", result);
+            }
+            return result;
         } catch (ParseException e) {
             throw new MessageMismatchException(e.getMessage(), e);
         }
