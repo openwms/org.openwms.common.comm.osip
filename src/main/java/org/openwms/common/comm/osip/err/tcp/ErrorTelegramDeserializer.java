@@ -58,7 +58,7 @@ class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
     @Override
     public Message<ErrorMessage> deserialize(String telegram, Map<String, Object> headers) {
         if (TELEGRAM_LOGGER.isDebugEnabled()) {
-            TELEGRAM_LOGGER.debug("Telegram to transform: [{}]", telegram);
+            TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         int startPayload = LENGTH_HEADER + forType().length();
         int startCreateDate = startPayload + ERROR_CODE_LENGTH;
