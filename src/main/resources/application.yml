@@ -23,20 +23,21 @@ owms:
       err:
         exchange-name: osip
         queue-name: osip-err-queue
-        routing-key: osip.err.received
+        routing-key-in: osip.err.mfc
+        routing-key-out: osip.err.ss
       locu:
         exchange-name: osip
-        routing-key: osip.locu.received
+        routing-key-out: osip.locu.ss
       req:
         exchange-name: osip
-        routing-key: osip.req.received
+        routing-key-out: osip.req.ss
       res:
         exchange-name: osip
         queue-name: osip-res-queue
-        routing-key: osip.res.received
+        routing-key-in: osip.res.*
       sysu:
         exchange-name: osip
-        routing-key: osip.sysu.received
+        routing-key-out: osip.sysu.ss
       upd:
         exchange-name: osip
-        routing-key: osip.upd.received
+        routing-key-out: osip.upd.ss

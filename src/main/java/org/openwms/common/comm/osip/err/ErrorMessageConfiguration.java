@@ -19,8 +19,8 @@ import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +45,9 @@ class ErrorMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean
-    DirectExchange errExchange(@Value("${owms.driver.osip.err.exchange-name}") String exchangeName) {
-        return new DirectExchange(exchangeName);
+    TopicExchange errExchange(
+            @Value("${owms.driver.osip.err.exchange-name}") String exchangeName) {
+        return new TopicExchange(exchangeName, true, false);
     }
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
@@ -58,13 +59,13 @@ class ErrorMessageConfiguration {
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean
     Binding errBinding(
-            @Value("${owms.driver.osip.err.exchange-name}") String exchangeName,
-            @Value("${owms.driver.osip.err.queue-name}") String queueName,
-            @Value("${owms.driver.osip.err.routing-key}") String routingKey
+            TopicExchange errExchange,
+            Queue errQueue,
+            @Value("${owms.driver.osip.err.routing-key-in}") String routingKey
     ) {
         return BindingBuilder
-                .bind(errQueue(queueName))
-                .to(errExchange(exchangeName))
+                .bind(errQueue)
+                .to(errExchange)
                 .with(routingKey);
     }
 }

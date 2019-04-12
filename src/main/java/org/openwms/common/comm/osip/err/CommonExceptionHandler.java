@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
+import java.util.Date;
+
 /**
  * A CommonExceptionHandler.
  * 
@@ -53,6 +55,6 @@ public class CommonExceptionHandler {
         String sender = header.getSender();
         header.setSender(header.getReceiver());
         header.setReceiver(sender);
-        return new ErrorMessage.Builder().withErrorCode(ErrorCodes.UNKNOWN_MESSAGE_TYPE).withCreateDate().build();
+        return ErrorMessage.newBuilder().errorCode(ErrorCodes.UNKNOWN_MESSAGE_TYPE).created(new Date()).build();
     }
 }

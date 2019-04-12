@@ -128,9 +128,7 @@ public abstract class Payload implements Serializable {
      *            The created to set.
      */
     protected void setCreated(Date created) {
-        if (this.created != null && this.created.equals(created)) {
-            this.created = created;
-        }
+        this.created = created;
     }
 
     /*~------------ Overrides ------------*/

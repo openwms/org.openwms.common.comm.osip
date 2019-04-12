@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.osip.sysu.spi;
+package org.openwms.common.comm.osip.internal;
 
 import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 
 /**
- * A SystemUpdateFieldLengthProviderImpl.
+ * A StaticFieldLengthProviderImpl.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
 @OSIPComponent
-class SystemUpdateFieldLengthProviderImpl implements SystemUpdateFieldLengthProvider {
+class StaticFieldLengthProviderImpl implements FieldLengthProvider {
 
     @Override
     public int lengthLocationGroupName() {
         return 20;
     }
+
+    @Override
+    public int barcodeLength() {
+        return 20;
+    }
+
+    @Override
+    public int locationIdLength() {
+        return 20;
+    }
+
+    @Override
+    public int noLocationIdFields() {
+        return 5;
+    }
+
 }

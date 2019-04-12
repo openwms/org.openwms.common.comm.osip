@@ -13,30 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.osip.req.spi;
-
-import org.openwms.common.comm.osip.OSIPComponent;
+package org.openwms.common.comm.spi;
 
 /**
- * A RequestFieldLengthProviderImpl.
+ * A FieldLengthProvider.
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-@OSIPComponent
-class RequestFieldLengthProviderImpl implements RequestFieldLengthProvider{
+public interface FieldLengthProvider {
 
-    @Override
-    public int barcodeLength() {
-        return 20;
-    }
+    int lengthLocationGroupName();
 
-    @Override
-    public int locationIdLength() {
-        return 20;
-    }
+    int barcodeLength();
 
-    @Override
-    public int noLocationIdFields() {
-        return 5;
-    }
+    int locationIdLength();
+
+    int noLocationIdFields();
+
 }

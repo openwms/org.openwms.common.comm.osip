@@ -59,7 +59,7 @@ class AsyncConfig {
     Map<String, Integer> asyncBootLogger(
             @Value("${owms.driver.osip.res.queue-name}") String queueName,
             @Value("${owms.driver.osip.res.exchange-name}") String exchangeMapping,
-            @Value("${owms.driver.osip.res.routing-key}") String routingKey
+            @Value("${owms.driver.osip.res.routing-key-in}") String routingKey
     ) {
         Map<String, Integer> res = new HashMap<>();
         BOOT_LOGGER.info("In ASYNCHRONOUS mode. OSIP RES bound to Queue [{}], Exchange [{}] and using Routing Key [{}]", queueName, exchangeMapping, routingKey);
@@ -86,7 +86,7 @@ class AsyncConfig {
     StatefulRetryOperationsInterceptor interceptor() {
         return RetryInterceptorBuilder.stateful()
                 .maxAttempts(3)
-                .backOffOptions(1000, 2.0, 10000) // initialInterval, multiplier, maxInterval
+                .backOffOptions(1000, 2.0, 10000)
                 .build();
     }
 

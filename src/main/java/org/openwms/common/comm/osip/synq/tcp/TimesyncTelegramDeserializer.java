@@ -66,7 +66,8 @@ class TimesyncTelegramDeserializer implements TelegramDeserializer<TimesyncReque
             request.setSenderTimer(
                     new SimpleDateFormat(driver
                             .getOsip().getDatePattern())
-                            .parse(telegram.substring(startSendertime, startSendertime + DATE_LENGTH)));
+                            .parse(telegram.substring(startSendertime, startSendertime + DATE_LENGTH))
+            );
 
             GenericMessage<TimesyncRequest> result =
                     new GenericMessage<>(

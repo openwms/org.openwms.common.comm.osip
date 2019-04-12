@@ -17,7 +17,7 @@ package org.openwms.common.comm.osip.locu;
 
 import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
-import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +42,8 @@ class LocationUpdateMessageConfiguration {
 
     @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
     @Bean
-    DirectExchange locuExchange(
+    TopicExchange locuExchange(
             @Value("${owms.driver.osip.locu.exchange-name}") String exchangeName) {
-        return new DirectExchange(exchangeName);
+        return new TopicExchange(exchangeName, true, false);
     }
 }

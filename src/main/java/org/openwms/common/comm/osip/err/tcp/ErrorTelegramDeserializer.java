@@ -17,10 +17,12 @@ package org.openwms.common.comm.osip.err.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
+import org.openwms.common.comm.ParserUtils;
 import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.err.ErrorMessage;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
@@ -47,9 +50,11 @@ class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final Driver driver;
+    private final FieldLengthProvider lengthProvider;
 
-    ErrorTelegramDeserializer(Driver driver) {
+    ErrorTelegramDeserializer(Driver driver, FieldLengthProvider lengthProvider) {
         this.driver = driver;
+        this.lengthProvider = lengthProvider;
     }
 
     /**
@@ -60,16 +65,19 @@ class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
         if (TELEGRAM_LOGGER.isDebugEnabled()) {
             TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
-        int startPayload = LENGTH_HEADER + forType().length();
-        int startCreateDate = startPayload + ERROR_CODE_LENGTH;
+        int startLocationGroup = LENGTH_HEADER + forType().length();
+        int startErrorCode = startLocationGroup + lengthProvider.lengthLocationGroupName();
+        int startCreateDate = startErrorCode + ERROR_CODE_LENGTH;
         try {
             GenericMessage<ErrorMessage> result =
                 new GenericMessage<>(
-                    new ErrorMessage.Builder()
-                        .withErrorCode(telegram.substring(startPayload, startCreateDate))
-                        .withCreateDate(
-                            telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
-                            driver.getOsip().getDatePattern()
+                    ErrorMessage.newBuilder()
+                        .errorCode(telegram.substring(startErrorCode, startCreateDate))
+                        .locationGroupName(ParserUtils.trimRight(telegram.substring(startLocationGroup, startErrorCode), '*'))
+                        .created(
+                            new SimpleDateFormat(driver
+                                .getOsip().getDatePattern())
+                                .parse(telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH))
                         )
                         .build(),
                         CommonMessageFactory.createHeaders(telegram, headers)

@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.osip.sysu.spi;
-
 /**
- * A SystemUpdateFieldLengthProvider.
- *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * Contains default implementations and bean instances that can be overridden.
  */
-public interface SystemUpdateFieldLengthProvider {
+package org.openwms.common.comm.osip.internal;
 
-    int lengthLocationGroupName();
-}

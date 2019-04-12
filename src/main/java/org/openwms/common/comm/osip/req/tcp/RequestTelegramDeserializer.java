@@ -22,7 +22,7 @@ import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.req.RequestMessage;
-import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ class RequestTelegramDeserializer implements TelegramDeserializer<RequestMessage
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
-    private RequestFieldLengthProvider provider;
+    private FieldLengthProvider provider;
     private final Driver driver;
 
     RequestTelegramDeserializer(Driver driver) {

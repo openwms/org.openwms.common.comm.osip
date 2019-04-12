@@ -14,6 +14,8 @@ spring:
       headers:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: true
+  rabbitmq:
+    virtual-host: openwms
 
 owms:
   srv:

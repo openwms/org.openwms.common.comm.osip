@@ -40,7 +40,9 @@ class AmqpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
     private final String exchangeName;
     private final String routingKey;
 
-    AmqpSystemUpdateMessageHandler(AmqpTemplate amqpTemplate, @Value("${owms.driver.osip.sysu.exchange-name}") String exchangeName, @Value("${owms.driver.osip.sysu.routing-key}") String routingKey) {
+    AmqpSystemUpdateMessageHandler(AmqpTemplate amqpTemplate,
+            @Value("${owms.driver.osip.sysu.exchange-name}") String exchangeName,
+            @Value("${owms.driver.osip.sysu.routing-key-out}") String routingKey) {
         this.amqpTemplate = amqpTemplate;
         this.exchangeName = exchangeName;
         this.routingKey = routingKey;
