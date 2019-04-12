@@ -19,8 +19,6 @@ import org.openwms.common.comm.osip.Payload;
 import org.openwms.common.comm.osip.ResponseHeader;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -33,10 +31,23 @@ public class ErrorMessage extends Payload implements Serializable {
 
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "ERR_";
+    private String locationGroupName;
+    private Date createDate;
 
     /*~------------ Constructors ------------*/
     public ErrorMessage() {
         super();
+    }
+
+    private ErrorMessage(Builder builder) {
+        setHeader(builder.header);
+        setErrorCode(builder.errorCode);
+        setCreated(builder.created);
+        locationGroupName = builder.locationGroupName;
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     /*~------------ Accessors ------------*/
@@ -48,64 +59,54 @@ public class ErrorMessage extends Payload implements Serializable {
         super.setHeader(header);
     }
 
+    public String getLocationGroupName() {
+        return locationGroupName;
+    }
+
+    public void setLocationGroupName(String locationGroupName) {
+        this.locationGroupName = locationGroupName;
+    }
+
+    public Date getCreateDate() {
+        return super.getCreated();
+    }
+
+    public void setCreateDate(Date createDate) {
+        super.setCreated(createDate);
+    }
+
     /*~------------ Builders ------------*/
-    /**
-     * A Builder.
-     * 
-     * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
-     */
-    public static class Builder {
+    public static final class Builder {
+        private ResponseHeader header;
+        private String errorCode;
+        private Date created;
+        private String locationGroupName;
 
-        private final ErrorMessage message;
-
-        /**
-         * Create a new Builder.
-         */
-        public Builder() {
-            this.message = new ErrorMessage();
+        private Builder() {
         }
 
-        /**
-         * Add an error code to the message.
-         * 
-         * @param errorCode
-         *            The error code
-         * @return The builder
-         */
-        public Builder withErrorCode(String errorCode) {
-            message.setErrorCode(errorCode);
+        public Builder header(ResponseHeader val) {
+            header = val;
             return this;
         }
 
-        /**
-         * Add the date of creation in an expected format.
-         *
-         * @param createDate The creation date as String
-         * @param pattern The datetime pattern used for the date
-         * @return The builder
-         */
-        public Builder withCreateDate(String createDate, String pattern) throws ParseException {
-            message.setCreated(new SimpleDateFormat(pattern).parse(createDate));
+        public Builder errorCode(String val) {
+            errorCode = val;
             return this;
         }
 
-        /**
-         * Add a new instance of Date to the Message.
-         * 
-         * @return The builder
-         */
-        public Builder withCreateDate() {
-            message.setCreated(new Date());
+        public Builder created(Date val) {
+            created = val;
             return this;
         }
 
-        /**
-         * Build and return the Message.
-         * 
-         * @return The Message
-         */
+        public Builder locationGroupName(String val) {
+            locationGroupName = val;
+            return this;
+        }
+
         public ErrorMessage build() {
-            return message;
+            return new ErrorMessage(this);
         }
     }
 

@@ -52,6 +52,7 @@ public class ErrorMessageSerializer extends OSIPSerializer<ErrorMessage> {
     @Override
     protected String convert(ErrorMessage message) {
         return getMessageIdentifier() +
+                message.getLocationGroupName() +
                 message.getErrorCode() +
                 new SimpleDateFormat(getDriver().getOsip().getDatePattern()).format(timeProvider.now());
     }

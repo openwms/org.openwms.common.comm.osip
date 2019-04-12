@@ -21,7 +21,7 @@ import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.sysu.SystemUpdateMessage;
-import org.openwms.common.comm.osip.sysu.spi.SystemUpdateFieldLengthProvider;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ class SystemUpdateTelegramDeserializer implements TelegramDeserializer<SystemUpd
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemUpdateTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
-    private SystemUpdateFieldLengthProvider provider;
+    private FieldLengthProvider provider;
     private final Driver driver;
 
     SystemUpdateTelegramDeserializer(Driver driver) {

@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.sysu.spi;
 
-import org.openwms.common.comm.osip.sysu.spi.SystemUpdateFieldLengthProvider;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,10 +24,25 @@ import org.springframework.stereotype.Component;
  * @author <a href="mailto:scherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
-class TestSystemUpdateFieldLengthProvider implements SystemUpdateFieldLengthProvider {
+class TestSystemUpdateFieldLengthProvider implements FieldLengthProvider {
 
     @Override
     public int lengthLocationGroupName() {
         return 20;
+    }
+
+    @Override
+    public int barcodeLength() {
+        return 20;
+    }
+
+    @Override
+    public int locationIdLength() {
+        return 20;
+    }
+
+    @Override
+    public int noLocationIdFields() {
+        return 5;
     }
 }

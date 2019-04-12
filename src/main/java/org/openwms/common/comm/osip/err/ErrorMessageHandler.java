@@ -52,11 +52,11 @@ class ErrorMessageHandler {
         MessageChannel channel = channels.getOutboundChannel(headers.get(OSIPHeader.SENDER_FIELD_NAME));
         MessagingTemplate template = new MessagingTemplate();
         Message<ErrorMessage> message =
-                MessageBuilder
-                        .withPayload(msg)
-                        .copyHeaders(msg.getHeader().getAll())
-                .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
-                .build();
+            MessageBuilder
+                .withPayload(msg)
+                .copyHeaders(msg.getHeader().getAll())
+            .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
+            .build();
         template.send(channel, message);
     }
 }

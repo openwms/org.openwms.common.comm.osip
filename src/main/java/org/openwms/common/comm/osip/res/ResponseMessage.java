@@ -16,7 +16,7 @@
 package org.openwms.common.comm.osip.res;
 
 import org.openwms.common.comm.osip.Payload;
-import org.openwms.common.comm.osip.req.spi.RequestFieldLengthProvider;
+import org.openwms.common.comm.spi.FieldLengthProvider;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -76,12 +76,12 @@ public class ResponseMessage extends Payload implements Serializable {
     public static class Builder {
 
         private final ResponseMessage responseMessage;
-        private final RequestFieldLengthProvider provider;
+        private final FieldLengthProvider provider;
 
         /**
          * Create a new RequestMessage.Builder.
          */
-        public Builder(RequestFieldLengthProvider provider) {
+        public Builder(FieldLengthProvider provider) {
             this.provider = provider;
             this.responseMessage = new ResponseMessage();
         }
@@ -100,7 +100,7 @@ public class ResponseMessage extends Payload implements Serializable {
         /**
          * Add an actual {@code Location} by the given unique {@code LocationPk} in an expected format like {@literal AAAAAAA/BBBBBB/...}.
          * Where the number of digits each coordinate has and the number of coordinates at all is defined by the {@code
-         * RequestFieldLengthProvider}.
+         * FieldLengthProvider}.
          *
          * @param actualLocation The String representation of {@code LocationPK} of the actual location
          * @return The builder
@@ -114,7 +114,7 @@ public class ResponseMessage extends Payload implements Serializable {
         /**
          * Add an target {@code Location} by the given unique {@code LocationPk} in an expected format like {@literal AAAAAAA/BBBBBB/...}.
          * Where the number of digits each coordinate has and the number of coordinates at all is defined by the {@code
-         * RequestFieldLengthProvider}.
+         * FieldLengthProvider}.
          *
          * @param targetLocation The String representation of {@code LocationPK} of the target location
          * @return The builder

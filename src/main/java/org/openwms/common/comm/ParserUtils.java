@@ -33,6 +33,10 @@ public final class ParserUtils {
         return String.format("%1$-" + n + "s", s).replace(" ", chr);
     }
 
+    public static String trimRight(String s, char chr) {
+        return s.substring(0, s.indexOf(chr));
+    }
+
     /**
      * Pad a String {@code s} with a number {@code n} of characters {@code chr}.
      *

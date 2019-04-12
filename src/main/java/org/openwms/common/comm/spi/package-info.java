@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains types and default implementations to extend the REQ_ telegram handling.
+ * Contains types and default implementations to extend the SYSU telegram handling.
  */
-package org.openwms.common.comm.osip.req.spi;
+package org.openwms.common.comm.spi;
 
