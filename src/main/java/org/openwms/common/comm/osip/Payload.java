@@ -27,7 +27,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 /**
  * A Payload is the abstract superclass of all messages sent to subsystems like PLC or ERP.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public abstract class Payload implements Serializable {
 

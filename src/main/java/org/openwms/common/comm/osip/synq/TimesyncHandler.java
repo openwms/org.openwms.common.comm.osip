@@ -33,7 +33,7 @@ import java.util.function.Function;
 /**
  * A TimesyncHandler.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIPComponent
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {

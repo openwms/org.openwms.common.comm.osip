@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * A MessageTransformer.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @MessageEndpoint("messageTransformer")
 public class MessageTransformer<T> {

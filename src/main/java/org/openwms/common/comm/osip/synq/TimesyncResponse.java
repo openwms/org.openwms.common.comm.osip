@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * A TimesyncResponse.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class TimesyncResponse extends Payload implements Serializable {
 

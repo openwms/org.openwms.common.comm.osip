@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 /**
  * A SystemUpdateMessage reflects the OSIP SYSU telegram type and is used to change the state of a {@code LocationGroup}.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class SystemUpdateMessage extends Payload implements Serializable {
 

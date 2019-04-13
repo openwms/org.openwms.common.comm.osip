@@ -25,7 +25,7 @@ import static java.lang.String.format;
 /**
  * A Channels.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class Channels {
 	

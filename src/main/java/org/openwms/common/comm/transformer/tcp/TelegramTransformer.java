@@ -44,7 +44,7 @@ import static java.lang.String.format;
  * be easily extended by putting new bean instances of {@link TelegramDeserializer} to the
  * classpath.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  * @see TelegramDeserializer
  */
 @MessageEndpoint("telegramTransformer")

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * A Connections.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
 @ConfigurationProperties(prefix = "owms.driver.connections")

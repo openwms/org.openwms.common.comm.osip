@@ -23,7 +23,7 @@ import java.util.Map;
  * A TelegramDeserializer is able to deserialize an incoming telegram String to a known
  * type of {@link Message}.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  * @see Message
  */
 public interface TelegramDeserializer<T> {

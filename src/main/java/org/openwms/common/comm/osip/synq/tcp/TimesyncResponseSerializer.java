@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 /**
  * A TimesyncResponseSerializer.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIPComponent
 class TimesyncResponseSerializer extends OSIPSerializer<TimesyncResponse> {

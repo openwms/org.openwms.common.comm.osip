@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 /**
  * A ErrorMessageSerializer.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIPComponent
 public class ErrorMessageSerializer extends OSIPSerializer<ErrorMessage> {

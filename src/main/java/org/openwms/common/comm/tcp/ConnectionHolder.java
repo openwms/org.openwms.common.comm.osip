@@ -33,7 +33,7 @@ import static java.lang.String.format;
  * listens on events whenever a new Connection is opened and stores the ConnectionId
  * that can be used as header argument in outbound messages.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
 public class ConnectionHolder {

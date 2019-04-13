@@ -26,7 +26,7 @@ import static org.openwms.common.comm.ParserUtils.padLeft;
 /**
  * A OSIPHeader represents the header part of a OSIP telegram message.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class OSIPHeader implements Serializable {
 
@@ -62,7 +62,7 @@ public class OSIPHeader implements Serializable {
         sequenceNo = builder.sequenceNo;
     }
 
-    public Iterable<? extends Map.Entry<String, Object>> getAll() {
+    public Iterable<Map.Entry<String, Object>> getAll() {
         return Arrays.asList(
                 new HashMap.SimpleEntry<>(SYNC_FIELD_NAME, sync),
                 new HashMap.SimpleEntry<>(MSG_LENGTH_FIELD_NAME, messageLength),
