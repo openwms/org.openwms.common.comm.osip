@@ -32,7 +32,6 @@ public class ErrorMessage extends Payload implements Serializable {
     /** Message identifier {@value} . */
     public static final String IDENTIFIER = "ERR_";
     private String locationGroupName;
-    private Date createDate;
 
     /*~------------ Constructors ------------*/
     public ErrorMessage() {
@@ -51,28 +50,12 @@ public class ErrorMessage extends Payload implements Serializable {
     }
 
     /*~------------ Accessors ------------*/
-    public ResponseHeader getHeader() {
-        return super.getHeader();
-    }
-
-    public void setHeader(ResponseHeader header) {
-        super.setHeader(header);
-    }
-
     public String getLocationGroupName() {
         return locationGroupName;
     }
 
     public void setLocationGroupName(String locationGroupName) {
         this.locationGroupName = locationGroupName;
-    }
-
-    public Date getCreateDate() {
-        return super.getCreated();
-    }
-
-    public void setCreateDate(Date createDate) {
-        super.setCreated(createDate);
     }
 
     /*~------------ Builders ------------*/

@@ -31,7 +31,9 @@ import java.util.StringJoiner;
 public class ResponseHeader implements Serializable {
 
     @JsonProperty
-    private String sender, receiver;
+    private String sender;
+    @JsonProperty
+    private String receiver;
     @JsonProperty
     private short sequenceNo;
 

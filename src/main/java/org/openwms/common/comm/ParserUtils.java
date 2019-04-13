@@ -22,17 +22,27 @@ package org.openwms.common.comm;
  */
 public final class ParserUtils {
 
+    private ParserUtils() {
+    }
+
     /**
-     * Pad a String {@code s} with a number {@code n} of characters {@code chr}.
+     * Pad the given String {@code s} with a number {@code n} of characters {@code chr}.
      *
      * @param s The String to pad
      * @param n Number of digits in sum
-     * @return The padded String
+     * @return A new padded String instance
      */
     public static String padRight(String s, int n, String chr) {
         return String.format("%1$-" + n + "s", s).replace(" ", chr);
     }
 
+    /**
+     * Trim the given String {@code s} about the character {@code chr}.
+     *
+     * @param s The String to analyse
+     * @param chr The character to remove from the right end sid
+     * @return A new trimmed String instance
+     */
     public static String trimRight(String s, char chr) {
         return s.substring(0, s.indexOf(chr));
     }
@@ -42,29 +52,49 @@ public final class ParserUtils {
      *
      * @param s The String to pad
      * @param n Number of digits in sum
-     * @return The padded String
+     * @return A new padded String instance
      */
     public static String padLeft(String s, int n, String chr) {
         return String.format("%1$" + n + "s", s).replace(" ", chr);
     }
 
-    public static String nullableBarcode(String location) {
-        if (location == null || location.isEmpty()) {
+    /**
+     * Return the standard telegram representation (???..) if the {@code barcode} is {@literal null}.
+     *
+     * @param barcode The Barcode to translate
+     * @return The barcode or ????????????????????
+     */
+    public static String nullableBarcode(String barcode) {
+        if (barcode == null || barcode.isEmpty()) {
             return padLeft("", 20, "?");
         }
-        return location.replace("/", "");
+        return barcode;
     }
 
-    public static String nullableLocation(String location) {
-        if (location == null || location.isEmpty()) {
+    /**
+     * Return the standard telegram representation (***..) if the {@code locationId} is
+     * {@literal null}.
+     *
+     * @param locationId The LocationId to translate
+     * @return The normalized LocationId or ********************
+     */
+    public static String nullableLocation(String locationId) {
+        if (locationId == null || locationId.isEmpty()) {
             return padLeft("", 20, "*");
         }
-        return location.replace("/", "");
+        return locationId.replace("/", "");
     }
 
+    /**
+     * Return the standard telegram representation (***..) if the {@code locationGroup} is
+     * {@literal null}.
+     *
+     * @param locationGroup The name of the LocationGroup to analyse
+     * @return The normalized name or ********************
+     */
     public static String nullableLocationGroup(String locationGroup) {
         if (locationGroup == null || locationGroup.isEmpty()) {
-            return padLeft("", 21, "*");
+            return padLeft("", 20, "*");
         }
         return locationGroup;
     }
