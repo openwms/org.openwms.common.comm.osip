@@ -28,7 +28,15 @@ import java.util.Date;
 public class RequestVO implements Serializable {
 
     @JsonProperty
-    String type, actualLocation, targetLocation, targetLocationGroup, barcode;
+    String type;
+    @JsonProperty
+    String actualLocation;
+    @JsonProperty
+    String targetLocation;
+    @JsonProperty
+    String targetLocationGroup;
+    @JsonProperty
+    String barcode;
     @JsonProperty
     RequestHeaderVO header;
     @JsonProperty
@@ -113,7 +121,11 @@ public class RequestVO implements Serializable {
 
     public static class RequestHeaderVO implements Serializable {
         @JsonProperty
-        String sender, receiver, sequenceNo;
+        String sender;
+        @JsonProperty
+        String receiver;
+        @JsonProperty
+        String sequenceNo;
 
         private RequestHeaderVO(Builder builder) {
             setSender(builder.sender);
@@ -150,9 +162,6 @@ public class RequestVO implements Serializable {
             private String receiver;
             private String sequenceNo;
 
-            public Builder() {
-            }
-
             public Builder sender(String val) {
                 sender = val;
                 return this;
@@ -183,9 +192,6 @@ public class RequestVO implements Serializable {
         private RequestHeaderVO header;
         private String errorCode;
         private Date created;
-
-        public Builder() {
-        }
 
         public Builder type(String val) {
             type = val;
