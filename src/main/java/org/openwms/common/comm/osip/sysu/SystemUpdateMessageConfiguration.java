@@ -29,7 +29,7 @@ import org.springframework.messaging.MessageChannel;
  * A SystemUpdateMessageConfiguration is the JavaConfig for the {@link SystemUpdateMessage}
  * handling part.
  * 
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIP
 @Configuration

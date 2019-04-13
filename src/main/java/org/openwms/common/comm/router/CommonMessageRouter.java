@@ -38,7 +38,7 @@ import static java.lang.String.format;
  * {@link CustomServiceActivator} when an incoming message arrives. If no suitable processor is found, the message will be delegated to the
  * default exception channel.
  * 
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @MessageEndpoint("messageRouter")
 public class CommonMessageRouter {

@@ -61,7 +61,7 @@ import static org.ameba.LoggingCategories.BOOT;
 /**
  * A DriverConfig.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Configuration
 @IntegrationComponentScan
@@ -240,7 +240,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
 
     @Bean
     MessageChannel outboundChannel() {
-        return MessageChannels.direct().get();//executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.direct().get();
     }
 
     DirectChannel createEnrichedOutboundChannel(AbstractMessageHandler messageHandler) {

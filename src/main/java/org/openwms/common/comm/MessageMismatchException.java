@@ -18,7 +18,7 @@ package org.openwms.common.comm;
 /**
  * A MessageMismatchException indicates that an incoming message is not in expected format.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class MessageMismatchException extends MessageProcessingException {
 

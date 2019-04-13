@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Profile;
  * A TimesyncConfiguration is the JavaConfig for the {@link ResponseMessage} handling
  * part.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIP

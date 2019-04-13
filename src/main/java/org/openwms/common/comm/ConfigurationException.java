@@ -18,7 +18,7 @@ package org.openwms.common.comm;
 /**
  * A ConfigurationException signals invalid process configuration.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public class ConfigurationException extends RuntimeException {
 

@@ -18,7 +18,7 @@ package org.openwms.common.comm;
 /**
  * A final CommConstants class collects common used data and formatting types.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 public final class CommConstants {
 

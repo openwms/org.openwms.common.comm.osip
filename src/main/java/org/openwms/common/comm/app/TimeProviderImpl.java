@@ -26,7 +26,7 @@ import java.util.Date;
 /**
  * A TimeProviderImpl.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Component
 class TimeProviderImpl implements TimeProvider {
