@@ -32,13 +32,12 @@ public class TimesyncRequest extends Payload implements Serializable {
     private Date senderTimer;
 
     /*~------------ Accessors ------------*/
-    /**
-     * Set the time of the sending party.
-     *
-     * @param senderTimer The senderTimer
-     */
     public void setSenderTimer(Date senderTimer) {
         this.senderTimer = senderTimer;
+    }
+
+    public Date getSenderTimer() {
+        return senderTimer;
     }
 
     /*~------------ Overrides ------------*/

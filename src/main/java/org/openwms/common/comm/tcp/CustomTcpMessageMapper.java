@@ -37,7 +37,6 @@ public class CustomTcpMessageMapper extends TcpMessageMapper {
 
     @Override
     public Object fromMessage(Message<?> message) throws Exception {
-        Object data = super.fromMessage(message);
-        return data;
+        return super.fromMessage(message);
     }
 }
