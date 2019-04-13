@@ -132,22 +132,38 @@ public abstract class Payload implements Serializable {
     }
 
     /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Payload payload = (Payload) o;
+        return Objects.equals(header, payload.header) && Objects.equals(errorCode, payload.errorCode) && Objects.equals(created, payload.created);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(header, errorCode, created);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
     @Override
     public String toString() {
         return new StringJoiner(", ", Payload.class.getSimpleName() + "[", "]").add("header=" + header).add("errorCode='" + errorCode + "'").add("created=" + created).toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Payload payload = (Payload) o;
-        return Objects.equals(errorCode, payload.errorCode) &&
-                Objects.equals(created, payload.created);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(errorCode, created);
     }
 }

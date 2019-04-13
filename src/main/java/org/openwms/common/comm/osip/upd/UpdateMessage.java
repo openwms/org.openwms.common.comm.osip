@@ -49,7 +49,7 @@ public class UpdateMessage extends Payload implements Serializable {
         return barcode;
     }
 
-    private void setBarcode(String barcode) {
+    void setBarcode(String barcode) {
         this.barcode = barcode;
     }
 
@@ -57,7 +57,7 @@ public class UpdateMessage extends Payload implements Serializable {
         return actualLocation;
     }
 
-    private void setActualLocation(String actualLocation) {
+    void setActualLocation(String actualLocation) {
         this.actualLocation = actualLocation;
     }
 

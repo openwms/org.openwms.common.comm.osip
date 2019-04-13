@@ -21,6 +21,7 @@ import org.openwms.common.comm.spi.FieldLengthProvider;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -76,6 +77,33 @@ public class RequestMessage extends Payload implements Serializable {
     @Override
     public boolean isWithoutReply() {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        RequestMessage that = (RequestMessage) o;
+        return Objects.equals(barcode, that.barcode) && Objects.equals(actualLocation, that.actualLocation) && Objects.equals(targetLocation, that.targetLocation);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), barcode, actualLocation, targetLocation);
     }
 
     /**

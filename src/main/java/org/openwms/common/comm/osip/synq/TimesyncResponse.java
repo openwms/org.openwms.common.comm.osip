@@ -20,6 +20,8 @@ import org.openwms.common.comm.osip.ResponseHeader;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A TimesyncResponse.
@@ -50,15 +52,70 @@ public class TimesyncResponse extends Payload implements Serializable {
         return senderTime;
     }
 
+    /*~------------ Overrides ------------*/
+    /**
+     * Subclasses have to return an unique, case-sensitive message identifier.
+     *
+     * @return The message TYPE field (see OSIP specification)
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * Does this type of message needs to be replied to?
+     *
+     * @return {@literal true} no reply needed, otherwise {@literal false}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        TimesyncResponse that = (TimesyncResponse) o;
+        return Objects.equals(senderTime, that.senderTime);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), senderTime);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TimesyncResponse.class.getSimpleName() + "[", "]").add("senderTime=" + senderTime).toString();
+    }
+
     /*~------------ Builders ------------*/
     public static final class Builder {
         private ResponseHeader header;
         private String errorCode;
         private Date created;
         private Date senderTime;
-
-        public Builder() {
-        }
 
         public Builder header(ResponseHeader val) {
             header = val;
@@ -83,26 +140,5 @@ public class TimesyncResponse extends Payload implements Serializable {
         public TimesyncResponse build() {
             return new TimesyncResponse(this);
         }
-    }
-
-    /*~------------ Overrides ------------*/
-    /**
-     * Subclasses have to return an unique, case-sensitive message identifier.
-     *
-     * @return The message TYPE field (see OSIP specification)
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * Does this type of message needs to be replied to?
-     *
-     * @return {@literal true} no reply needed, otherwise {@literal false}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return false;
     }
 }
