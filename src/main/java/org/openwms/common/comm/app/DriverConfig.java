@@ -20,7 +20,6 @@ import org.openwms.common.comm.ConfigurationException;
 import org.openwms.common.comm.config.Connections;
 import org.openwms.common.comm.config.Subsystem;
 import org.openwms.common.comm.osip.PayloadSerializer;
-import org.openwms.common.comm.tcp.CustomTcpMessageMapper;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -271,8 +270,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
     /*~ ----------------   Converter---------------- */
     @Bean
     TcpMessageMapper customTcpMessageMapper(ByteArrayMessageConverter byteArrayMessageConverter, MapMessageConverter mapMessageConverter) {
-        CustomTcpMessageMapper messageMapper = new CustomTcpMessageMapper(mapMessageConverter);
-        return messageMapper;
+        return new TcpMessageMapper();
     }
 
     @Bean
