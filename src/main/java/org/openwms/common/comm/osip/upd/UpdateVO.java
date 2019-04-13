@@ -100,7 +100,11 @@ class UpdateVO implements Serializable {
     /*~------------ Inner Classes ------------*/
     static class UpdateHeaderVO {
         @JsonProperty
-        String sender, receiver, sequenceNo;
+        String sender;
+        @JsonProperty
+        String receiver;
+        @JsonProperty
+        String sequenceNo;
 
         private UpdateHeaderVO(Builder builder) {
             setSender(builder.sender);
@@ -137,9 +141,6 @@ class UpdateVO implements Serializable {
             private String receiver;
             private String sequenceNo;
 
-            public Builder() {
-            }
-
             public Builder sender(String val) {
                 sender = val;
                 return this;
@@ -169,9 +170,6 @@ class UpdateVO implements Serializable {
         private UpdateHeaderVO header;
         private String errorCode;
         private Date created;
-
-        public Builder() {
-        }
 
         public Builder type(String val) {
             type = val;
