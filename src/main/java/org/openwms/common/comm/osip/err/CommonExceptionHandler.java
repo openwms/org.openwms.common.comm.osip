@@ -49,7 +49,7 @@ public class CommonExceptionHandler {
     @ServiceActivator(inputChannel = "commonExceptionChannel", outputChannel = "outboundChannel")
     public ErrorMessage handle(String telegram) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Common error: " + telegram);
+            LOGGER.info("Common error: {}", telegram);
         }
         OSIPHeader header = CommonMessageFactory.createHeader(telegram);
         String sender = header.getSender();

@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.openwms.common.comm.ParserUtils.padLeft;
 
@@ -136,6 +137,8 @@ public class OSIPHeader implements Serializable {
 
     /**
      * {@inheritDoc}
+     *
+     * All fields.
      */
     @Override
     public int hashCode() {
@@ -151,44 +154,17 @@ public class OSIPHeader implements Serializable {
 
     /**
      * {@inheritDoc}
+     *
+     * All fields.
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o)
             return true;
-        }
-        if (obj == null) {
+        if (o == null || getClass() != o.getClass())
             return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        OSIPHeader other = (OSIPHeader) obj;
-        if (receiver == null) {
-            if (other.receiver != null) {
-                return false;
-            }
-        } else if (!receiver.equals(other.receiver)) {
-            return false;
-        }
-        if (sender == null) {
-            if (other.sender != null) {
-                return false;
-            }
-        } else if (!sender.equals(other.sender)) {
-            return false;
-        }
-        if (sequenceNo != other.sequenceNo) {
-            return false;
-        }
-        if (sync == null) {
-            if (other.sync != null) {
-                return false;
-            }
-        } else if (!sync.equals(other.sync)) {
-            return false;
-        }
-        return messageLength == other.messageLength;
+        OSIPHeader that = (OSIPHeader) o;
+        return messageLength == that.messageLength && sequenceNo == that.sequenceNo && Objects.equals(sync, that.sync) && Objects.equals(sender, that.sender) && Objects.equals(receiver, that.receiver);
     }
 
     @Override
@@ -202,9 +178,6 @@ public class OSIPHeader implements Serializable {
         private String sender;
         private String receiver;
         private short sequenceNo;
-
-        public Builder() {
-        }
 
         public Builder sync(String val) {
             sync = val;

@@ -18,7 +18,6 @@ package org.openwms.common.comm.osip;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.messaging.support.GenericMessage;
 
 import java.util.Map;
@@ -31,8 +30,7 @@ import java.util.Map;
 class OSIPJsonMessageConverter extends Jackson2JsonMessageConverter {
 
     @Override
-    protected Message createMessage(Object objectToConvert, MessageProperties messageProperties)
-            throws MessageConversionException {
+    protected Message createMessage(Object objectToConvert, MessageProperties messageProperties) {
 
         if (objectToConvert instanceof GenericMessage) {
             GenericMessage gm = (GenericMessage) objectToConvert;

@@ -23,7 +23,10 @@ import org.springframework.messaging.support.GenericMessage;
  *
  * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
  */
-class RequestHelper {
+final class RequestHelper {
+
+    private RequestHelper() {
+    }
 
     static RequestVO getRequest(GenericMessage<RequestMessage> msg) {
         return new RequestVO.Builder()

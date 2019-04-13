@@ -70,6 +70,12 @@ import static org.ameba.LoggingCategories.BOOT;
 class DriverConfig implements ApplicationEventPublisherAware {
 
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
+    public static final String PREFIX_CONNECTION_FACTORY = "connectionFactory_";
+    public static final String SUFFIX_INBOUND = "_inbound";
+    public static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
+    public static final String SUFFIX_OUTBOUND = "_outbound";
+    public static final String PREFIX_SENDING_MESSAGE_HANDLER = "sendingMessageHandler_";
+    public static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private AnnotationConfigApplicationContext applicationContext;
@@ -78,22 +84,6 @@ class DriverConfig implements ApplicationEventPublisherAware {
         applicationContext.getBeanFactory().registerSingleton(beanName, singletonObject);
     }
 
-    /*~ ---------------- TCP/IP stuff -------------
-    @Bean("tcpServerConnectionFactory")
-    @DependsOn({"propertyHolder", "clientConnectionFactory"})
-    AbstractConnectionFactory tcpConnectionFactory(Map<String, Integer> propertyHolder,
-                                                   TcpMessageMapper customTcpMessageMapper) {
-        TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(propertyHolder.get("owms.driver.server.port"));
-        connectionFactory.setSoTimeout(propertyHolder.get("owms.driver.server.so-timeout"));
-        connectionFactory.setSerializer(telegramSerializer());
-        connectionFactory.setDeserializer(byteArraySerializer());
-        connectionFactory.setSoReceiveBufferSize(propertyHolder.get("owms.driver.server.so-receive-buffer-size"));
-        connectionFactory.setSoSendBufferSize(propertyHolder.get("owms.driver.server.so-send-buffer-size"));
-        connectionFactory.setMapper(customTcpMessageMapper);
-        connectionFactory.setSingleUse(false);
-        return connectionFactory;
-    }
- */
     private AbstractServerConnectionFactory createInboundConnectionFactory(
             Connections connections,
             Subsystem subsystem,
@@ -158,7 +148,7 @@ class DriverConfig implements ApplicationEventPublisherAware {
         if (inbound.getMode() == Subsystem.MODE.server) {
 
             AbstractServerConnectionFactory connectionFactory = createInboundConnectionFactory(connections, subsystem, customTcpMessageMapper);
-            connectionFactory.setBeanName("connectionFactory_" + subsystem.getName() + "_inbound");
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as server: Port [{}]", subsystem.getName(), inbound.getPort());
         } else if (inbound.getMode() == Subsystem.MODE.client) {
@@ -174,15 +164,14 @@ class DriverConfig implements ApplicationEventPublisherAware {
     private void attachReceivingChannelAdapter(Subsystem subsystem, MessageChannel inboundChannel, AbstractConnectionFactory connectionFactory) {
         TcpReceivingChannelAdapter channelAdapter = tcpReceivingChannelAdapter(connectionFactory, inboundChannel);
 
-        registerBean("connectionFactory_" + subsystem.getName() + "_inbound", connectionFactory);
-        registerBean("channelAdapter_" + subsystem.getName() + "_inbound", channelAdapter);
+        registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
+        registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_INBOUND, channelAdapter);
     }
 
     private AbstractClientConnectionFactory createClientConnectionFactory(String clientHostname, int clientPort, Serializer serializer) {
         TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
         connectionFactory.setSerializer(serializer == null ? byteArrayCrLfSerializer() : serializer);
         connectionFactory.setDeserializer(byteArrayCrLfSerializer());
-        //connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.start();
         return connectionFactory;
     }
@@ -193,8 +182,8 @@ class DriverConfig implements ApplicationEventPublisherAware {
         if (outbound.getMode() == Subsystem.MODE.server) {
 
             AbstractServerConnectionFactory connectionFactory = createOutboundConnectionFactory(connections, subsystem, customTcpMessageMapper);
-            connectionFactory.setBeanName("connectionFactory_" + subsystem.getName() + "_outbound");
-            connectionFactory.setComponentName("connectionFactory_" + subsystem.getName() + "_outbound");
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND);
+            connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND);
             connectionFactory.setSingleUse(false);
             connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
 
@@ -207,25 +196,25 @@ class DriverConfig implements ApplicationEventPublisherAware {
             adapter.setClientMode(false);
             adapter.start();
 
-            channels.addOutboundChannel("enrichedOutboundChannel_" + outbound.getIdentifiedByValue(), channel);
-            registerBean("connectionFactory_" + subsystem.getName() + "_outbound", connectionFactory);
-            registerBean("outboundAdapter_" + subsystem.getName() + "_outbound", adapter);
-            registerBean("sendingMessageHandler_" + subsystem.getName() + "_outbound", sendingMessageHandler);
-            registerBean("enrichedOutboundChannel_" + outbound.getIdentifiedByValue(), channel);
+            channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
+            registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND, connectionFactory);
+            registerBean("outboundAdapter_" + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
+            registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", outbound.getIdentifiedByValue(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
             AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(outbound.getHostname(), outbound.getPort(), serializer);
-            registerBean("connectionFactory_" + subsystem.getName() + "_outbound", connectionFactory);
+            registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND, connectionFactory);
 
             TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
-            registerBean("sendingMessageHandler_" + subsystem.getName() + "_outbound", sendingMessageHandler);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
 
             DirectChannel channel = createEnrichedOutboundChannel(sendingMessageHandler);
-            registerBean("enrichedOutboundChannel_" + outbound.getIdentifiedByValue(), channel);
+            registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
-            channels.addOutboundChannel("enrichedOutboundChannel_" + outbound.getIdentifiedByValue(), channel);
+            channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", outbound.getIdentifiedByValue(), outbound.getHostname(), outbound.getPort());
         } else {
             throw new ConfigurationException(format("Mode [%s] for outbound not supported. Please use [server] or [client]", outbound.getMode()));
