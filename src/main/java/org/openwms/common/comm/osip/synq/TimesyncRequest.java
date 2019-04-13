@@ -19,6 +19,8 @@ import org.openwms.common.comm.osip.Payload;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A TimesyncRequest.
@@ -59,5 +61,42 @@ public class TimesyncRequest extends Payload implements Serializable {
     @Override
     public boolean isWithoutReply() {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        TimesyncRequest that = (TimesyncRequest) o;
+        return Objects.equals(senderTimer, that.senderTimer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), senderTimer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TimesyncRequest.class.getSimpleName() + "[", "]").add("senderTimer=" + senderTimer).toString();
     }
 }

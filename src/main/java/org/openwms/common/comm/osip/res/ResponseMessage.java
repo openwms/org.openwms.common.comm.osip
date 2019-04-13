@@ -21,6 +21,8 @@ import org.openwms.common.comm.spi.FieldLengthProvider;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A OSIP ResponseMessage responds to an processed {@code RequestMessage}.
@@ -70,6 +72,60 @@ public class ResponseMessage extends Payload implements Serializable {
 
     public void setTargetLocationGroup(String targetLocationGroup) {
         this.targetLocationGroup = targetLocationGroup;
+    }
+
+    /*~------------ Overrides ------------*/
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMessageIdentifier() {
+        return IDENTIFIER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isWithoutReply() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        ResponseMessage that = (ResponseMessage) o;
+        return Objects.equals(barcode, that.barcode) && Objects.equals(actualLocation, that.actualLocation) && Objects.equals(targetLocation, that.targetLocation) && Objects.equals(targetLocationGroup, that.targetLocationGroup);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), barcode, actualLocation, targetLocation, targetLocationGroup);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Use all fields.
+     */
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ResponseMessage.class.getSimpleName() + "[", "]").add("barcode='" + barcode + "'").add("actualLocation='" + actualLocation + "'").add("targetLocation='" + targetLocation + "'").add("targetLocationGroup='" + targetLocationGroup + "'").toString();
     }
 
     /*~------------ Builders ------------*/
@@ -160,22 +216,5 @@ public class ResponseMessage extends Payload implements Serializable {
         public ResponseMessage build() {
             return responseMessage;
         }
-    }
-
-    /*~------------ Overrides ------------*/
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMessageIdentifier() {
-        return IDENTIFIER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isWithoutReply() {
-        return true;
     }
 }

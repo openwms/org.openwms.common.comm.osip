@@ -30,7 +30,11 @@ import java.util.StringJoiner;
 class UpdateVO implements Serializable {
 
     @JsonProperty
-    String type, actualLocation, barcode;
+    String type;
+    @JsonProperty
+    String actualLocation;
+    @JsonProperty
+    String barcode;
     @JsonProperty
     UpdateHeaderVO header;
     @JsonProperty
@@ -98,7 +102,7 @@ class UpdateVO implements Serializable {
     }
 
     /*~------------ Inner Classes ------------*/
-    static class UpdateHeaderVO {
+    static class UpdateHeaderVO implements Serializable {
         @JsonProperty
         String sender;
         @JsonProperty

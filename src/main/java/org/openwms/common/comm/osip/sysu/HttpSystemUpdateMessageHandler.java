@@ -84,7 +84,9 @@ class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
         @JsonProperty
         Date created;
         @JsonProperty
-        String locationGroupName, errorCode;
+        String locationGroupName;
+        @JsonProperty
+        String errorCode;
 
         private RequestVO(Builder builder) {
             setCreated(builder.created);
@@ -121,9 +123,6 @@ class HttpSystemUpdateMessageHandler implements Function<GenericMessage<SystemUp
             private Date created;
             private String locationGroupName;
             private String errorCode;
-
-            public Builder() {
-            }
 
             public Builder created(Date val) {
                 created = val;

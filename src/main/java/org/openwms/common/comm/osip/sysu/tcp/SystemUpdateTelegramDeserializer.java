@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.sysu.tcp;
 
+import org.ameba.exception.NotFoundException;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.config.Driver;
@@ -66,7 +67,7 @@ class SystemUpdateTelegramDeserializer implements TelegramDeserializer<SystemUpd
             TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         if (provider == null) {
-            throw new RuntimeException(format("Telegram handling [%s] not supported", SystemUpdateMessage.IDENTIFIER));
+            throw new NotFoundException(format("Telegram handling [%s] not supported", SystemUpdateMessage.IDENTIFIER));
         }
         int startLocationGroup = LENGTH_HEADER + forType().length();
         int startErrorCode = startLocationGroup + provider.lengthLocationGroupName();
