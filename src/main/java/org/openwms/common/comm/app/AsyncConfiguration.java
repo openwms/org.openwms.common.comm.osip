@@ -15,7 +15,6 @@
  */
 package org.openwms.common.comm.app;
 
-import org.openwms.common.comm.osip.OSIP;
 import org.openwms.core.SpringProfiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +25,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.amqp.support.converter.SerializerMessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.ameba.LoggingCategories.BOOT;
 
@@ -49,22 +43,9 @@ import static org.ameba.LoggingCategories.BOOT;
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 @EnableRabbit
-class AsyncConfig {
+class AsyncConfiguration {
 
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
-
-    @Bean
-    @OSIP
-    @RefreshScope
-    Map<String, Integer> asyncBootLogger(
-            @Value("${owms.driver.osip.res.queue-name}") String queueName,
-            @Value("${owms.driver.osip.res.exchange-name}") String exchangeMapping,
-            @Value("${owms.driver.osip.res.routing-key-in}") String routingKey
-    ) {
-        Map<String, Integer> res = new HashMap<>();
-        BOOT_LOGGER.info("In ASYNCHRONOUS mode. OSIP RES bound to Queue [{}], Exchange [{}] and using Routing Key [{}]", queueName, exchangeMapping, routingKey);
-        return res;
-    }
 
     @ConditionalOnExpression("'${owms.driver.serialization}'=='json'")
     @Bean

@@ -23,13 +23,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A AppConfig.
+ * A AppConfiguration.
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
-class AppConfig {
+class AppConfiguration {
 
     @LoadBalanced
     @Bean

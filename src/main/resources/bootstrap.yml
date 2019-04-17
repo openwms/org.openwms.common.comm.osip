@@ -15,6 +15,9 @@ spring:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: true
 
+logging:
+  file: "/tmp/owms/BOOT-COMMON.log"
+
 owms:
   srv:
     protocol: http

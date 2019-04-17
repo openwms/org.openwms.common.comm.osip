@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Headers;
@@ -47,8 +46,7 @@ import static java.lang.String.format;
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  * @see TelegramDeserializer
  */
-@MessageEndpoint("telegramTransformer")
-public class TelegramTransformer<T> {
+public class TelegramTransformer<T> implements Transformable<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TelegramTransformer.class);
     private final List<TelegramDeserializer<T>> deserializers;
@@ -75,6 +73,7 @@ public class TelegramTransformer<T> {
      * @throws MessageMismatchException if no appropriate type was found.
      */
     @Transformer
+    @Override
     public Message<T> transform(String telegram, @Headers Map<String, Object> headers) {
         if (telegram == null || telegram.isEmpty()) {
             if (LOGGER.isInfoEnabled()) {
