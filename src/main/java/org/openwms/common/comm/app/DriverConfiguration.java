@@ -19,17 +19,20 @@ import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.ConfigurationException;
 import org.openwms.common.comm.config.Connections;
 import org.openwms.common.comm.config.Subsystem;
-import org.openwms.common.comm.osip.PayloadSerializer;
+import org.openwms.common.comm.tcp.TelegramDeserializer;
 import org.openwms.common.comm.transformer.tcp.TelegramTransformer;
+import org.openwms.common.comm.transformer.tcp.Transformable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.serializer.Deserializer;
 import org.springframework.core.serializer.Serializer;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.channel.DirectChannel;
@@ -52,6 +55,7 @@ import org.springframework.integration.support.converter.MapMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.ByteArrayMessageConverter;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 
@@ -59,41 +63,77 @@ import static java.lang.String.format;
 import static org.ameba.LoggingCategories.BOOT;
 
 /**
- * A DriverConfig.
+ * A DriverConfiguration.
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Configuration
 @IntegrationComponentScan
 @EnableIntegration
-class DriverConfig implements ApplicationEventPublisherAware {
+class DriverConfiguration implements ApplicationEventPublisherAware {
 
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
-    public static final String PREFIX_CONNECTION_FACTORY = "connectionFactory_";
-    public static final String SUFFIX_INBOUND = "_inbound";
-    public static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
-    public static final String SUFFIX_OUTBOUND = "_outbound";
-    public static final String PREFIX_SENDING_MESSAGE_HANDLER = "sendingMessageHandler_";
-    public static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
+    private static final String PREFIX_CONNECTION_FACTORY = "connectionFactory_";
+    private static final String SUFFIX_INBOUND = "_inbound";
+    private static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
+    private static final String SUFFIX_OUTBOUND = "_outbound";
+    private static final String PREFIX_SENDING_MESSAGE_HANDLER = "sendingMessageHandler_";
+    private static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private AnnotationConfigApplicationContext applicationContext;
 
-    void registerBean(String beanName, Object singletonObject) {
+    private void registerBean(String beanName, Object singletonObject) {
         applicationContext.getBeanFactory().registerSingleton(beanName, singletonObject);
     }
 
-    private AbstractServerConnectionFactory createInboundConnectionFactory(
+    private TcpReceivingChannelAdapter tcpReceivingChannelAdapter(
+            AbstractConnectionFactory connectionFactory, MessageChannel inboundChannel) {
+        TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
+        adapter.setConnectionFactory(connectionFactory);
+        adapter.setOutputChannel(inboundChannel);
+        return adapter;
+    }
+
+    private void attachReceivingChannelAdapter(
+            Subsystem subsystem, MessageChannel inboundChannel,
+            AbstractConnectionFactory connectionFactory) {
+        TcpReceivingChannelAdapter channelAdapter = tcpReceivingChannelAdapter(connectionFactory, inboundChannel);
+
+        registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
+        registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_INBOUND, channelAdapter);
+    }
+
+    private TcpSendingMessageHandler createSendingMessageHandler(
+            AbstractConnectionFactory connectionFactory) {
+        TcpSendingMessageHandler handler = new TcpSendingMessageHandler();
+        handler.setConnectionFactory(connectionFactory);
+        handler.setClientMode(true);
+        return handler;
+    }
+
+    private AbstractClientConnectionFactory createClientConnectionFactory(
+            String clientHostname, int clientPort, Serializer serializer,
+            Deserializer deserializer) {
+        TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
+        connectionFactory.setSerializer(serializer);
+        connectionFactory.setDeserializer(deserializer);
+        connectionFactory.start();
+        return connectionFactory;
+    }
+
+    private AbstractServerConnectionFactory createInboundServerConnectionFactory(
             Connections connections,
             Subsystem subsystem,
-            TcpMessageMapper customTcpMessageMapper) {
+            TcpMessageMapper tcpMessageMapper,
+            Deserializer deserializer) {
 
         Subsystem.Inbound inbound = subsystem.getInbound();
         int port = Optional.ofNullable(inbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
-        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
-        connectionFactory.setMapper(customTcpMessageMapper);
+        connectionFactory.setDeserializer(deserializer);
+        connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
 
         Integer soTimeout = inbound.getSoTimeout() == null ? connections.getSoTimeout() : inbound.getSoTimeout();
@@ -108,17 +148,18 @@ class DriverConfig implements ApplicationEventPublisherAware {
         return connectionFactory;
     }
 
-    private AbstractServerConnectionFactory createOutboundConnectionFactory(
+    private AbstractServerConnectionFactory createOutboundServerConnectionFactory(
             Connections connections,
             Subsystem subsystem,
-            TcpMessageMapper customTcpMessageMapper) {
+            TcpMessageMapper tcpMessageMapper,
+            Deserializer deserializer) {
 
         Subsystem.Outbound outbound = subsystem.getOutbound();
         int port = Optional.ofNullable(outbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
-        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
-        connectionFactory.setMapper(customTcpMessageMapper);
+        connectionFactory.setDeserializer(deserializer);
+        connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
 
         Integer soTimeout = outbound.getSoTimeout() == null ? connections.getSoTimeout() : outbound.getSoTimeout();
@@ -133,26 +174,22 @@ class DriverConfig implements ApplicationEventPublisherAware {
         return connectionFactory;
     }
 
-    private TcpReceivingChannelAdapter tcpReceivingChannelAdapter(AbstractConnectionFactory connectionFactory, MessageChannel inboundChannel) {
-        TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
-        adapter.setConnectionFactory(connectionFactory);
-        adapter.setOutputChannel(inboundChannel);
-        return adapter;
-    }
-
-    private void createInbound(Connections connections, Subsystem subsystem,
-            TcpMessageMapper customTcpMessageMapper, MessageChannel inboundChannel, Serializer serializer) {
+    private void setupInbound(
+            Connections connections, Subsystem subsystem,
+            TcpMessageMapper tcpMessageMapper, MessageChannel inboundChannel,
+            Serializer serializer,
+            Deserializer deserializer) {
 
         Subsystem.Inbound inbound = subsystem.getInbound();
         if (inbound.getMode() == Subsystem.MODE.server) {
 
-            AbstractServerConnectionFactory connectionFactory = createInboundConnectionFactory(connections, subsystem, customTcpMessageMapper);
+            AbstractServerConnectionFactory connectionFactory = createInboundServerConnectionFactory(connections, subsystem, tcpMessageMapper, deserializer);
             connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as server: Port [{}]", subsystem.getName(), inbound.getPort());
         } else if (inbound.getMode() == Subsystem.MODE.client) {
 
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(inbound.getHostname(), inbound.getPort(), serializer);
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(inbound.getHostname(), inbound.getPort(), serializer, deserializer);
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), inbound.getHostname(), inbound.getPort());
         } else {
@@ -160,27 +197,15 @@ class DriverConfig implements ApplicationEventPublisherAware {
         }
     }
 
-    private void attachReceivingChannelAdapter(Subsystem subsystem, MessageChannel inboundChannel, AbstractConnectionFactory connectionFactory) {
-        TcpReceivingChannelAdapter channelAdapter = tcpReceivingChannelAdapter(connectionFactory, inboundChannel);
-
-        registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
-        registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_INBOUND, channelAdapter);
-    }
-
-    private AbstractClientConnectionFactory createClientConnectionFactory(String clientHostname, int clientPort, Serializer serializer) {
-        TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
-        connectionFactory.setSerializer(serializer == null ? byteArrayCrLfSerializer() : serializer);
-        connectionFactory.setDeserializer(byteArrayCrLfSerializer());
-        connectionFactory.start();
-        return connectionFactory;
-    }
-
-    private void createOutbound(Connections connections, Subsystem subsystem, TcpMessageMapper customTcpMessageMapper, Channels channels, Serializer serializer) {
+    private void setupOutbound(
+            Connections connections,Subsystem subsystem,
+            TcpMessageMapper tcpMessageMapper, Channels channels,
+            Serializer serializer, Deserializer deserializer) {
 
         Subsystem.Outbound outbound = subsystem.getOutbound();
         if (outbound.getMode() == Subsystem.MODE.server) {
 
-            AbstractServerConnectionFactory connectionFactory = createOutboundConnectionFactory(connections, subsystem, customTcpMessageMapper);
+            AbstractServerConnectionFactory connectionFactory = createOutboundServerConnectionFactory(connections, subsystem, tcpMessageMapper, deserializer);
             connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND);
             connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND);
             connectionFactory.setSingleUse(false);
@@ -201,10 +226,10 @@ class DriverConfig implements ApplicationEventPublisherAware {
             registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", outbound.getIdentifiedByValue(), outbound.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(outbound.getHostname(), outbound.getPort(), serializer);
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(outbound.getHostname(), outbound.getPort(), serializer, deserializer);
             registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND, connectionFactory);
 
             TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
@@ -214,17 +239,26 @@ class DriverConfig implements ApplicationEventPublisherAware {
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", outbound.getIdentifiedByValue(), outbound.getHostname(), outbound.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), outbound.getHostname(), outbound.getPort());
         } else {
             throw new ConfigurationException(format("Mode [%s] for outbound not supported. Please use [server] or [client]", outbound.getMode()));
         }
     }
 
-    TcpSendingMessageHandler createSendingMessageHandler(AbstractConnectionFactory connectionFactory) {
-        TcpSendingMessageHandler handler = new TcpSendingMessageHandler();
-        handler.setConnectionFactory(connectionFactory);
-        handler.setClientMode(true);
-        return handler;
+    @Bean
+    @DependsOn("connections")
+    Channels channels(
+            Connections connections, TcpMessageMapper tcpMessageMapper,
+            MessageChannel inboundChannel,
+            Serializer serializer,
+            Deserializer deserializer) {
+        Channels channels =  new Channels();
+        for(Subsystem subsystem : connections.getSubsystems()) {
+            setupInbound(connections, subsystem, tcpMessageMapper, inboundChannel, serializer, deserializer);
+            setupOutbound(connections, subsystem, tcpMessageMapper, channels, serializer, deserializer);
+        }
+
+        return channels;
     }
 
     /*~ --------------- MessageChannels ------------ */
@@ -243,33 +277,27 @@ class DriverConfig implements ApplicationEventPublisherAware {
         return MessageChannels.direct().get();
     }
 
-    DirectChannel createEnrichedOutboundChannel(AbstractMessageHandler messageHandler) {
+    private DirectChannel createEnrichedOutboundChannel(
+            AbstractMessageHandler messageHandler) {
         DirectChannel channel = MessageChannels.direct().get();
         channel.subscribe(messageHandler);
         return channel;
     }
 
-    @Bean
-    @DependsOn("connections")
-    Channels channels(Connections connections, TcpMessageMapper tcpMessageMapper, MessageChannel inboundChannel, @Autowired(required = false) PayloadSerializer payloadSerializer) {
-        Channels channels =  new Channels();
-        for(Subsystem subsystem : connections.getSubsystems()) {
-            createInbound(connections, subsystem, tcpMessageMapper, inboundChannel, payloadSerializer);
-            createOutbound(connections, subsystem, tcpMessageMapper, channels, payloadSerializer);
-        }
-
-        return channels;
-    }
-
     /*~ --------- Serializer / Deserializer -------- */
     @Bean
-    ByteArrayCrLfSerializer byteArrayCrLfSerializer() {
+    Serializer serializer() {
+        return new ByteArrayCrLfSerializer();
+    }
+
+    @Bean
+    Deserializer deserializer() {
         return new ByteArrayCrLfSerializer();
     }
 
     /*~ ----------------   Converter---------------- */
     @Bean
-    TcpMessageMapper customTcpMessageMapper(ByteArrayMessageConverter byteArrayMessageConverter, MapMessageConverter mapMessageConverter) {
+    TcpMessageMapper tcpMessageMapper() {
         return new TcpMessageMapper();
     }
 
@@ -285,9 +313,15 @@ class DriverConfig implements ApplicationEventPublisherAware {
         return result;
     }
 
+    @Bean
+    @ConditionalOnMissingBean(Transformable.class)
+    Transformable telegramTransformer(List<TelegramDeserializer> deserializers) {
+        return new TelegramTransformer(deserializers);
+    }
+
     /*~ -------------------- Flows ----------------- */
     @Bean
-    IntegrationFlow inboundFlow(TelegramTransformer telegramTransformer) {
+    IntegrationFlow inboundFlow(Transformable telegramTransformer) {
         return IntegrationFlows.from("inboundChannel")
                 .transform(telegramTransformer)
                 .channel("transformerOutputChannel")

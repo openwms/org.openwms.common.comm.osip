@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.app;
+package org.openwms.common.comm.osip.app;
 
 import org.openwms.common.comm.osip.res.ResponseMessage;
 import org.openwms.common.comm.osip.res.ResponseMessageServiceActivator;

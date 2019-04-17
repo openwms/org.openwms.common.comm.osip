@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Heiko Scherrer
+ * Copyright 2019 Heiko Scherrer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Contains default implementations and bean instances that can be overridden.
- */
-package org.openwms.common.comm.osip.internal;
+package org.openwms.common.comm.transformer.tcp;
 
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Headers;
+
+import java.util.Map;
+
+/**
+ * A Transformable.
+ *
+ * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ */
+public interface Transformable<T> {
+
+    Message<T> transform(String telegram, @Headers Map<String, Object> headers);
+}
