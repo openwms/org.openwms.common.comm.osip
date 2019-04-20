@@ -33,6 +33,8 @@ public class Driver {
     private ZoneId timezone = ZoneId.of("UTC+00:00");
     /** Serialization methods: json, barray */
     private String serialization;
+    /** Port number used for synchronous RESTful communication. */
+    private String portRest;
     /** OSIP protocol configuration. */
     private Osip osip;
     /** Global valid and individual connection parameters of the driver instance. */
@@ -44,6 +46,14 @@ public class Driver {
 
     public void setTimezone(ZoneId timezone) {
         this.timezone = timezone;
+    }
+
+    public String getPortRest() {
+        return portRest;
+    }
+
+    public void setPortRest(String portRest) {
+        this.portRest = portRest;
     }
 
     public String getSerialization() {
