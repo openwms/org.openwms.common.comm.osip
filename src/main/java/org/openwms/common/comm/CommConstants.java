@@ -32,6 +32,10 @@ public final class CommConstants {
     public static final String LOG_TELEGRAM_TYPE = "TelegramType";
     /** Logging category to log telegrams only. */
     public static final String CORE_INTEGRATION_MESSAGING = "CORE_INTEGRATION_MESSAGING";
+    /** Prefix used to identify the outbound channel. */
+    public static final String PREFIX_CONNECTION_FACTORY = "connectionFactory_";
+    /** Suffix used to identify the outbound channel. */
+    public static final String SUFFIX_OUTBOUND = "_outbound";
 
     private CommConstants() {
     }

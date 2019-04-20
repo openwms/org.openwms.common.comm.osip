@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
+import static org.openwms.common.comm.CommConstants.PREFIX_CONNECTION_FACTORY;
+import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 
 /**
  * A ConnectionHolder keeps track of established connections per ConnectionFactory. It
@@ -76,7 +78,7 @@ public class ConnectionHolder {
      * @return The connectionId of the active Connection
      */
     public String getConnectionId(String connectionFactoryName) {
-        String result = connectionIds.get(connectionFactoryName);
+        String result = connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_OUTBOUND);
         if (result == null) {
             throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
         }

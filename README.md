@@ -10,6 +10,46 @@ not possible. Each instance must have it's own configuration, in particular TCP/
 settings. A project (tenant) may have multiple drivers deployed, all running on different
 ports.
 
+# Operation Modes
+
+A driver instance can be started in different modes.
+
+## Simplex Communication
+
+Simplex communication means a client application connecting to the driver uses one Socket
+for the sending (or inbound) direction and another Socket for the receiving (or outbound)
+direction.
+
+The simplex communication mode can be enabled just by configuring the inbound port
+differently as the outbound port. By doing so the driver creates a two separate
+ConnectionFactories, one for inbound and one for outbound.
+
+In the driver configuration this looks like:
+```
+owms:
+  driver:
+    connections:
+      hostname: localhost
+      tcpProperties:
+      - name: G02
+        serverport: 30002
+        clienthostname: localhost
+        clientport: 31002
+        identifyby: "02"
+```
+
+Here the server port is different from the client port and the identifier that is used
+to correlate the messages is the group controller field with the value '02'.
+
+To summarize: Configure the driver in Simplex mode with two different ports and an 
+identifier that is the GroupController in the message. Then the always last connection to
+the driver acts as active connection and receives the messages.
+
+## Duplex Communication
+
+In contrast to simplex connections a project could also decide to use duplex connections
+that require only one Socket for sending and receiving communication.
+
 # Resources
 
 Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wiki)

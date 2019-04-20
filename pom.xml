@@ -33,7 +33,7 @@
         <site>
             <id>ftp-io</id>
             <name>OpenWMS.org WebSite</name>
-            <url>ftp://ftp.interface21.io/docs/common/comm</url>
+            <url>ftps://ftp.interface21.io/docs/common/comm</url>
         </site>
     </distributionManagement>
 
@@ -75,9 +75,13 @@
     </ciManagement>
 
     <properties>
+        <distribution.serverId>ftp-io</distribution.serverId>
+        <distribution.serverProtocol>ftps</distribution.serverProtocol>
         <core.version>1.3.0</core.version>
-        <logstash-logback-encoder.version>4.9</logstash-logback-encoder.version>
+        <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
         <guava.version>19.0</guava.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <maven-surefire-report-plugin.version>3.0.0-M3</maven-surefire-report-plugin.version>
     </properties>
 
     <reporting>
@@ -89,9 +93,9 @@
                         <reports>
                             <report>index</report>
                             <report>summary</report>
-                            <report>project-team</report>
-                            <report>issue-tracking</report>
-                            <report>cim</report>
+                            <report>team</report>
+                            <report>issue-management</report>
+                            <report>ci-management</report>
                             <report>scm</report>
                         </reports>
                     </reportSet>
@@ -102,6 +106,14 @@
 
     <build>
         <finalName>tcpip-driver</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.7.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -109,11 +121,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>build-info</goal>
                         </goals>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -210,6 +219,10 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
         </dependency>
         <dependency>
             <!-- Required by eureka-client -->
