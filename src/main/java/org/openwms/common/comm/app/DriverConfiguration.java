@@ -42,7 +42,6 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.handler.AbstractMessageHandler;
-import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter;
 import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
 import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
@@ -52,7 +51,6 @@ import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayCrLfSerializer;
-import org.springframework.integration.support.converter.MapMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.ByteArrayMessageConverter;
 
@@ -268,6 +266,11 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
     }
 
     @Bean
+    MessageChannel transformerOutputChannel() {
+        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+    }
+
+    @Bean
     MessageChannel inboundChannel() {
         return MessageChannels.executor(Executors.newCachedThreadPool()).get();
     }
@@ -307,13 +310,6 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
     }
 
     @Bean
-    MapMessageConverter mapMessageConverter() {
-        MapMessageConverter result = new MapMessageConverter();
-        result.setHeaderNames("SYNC_FIELD", "SENDER", "MSG_LENGTH", "SEQUENCENO", "RECEIVER", IpHeaders.CONNECTION_ID);
-        return result;
-    }
-
-    @Bean
     @ConditionalOnMissingBean(Transformable.class)
     Transformable telegramTransformer(List<TelegramDeserializer> deserializers) {
         return new TelegramTransformer(deserializers);
@@ -321,10 +317,14 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
 
     /*~ -------------------- Flows ----------------- */
     @Bean
-    IntegrationFlow inboundFlow(Transformable telegramTransformer) {
-        return IntegrationFlows.from("inboundChannel")
+    IntegrationFlow inboundFlow(
+            MessageChannel inboundChannel,
+            MessageChannel transformerOutputChannel,
+            Transformable telegramTransformer) {
+        return IntegrationFlows
+                .from(inboundChannel)
                 .transform(telegramTransformer)
-                .channel("transformerOutputChannel")
+                .channel(transformerOutputChannel)
                 .route("messageRouter")
                 .get();
     }

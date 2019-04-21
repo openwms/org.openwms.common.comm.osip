@@ -35,7 +35,7 @@ import org.springframework.messaging.MessageChannel;
 @Configuration
 class UpdateMessageConfiguration {
 
-    @Bean(name = UpdateServiceActivator.INPUT_CHANNEL_NAME)
+    @Bean(name = UpdateMessageServiceActivator.INPUT_CHANNEL_NAME)
     public MessageChannel getMessageChannel() {
         return new DirectChannel();
     }

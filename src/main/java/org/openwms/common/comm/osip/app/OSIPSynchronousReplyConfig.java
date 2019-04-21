@@ -35,14 +35,14 @@ import org.springframework.messaging.MessageChannel;
 import java.util.concurrent.Executors;
 
 /**
- * A SynchronousReplyConfig.
+ * A OSIPSynchronousReplyConfig.
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @Profile("!" + SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 @EnableDiscoveryClient
-class SynchronousReplyConfig {
+class OSIPSynchronousReplyConfig {
 
     /*~ ----------------- Inbound ------------------ */
     @Bean
@@ -63,7 +63,12 @@ class SynchronousReplyConfig {
     @Bean
     public IntegrationFlow httpPostAtms(ResponseMessageServiceActivator responseMessageServiceActivator) {
         return IntegrationFlows.from(Http.inboundGateway("/res")
-                .requestMapping(m -> m.methods(HttpMethod.POST)).messageConverters(mappingJackson2HttpMessageConverter(), new ByteArrayHttpMessageConverter(), new StringHttpMessageConverter())
+                .requestMapping(
+                        m -> m.methods(HttpMethod.POST))
+                .messageConverters(
+                        mappingJackson2HttpMessageConverter(),
+                        new ByteArrayHttpMessageConverter(),
+                        new StringHttpMessageConverter())
                 .requestPayloadType(ResponseMessage.class))
                 .channel("resInChannel")
                 .transform(responseMessageServiceActivator)

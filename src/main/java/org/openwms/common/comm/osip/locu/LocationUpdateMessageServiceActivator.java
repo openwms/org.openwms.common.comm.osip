@@ -34,7 +34,7 @@ import java.util.function.Function;
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIP
-@MessageEndpoint
+@MessageEndpoint("locationupdateServiceActivator")
 class LocationUpdateMessageServiceActivator implements NotRespondingServiceActivator<LocationUpdateMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
