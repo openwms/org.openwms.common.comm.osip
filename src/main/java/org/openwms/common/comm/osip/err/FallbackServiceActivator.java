@@ -27,15 +27,16 @@ import org.springframework.integration.annotation.ServiceActivator;
 import java.util.Date;
 
 /**
- * A CommonExceptionHandler.
+ * A FallbackServiceActivator takes all other telegrams not defined and not mapped to any
+ * specific channel and publishes an OSIP ERR message.
  * 
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIP
 @MessageEndpoint("errorServiceActivator")
-public class CommonExceptionHandler {
+public class FallbackServiceActivator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FallbackServiceActivator.class);
 
     /**
      * Reply to incoming OSIP telegrams on the inputChannel with an {@link ErrorMessage} o the outputChannel.

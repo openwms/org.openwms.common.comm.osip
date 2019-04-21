@@ -30,6 +30,7 @@ import org.springframework.messaging.support.MessageBuilder;
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIP
+@Deprecated
 @MessageEndpoint("responseMessageServiceActivator")
 public class ResponseMessageServiceActivator {
 

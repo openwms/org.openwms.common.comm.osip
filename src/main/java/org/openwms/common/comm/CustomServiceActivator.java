@@ -39,5 +39,4 @@ public interface CustomServiceActivator {
      * defined in {@link CommConstants#CHANNEL_SUFFIX}
      */
     String getChannelName();
-
 }

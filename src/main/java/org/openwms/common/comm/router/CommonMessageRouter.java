@@ -34,9 +34,10 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 /**
- * A CommonMessageRouter collects all {@link CustomServiceActivator}s from the ApplicationContext and tries to find a suitable
- * {@link CustomServiceActivator} when an incoming message arrives. If no suitable processor is found, the message will be delegated to the
- * default exception channel.
+ * A CommonMessageRouter collects all {@link CustomServiceActivator}s from the
+ * ApplicationContext and tries to find the suitable {@link CustomServiceActivator} when
+ * an incoming message arrives. If no suitable processor is found, the message will be
+ * routed to the default exception channel.
  * 
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
@@ -46,8 +47,8 @@ public class CommonMessageRouter {
     private final List<CustomServiceActivator> processors;
     private Map<String, CustomServiceActivator> processorMap;
 
-    @Autowired
-    public CommonMessageRouter(@Autowired(required = false) List<CustomServiceActivator> processors) {
+    public CommonMessageRouter(
+            @Autowired(required = false) List<CustomServiceActivator> processors) {
         this.processors = processors;
     }
 
@@ -65,7 +66,9 @@ public class CommonMessageRouter {
      *            The message to process
      * @return The MessageChannel where to put the message
      */
-    @Router(inputChannel = "transformerOutputChannel", defaultOutputChannel = "commonExceptionChannel")
+    @Router(inputChannel = "transformerOutputChannel",
+            defaultOutputChannel = "commonExceptionChannel",
+            resolutionRequired = "false")
     public MessageChannel resolve(Message<Payload> message) {
         CustomServiceActivator result = processorMap.get(message.getPayload().getMessageIdentifier() + CommConstants.CHANNEL_SUFFIX);
         if (result == null) {

@@ -28,14 +28,14 @@ import org.springframework.messaging.support.GenericMessage;
 import java.util.function.Function;
 
 /**
- * A UpdateServiceActivator implements the Service Activator pattern and delegates
+ * A UpdateMessageServiceActivator implements the Service Activator pattern and delegates
  * incoming {@link UpdateMessage}s to the appropriate handler function.
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
 @OSIP
-@MessageEndpoint
-class UpdateServiceActivator implements NotRespondingServiceActivator<UpdateMessage> {
+@MessageEndpoint("updatemessageServiceActivator")
+class UpdateMessageServiceActivator implements NotRespondingServiceActivator<UpdateMessage> {
 
     /** The name of the MessageChannel used as input-channel of this message processor. */
     static final String INPUT_CHANNEL_NAME = UpdateMessage.IDENTIFIER + CommConstants.CHANNEL_SUFFIX;
@@ -43,7 +43,7 @@ class UpdateServiceActivator implements NotRespondingServiceActivator<UpdateMess
     private final Function<GenericMessage<UpdateMessage>, Void> handler;
     private final ApplicationContext ctx;
 
-    UpdateServiceActivator(
+    UpdateMessageServiceActivator(
             Function<GenericMessage<UpdateMessage>, Void> handler,
             ApplicationContext ctx) {
         this.handler = handler;
