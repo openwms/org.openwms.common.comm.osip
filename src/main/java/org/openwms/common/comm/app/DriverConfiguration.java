@@ -186,7 +186,8 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as server: Port [{}]", subsystem.getName(), inbound.getPort());
         } else if (inbound.getMode() == Subsystem.MODE.client) {
 
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(inbound.getHostname(), inbound.getPort(), serializer, deserializer);
+            String hostname = inbound.getHostname() == null ? connections.getHostname() : inbound.getHostname();
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(hostname, inbound.getPort(), serializer, deserializer);
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), inbound.getHostname(), inbound.getPort());
         } else {
