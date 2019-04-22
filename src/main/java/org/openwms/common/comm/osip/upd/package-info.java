@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * This package contains all types to handle UPD telegrams.
+ * Contains types responsible for dealing with OSIP UPD telegrams.
  */
 package org.openwms.common.comm.osip.upd;

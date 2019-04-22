@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * This package contains all types to handle RES telegrams.
+ * Contains types responsible for dealing with OSIP RES telegrams.
  */
 package org.openwms.common.comm.osip.res;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains handlers and types according to SYNQ telegram handling.
+ * Contains types responsible for dealing with OSIP SYNQ telegrams.
  */
 package org.openwms.common.comm.osip.synq;
 

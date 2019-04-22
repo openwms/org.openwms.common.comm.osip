@@ -134,20 +134,11 @@ public class ResponseMessage extends Payload implements Serializable {
         private final ResponseMessage responseMessage;
         private final FieldLengthProvider provider;
 
-        /**
-         * Create a new RequestMessage.Builder.
-         */
         public Builder(FieldLengthProvider provider) {
             this.provider = provider;
             this.responseMessage = new ResponseMessage();
         }
 
-        /**
-         * Add an {@code Barcode} to the message.
-         *
-         * @param barcode The barcode
-         * @return The builder
-         */
         public Builder withBarcode(String barcode) {
             responseMessage.barcode = barcode;
             return this;
@@ -183,12 +174,6 @@ public class ResponseMessage extends Payload implements Serializable {
             return this;
         }
 
-        /**
-         * Add an error code.
-         *
-         * @param errorCode The error code
-         * @return The builder
-         */
         public Builder withErrorCode(String errorCode) {
             if (exists(errorCode)) {
                 responseMessage.setErrorCode(errorCode);
@@ -196,23 +181,11 @@ public class ResponseMessage extends Payload implements Serializable {
             return this;
         }
 
-        /**
-         * Add the date of creation with the configured date format.
-         *
-         * @param createDate The creation date as String
-         * @param pattern The configured date time pattern
-         * @return The builder
-         */
         public Builder withCreateDate(String createDate, String pattern) throws ParseException {
             responseMessage.setCreated(new SimpleDateFormat(pattern).parse(createDate));
             return this;
         }
 
-        /**
-         * Finally build the message.
-         *
-         * @return The completed message
-         */
         public ResponseMessage build() {
             return responseMessage;
         }

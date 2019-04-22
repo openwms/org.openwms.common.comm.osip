@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains types for {@code LocationUpdateMessage} handling specific to tcp/ip.
+ * Contains types to serialize and deserialize OSIP LOCU telegrams and messages.
  */
 package org.openwms.common.comm.osip.locu.tcp;

@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Implementation view package contains classes used internally by the component but not specific to the underlying transport technology.
+ * Contains converter classes used by the serializers and deserializers.
  */
 package org.openwms.common.comm.converter;

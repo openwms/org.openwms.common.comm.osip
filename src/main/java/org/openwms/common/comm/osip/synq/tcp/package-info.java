@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains types for {@code TimesyncRequest} handling specific to tcp/ip.
+ * Contains types to serialize and deserialize OSIP SYNQ telegrams and messages.
  */
 package org.openwms.common.comm.osip.synq.tcp;
 

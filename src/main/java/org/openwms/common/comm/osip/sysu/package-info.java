@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * This package contains all types to handle SYSU telegrams.
+ * Contains types responsible for dealing with OSIP SYSU telegrams.
  */
 package org.openwms.common.comm.osip.sysu;

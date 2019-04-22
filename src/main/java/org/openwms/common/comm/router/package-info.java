@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains implementation following the Router pattern, used to route incoming messages to the right MessageChannel.
+ * Contains implementations following the Message Router pattern.
  */
 package org.openwms.common.comm.router;

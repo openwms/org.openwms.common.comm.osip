@@ -30,6 +30,7 @@ public final class ParserUtils {
      *
      * @param s The String to pad
      * @param n Number of digits in sum
+     * @param chr The actual padding character
      * @return A new padded String instance
      */
     public static String padRight(String s, int n, String chr) {
@@ -52,6 +53,7 @@ public final class ParserUtils {
      *
      * @param s The String to pad
      * @param n Number of digits in sum
+     * @param chr The actual padding character
      * @return A new padded String instance
      */
     public static String padLeft(String s, int n, String chr) {

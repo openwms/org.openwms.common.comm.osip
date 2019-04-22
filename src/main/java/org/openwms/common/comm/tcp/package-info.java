@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains classes specific to the tcp/ip handling.
+ * Contains types specific to the tcp/ip handling.
  */
 package org.openwms.common.comm.tcp;

@@ -48,7 +48,8 @@ public abstract class OSIPSerializer<T extends Payload> {
     /**
      * Serialize the given object {@code obj} into a String.
      *
-     * @param obj
+     * @param obj The message object to serialize
+     * @return The telegram String
      */
     public String serialize(T obj) {
         short maxTelegramLength = driver.getOsip().getTelegramLength();

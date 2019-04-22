@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains types to serialize and deserialize OSIP SYSU telegrams and messages.
+ * Contains types and default implementations to extend the UPD telegram handling.
  */
-package org.openwms.common.comm.osip.sysu.tcp;
+package org.openwms.common.comm.osip.upd.spi;
+

@@ -40,6 +40,7 @@ public class MessageTransformer<T> {
      * Transformer method to transform a message into a telegram String.
      *
      * @param message The incoming message
+     * @param headers The message headers
      * @return The {@link Payload} is transformable
      * @throws MessageMismatchException if no appropriate type was found.
      */
