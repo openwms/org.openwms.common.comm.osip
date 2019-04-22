@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains classes responsible for dealing with error messages.
+ * Contains types responsible for dealing with OSIP ERR telegrams.
  */
 package org.openwms.common.comm.osip.err;

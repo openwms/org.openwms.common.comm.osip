@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains types for {@code RequestMessage} handling specific to tcp/ip.
+ * Contains types to serialize and deserialize OSIP REQ telegrams and messages.
  */
 package org.openwms.common.comm.osip.req.tcp;

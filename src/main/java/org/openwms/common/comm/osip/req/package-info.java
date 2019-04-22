@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains types according to the RequestMessage handling.
+ * Contains types responsible for dealing with OSIP REQ telegrams.
  */
 package org.openwms.common.comm.osip.req;

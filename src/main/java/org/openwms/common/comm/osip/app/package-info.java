@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains types to serialize and deserialize OSIP SYSU telegrams and messages.
+ * Contains Spring configuration files and other lifecycle relevant types for OSIP.
  */
-package org.openwms.common.comm.osip.sysu.tcp;
+package org.openwms.common.comm.osip.app;
+

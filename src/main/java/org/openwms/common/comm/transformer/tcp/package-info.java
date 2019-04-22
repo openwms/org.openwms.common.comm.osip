@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains transformer implementations responsible to transform incoming messages to domain specific messages.
+ * Contains transformer implementations for tcp/ip.
  */
 package org.openwms.common.comm.transformer.tcp;

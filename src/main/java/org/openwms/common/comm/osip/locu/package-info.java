@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * This package contains all types to handle LOCU telegrams.
+ * Contains types responsible for dealing with OSIP LOCU telegrams.
  */
 package org.openwms.common.comm.osip.locu;

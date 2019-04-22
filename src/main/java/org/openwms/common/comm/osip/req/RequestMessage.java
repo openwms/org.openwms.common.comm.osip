@@ -122,9 +122,6 @@ public class RequestMessage extends Payload implements Serializable {
         private final RequestMessage requestMessage;
         private final FieldLengthProvider provider;
 
-        /**
-         * Create a new RequestMessage.Builder.
-         */
         public Builder(FieldLengthProvider provider) {
             this.provider = provider;
             this.requestMessage = new RequestMessage();
@@ -190,6 +187,7 @@ public class RequestMessage extends Payload implements Serializable {
          * @param createDate The creation date as String
          * @param pattern The configured date time pattern
          * @return The builder
+         * @throws ParseException with invalid pattern
          */
         public Builder withCreateDate(String createDate, String pattern) throws ParseException {
             requestMessage.setCreated(new SimpleDateFormat(pattern).parse(createDate));

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains types and default implementations to extend the SYSU telegram handling.
+ * Contains default types and type definitions to be extended and overridden.
  */
 package org.openwms.common.comm.spi;
 

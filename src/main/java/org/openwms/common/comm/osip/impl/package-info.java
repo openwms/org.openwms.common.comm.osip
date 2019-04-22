@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains default implementations and bean instances that can be overridden.
+ * Contains default implementations and bean instances to be extended and overridden.
  */
 package org.openwms.common.comm.osip.impl;
 
