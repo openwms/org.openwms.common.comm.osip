@@ -129,6 +129,7 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
         int port = Optional.ofNullable(inbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
+        connectionFactory.setHost(inbound.getHostname());
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
@@ -155,6 +156,9 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
         int port = Optional.ofNullable(outbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystem.getName())));
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
+        if (outbound.getHostname() != null) {
+            connectionFactory.setHost(outbound.getHostname());
+        }
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);

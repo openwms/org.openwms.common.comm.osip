@@ -56,11 +56,11 @@ owms:
         - name: SPS01
           inbound:
             mode: server
+            hostname: 0.0.0.0
             port: 30001
             so-receive-buffer-size: 200
           outbound:
             mode: client
-            hostname: ${owms.driver.connections.hostname}
             port: 30002
             so-send-buffer-size: 200
             identified-by-field: "RECV"
@@ -141,45 +141,3 @@ eureka:
     healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/health
     homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/
 
----
-spring:
-  profiles: "!ASYNCHRONOUS"
-
-owms:
-  driver:
-    server:
-      port-rest: 30008
-server:
-  port: ${owms.driver.connections.port-rest}
-
----
-spring:
-  profiles: ASYNCHRONOUS
-  main:
-    web-application-type: none
-
-owms:
-  driver:
-    osip:
-      enabled: true
-      err:
-        exchange-name: osip
-        queue-name: osip-err-queue
-        routing-key-in: osip.err.mfc
-        routing-key-out: osip.err.ss
-      locu:
-        exchange-name: osip
-        routing-key-out: osip.locu.ss
-      req:
-        exchange-name: osip
-        routing-key-out: osip.req.ss
-      res:
-        exchange-name: osip
-        queue-name: osip-res-queue
-        routing-key-in: osip.res.*
-      sysu:
-        exchange-name: osip
-        routing-key-out: osip.sysu.ss
-      upd:
-        exchange-name: osip
-        routing-key-out: osip.upd.ss

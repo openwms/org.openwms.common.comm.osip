@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains Spring Boot application configuration classes.
+ * This package contains Spring Boot application configuration classes.
  */
 package org.openwms.common.comm.config;

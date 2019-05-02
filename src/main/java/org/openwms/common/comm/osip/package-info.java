@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains all types to handle OSIP telegrams.
+ * This package contains all types to handle OSIP telegrams.
  */
 package org.openwms.common.comm.osip;
