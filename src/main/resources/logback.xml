@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="false" scanPeriod="30 seconds">
 
-    <conversionRule conversionWord="tid" converterClass="org.ameba.logging.ThreadIdProvider" />
-    <variable scope="context" name="mdcPattern" value="%replace(;%X{MSGKEY};%X{MSGDATA}){';+( |$)', ''}" />
-
     <property name="LOG_TEMP" value="/tmp/owms"/>
-    <property name="MODULE_NAME" value="COMMON"/>
-    <property name="SERVICE_NAME" value="COMMON-Comm"/>
+    <property name="MODULE_NAME" value="COMMON-Comm"/>
 
     <include resource="logback-appenders.xml"/>
     <include resource="logback-loggers.xml"/>

@@ -29,10 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.serializer.Deserializer;
 import org.springframework.core.serializer.Serializer;
 import org.springframework.integration.annotation.IntegrationComponentScan;
@@ -78,7 +78,7 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
     private static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
-    private AnnotationConfigApplicationContext applicationContext;
+    private GenericApplicationContext applicationContext;
 
     private void registerBean(String beanName, Object singletonObject) {
         applicationContext.getBeanFactory().registerSingleton(beanName, singletonObject);

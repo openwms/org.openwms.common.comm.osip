@@ -15,16 +15,21 @@ spring:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: true
 
-logging:
-  file: "/tmp/owms/BOOT-COMMON.log"
+feign:
+  httpclient:
+    connection-timeout: 30000
+    connection-timer-repeat: 30000
+ribbon:
+  connectTimeout: 30000
+  ReadTimeout: 30000
 
 owms:
-  srv:
-    protocol: http
-    hostname: localhost
   eureka:
     url: http://user:sa@localhost:8761
     zone: ${owms.eureka.url}/eureka/
+  srv:
+    protocol: http
+    hostname: localhost
   config:
     username: user
     password: sa
@@ -68,6 +73,10 @@ owms:
             mode: server
             port: 30011
             identified-by-value: "SPS02"
+
+server:
+  port: ${owms.driver.connections.port-rest}
+
 eureka:
   client:
     healthcheck:
@@ -85,6 +94,15 @@ eureka:
       protocol: ${owms.srv.protocol}
       zone: ${owms.eureka.zone}
     hostname: ${owms.srv.hostname}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  file: "/tmp/owms/BOOT-COMMON-Comm.log"
 
 ---
 spring:
