@@ -49,7 +49,7 @@ class ChannelRouter {
     public MessageChannel resolve(Message<Payload> message) {
         MessageChannel result = channels.getOutboundChannel(message.getPayload().getHeader().getReceiver());
         if (result == null) {
-            throw new MessageProcessingException(format("No processor for message of type [%s] registered", message.getPayload().getMessageIdentifier()));
+            throw new MessageProcessingException(format("No processor registered for message [%s]", message));
         }
         return result;
     }

@@ -31,9 +31,9 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <site>
-            <id>ftp-io</id>
+            <id>site-server</id>
             <name>OpenWMS.org WebSite</name>
-            <url>ftps://ftp.interface21.io/docs/common/comm</url>
+            <url>scp://ftp.interface21.io/home/cgxusdef/public_html/docs/common/comm</url>
         </site>
     </distributionManagement>
 
@@ -82,6 +82,7 @@
         <guava.version>19.0</guava.version>
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-surefire-report-plugin.version>3.0.0-M3</maven-surefire-report-plugin.version>
+        <wagon-ssh.version>3.3.2</wagon-ssh.version>
     </properties>
 
     <reporting>
@@ -105,6 +106,13 @@
     </reporting>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>${wagon-ssh.version}</version>
+            </extension>
+        </extensions>
         <finalName>tcpip-driver</finalName>
         <pluginManagement>
             <plugins>
