@@ -21,7 +21,8 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
 /**
- * A MessageMismatchHandler cares about incoming error telegrams on a defined error channel with name {@value MessageMismatchHandler#ERROR_CHANNEL_ID}.
+ * A MessageMismatchHandler cares about incoming error telegrams on a defined error
+ * channel with name {@value MessageMismatchHandler#ERROR_CHANNEL_ID}.
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */

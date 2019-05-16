@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.openwms</groupId>
         <artifactId>org.openwms.parent</artifactId>
-        <version>6</version>
+        <version>7</version>
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <name>OpenWMS.org COMMON: OSIP TCP/IP Driver</name>
     <url>https://www.interface21.io/docs/common/comm/index.html</url>
 
@@ -20,16 +20,6 @@
     </issueManagement>
 
     <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>OpenWMS.org Release Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype-nexus-staging</id>
-            <name>OpenWMS.org Snapshot Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <site>
             <id>site-server</id>
             <name>OpenWMS.org WebSite</name>
@@ -75,14 +65,7 @@
     </ciManagement>
 
     <properties>
-        <distribution.serverId>ftp-io</distribution.serverId>
-        <distribution.serverProtocol>ftps</distribution.serverProtocol>
-        <core.version>1.3.0</core.version>
-        <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
-        <guava.version>19.0</guava.version>
-        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
-        <maven-surefire-report-plugin.version>3.0.0-M3</maven-surefire-report-plugin.version>
-        <wagon-ssh.version>3.3.2</wagon-ssh.version>
+        <core.version>1.4.0</core.version>
     </properties>
 
     <reporting>
@@ -106,22 +89,7 @@
     </reporting>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>${wagon-ssh.version}</version>
-            </extension>
-        </extensions>
         <finalName>tcpip-driver</finalName>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -144,32 +112,6 @@
                 <artifactId>org.openwms.core.util</artifactId>
                 <version>${core.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud-dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.logstash.logback</groupId>
-                <artifactId>logstash-logback-encoder</artifactId>
-                <version>${logstash-logback-encoder.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>net.sf.dozer</groupId>
                 <artifactId>dozer</artifactId>
@@ -181,6 +123,13 @@
                         <artifactId>commons-collections</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
