@@ -22,7 +22,7 @@ import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.support.GenericMessage;
+import org.springframework.messaging.handler.annotation.Payload;
 
 import java.util.Map;
 
@@ -43,9 +43,9 @@ class AmqpResponseMessageListener {
 
     @Measured
     @RabbitListener(queues = "${owms.driver.osip.res.queue-name}")
-    void handle(GenericMessage<ResponseMessage> res, @Headers Map<String, String> headers) {
+    void handle(@Payload ResponseMessage res, @Headers Map<String, String> headers) {
         try {
-            handler.handle(res.getPayload(), headers);
+            handler.handle(res, headers);
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }
