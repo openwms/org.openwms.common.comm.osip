@@ -50,9 +50,11 @@ import org.springframework.integration.ip.tcp.connection.AbstractServerConnectio
 import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
-import org.springframework.integration.ip.tcp.serializer.ByteArrayCrLfSerializer;
+import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.ByteArrayMessageConverter;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.List;
 import java.util.Optional;
@@ -112,6 +114,7 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
     private AbstractClientConnectionFactory createClientConnectionFactory(
             String clientHostname, int clientPort, Serializer serializer,
             Deserializer deserializer) {
+
         TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
         connectionFactory.setSerializer(serializer);
         connectionFactory.setDeserializer(deserializer);
@@ -254,14 +257,82 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
             Connections connections, TcpMessageMapper tcpMessageMapper,
             MessageChannel inboundChannel,
             Serializer serializer,
-            Deserializer deserializer) {
+            Deserializer deserializer,
+            TaskScheduler taskScheduler
+            ) {
         Channels channels =  new Channels();
         for(Subsystem subsystem : connections.getSubsystems()) {
-            setupInbound(connections, subsystem, tcpMessageMapper, inboundChannel, serializer, deserializer);
-            setupOutbound(connections, subsystem, tcpMessageMapper, channels, serializer, deserializer);
+            if (subsystem.getDuplex() != null) {
+                setupDuplex(connections, subsystem, tcpMessageMapper, inboundChannel, taskScheduler, channels, serializer, deserializer);
+            } else {
+                setupInbound(connections, subsystem, tcpMessageMapper, inboundChannel, serializer, deserializer);
+                setupOutbound(connections, subsystem, tcpMessageMapper, channels, serializer, deserializer);
+            }
         }
 
         return channels;
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
+        ThreadPoolTaskScheduler threadPoolTaskScheduler
+                = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(5);
+        threadPoolTaskScheduler.setThreadNamePrefix(
+                "ThreadPoolTaskScheduler");
+        return threadPoolTaskScheduler;
+    }
+
+    private void setupDuplex(Connections connections, Subsystem subsystem,
+            TcpMessageMapper tcpMessageMapper, MessageChannel inboundChannel,
+            TaskScheduler threadPoolTaskScheduler, Channels channels,
+            Serializer serializer, Deserializer deserializer) {
+
+        Subsystem.Duplex duplex = subsystem.getDuplex();
+        String hostname = duplex.getHostname();
+
+        if (subsystem.getDuplex().getMode() == Subsystem.MODE.client) {
+
+            // Duplex mode !!!
+            AbstractClientConnectionFactory clientConnectionFactory = createClientConnectionFactory(hostname, duplex.getPort(), serializer, deserializer);
+            clientConnectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
+            clientConnectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
+            clientConnectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+            clientConnectionFactory.setSingleUse(false);
+            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, clientConnectionFactory);
+
+            // This adapter is only required to let the SCF work as a CCF!!
+            TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
+            adapter.setRetryInterval(120);
+            adapter.setOutputChannel(inboundChannel);
+            adapter.setConnectionFactory(clientConnectionFactory);
+            adapter.setTaskScheduler(threadPoolTaskScheduler);
+            adapter.setClientMode(true);
+            adapter.start();
+            registerBean("outboundAdapter_" + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, adapter);
+
+            // ---- Sending part
+            TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(clientConnectionFactory);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, sendingMessageHandler);
+
+            DirectChannel channel = createEnrichedOutboundChannel(sendingMessageHandler);
+            registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
+
+            channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
+            BOOT_LOGGER.info("[{}] Duplex   TCP/IP connection configured with client: Hostname [{}], port [{}]", subsystem.getName(), duplex.getHostname(), duplex.getPort());
+
+
+        } else {
+            AbstractServerConnectionFactory connectionFactory = createOutboundServerConnectionFactory(connections, subsystem, tcpMessageMapper, deserializer);
+            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
+            connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
+            //connectionFactory.setSingleUse(false);
+            connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+
+        }
+
+
+
     }
 
     /*~ --------------- MessageChannels ------------ */
@@ -295,12 +366,12 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
     /*~ --------- Serializer / Deserializer -------- */
     @Bean
     Serializer serializer() {
-        return new ByteArrayCrLfSerializer();
+        return new ByteArrayLfSerializer();
     }
 
     @Bean
     Deserializer deserializer() {
-        return new ByteArrayCrLfSerializer();
+        return new ByteArrayLfSerializer();
     }
 
     /*~ ----------------   Converter---------------- */
