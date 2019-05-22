@@ -23,6 +23,8 @@ package org.openwms.common.comm.config;
 public class Subsystem {
     /** Unique subsystem name, that is used to identify the receiver. */
     private String name;
+    /** The subsystem can be configured in bi-directional duplex mode. */
+    private Duplex duplex;
     /** All inbound connection configuration. */
     private Inbound inbound = new Inbound();
     /** All outbound connection configuration. */
@@ -34,6 +36,14 @@ public class Subsystem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Duplex getDuplex() {
+        return duplex;
+    }
+
+    public void setDuplex(Duplex duplex) {
+        this.duplex = duplex;
     }
 
     public Inbound getInbound() {
@@ -163,6 +173,89 @@ public class Subsystem {
 
         public void setSoSendBufferSize(Integer soSendBufferSize) {
             this.soSendBufferSize = soSendBufferSize;
+        }
+
+        public String getIdentifiedByField() {
+            return identifiedByField;
+        }
+
+        public void setIdentifiedByField(String identifiedByField) {
+            this.identifiedByField = identifiedByField;
+        }
+
+        public String getIdentifiedByValue() {
+            return identifiedByValue;
+        }
+
+        public void setIdentifiedByValue(String identifiedByValue) {
+            this.identifiedByValue = identifiedByValue;
+        }
+    }
+
+    public static class Duplex {
+        /** Whether the inbound connection channel is operated in client or server mode. */
+        private MODE mode = MODE.server;
+        /** The hostname to connect to in client mode. */
+        private String hostname;
+        /** The port to connect to in client mode. */
+        private Integer port;
+        /** Socket timeout in [ms], the idle time when to close the connection. */
+        private Integer soTimeout;
+        /** The size of the send buffer for tcp/ip connections. */
+        private Integer soSendBufferSize;
+        /** The size of the receive buffer for tcp/ip connections. */
+        private Integer soReceiveBufferSize;
+        /** The telegram field name that identifies the corresponding receiving party. */
+        private String identifiedByField;
+        /** The value of the identifying field to match the corresponding receiving party. */
+        private String identifiedByValue;
+
+        public MODE getMode() {
+            return mode;
+        }
+
+        public void setMode(MODE mode) {
+            this.mode = mode;
+        }
+
+        public String getHostname() {
+            return hostname;
+        }
+
+        public void setHostname(String hostname) {
+            this.hostname = hostname;
+        }
+
+        public Integer getPort() {
+            return port;
+        }
+
+        public void setPort(Integer port) {
+            this.port = port;
+        }
+
+        public Integer getSoTimeout() {
+            return soTimeout;
+        }
+
+        public void setSoTimeout(Integer soTimeout) {
+            this.soTimeout = soTimeout;
+        }
+
+        public Integer getSoSendBufferSize() {
+            return soSendBufferSize;
+        }
+
+        public void setSoSendBufferSize(Integer soSendBufferSize) {
+            this.soSendBufferSize = soSendBufferSize;
+        }
+
+        public Integer getSoReceiveBufferSize() {
+            return soReceiveBufferSize;
+        }
+
+        public void setSoReceiveBufferSize(Integer soReceiveBufferSize) {
+            this.soReceiveBufferSize = soReceiveBufferSize;
         }
 
         public String getIdentifiedByField() {
