@@ -73,14 +73,21 @@ owms:
             mode: server
             port: 30011
             identified-by-value: "SPS02"
+        - name: SPS03
+          duplex:
+            mode: client
+            hostname: localhost
+            port: 30003
+            so-send-buffer-size: 200
+            so-receive-buffer-size: 200
+            identified-by-field: "RECV"
+            identified-by-value: "SPS03"
 
 server:
   port: ${owms.driver.connections.port-rest}
 
 eureka:
   client:
-    healthcheck:
-      enabled: true
     instance-info-replication-interval-seconds: 10 # default is 30
     service-url:
       defaultZone: ${owms.eureka.zone}  # Must be camelCase
