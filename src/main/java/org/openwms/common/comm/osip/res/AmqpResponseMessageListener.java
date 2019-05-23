@@ -17,6 +17,7 @@ package org.openwms.common.comm.osip.res;
 
 import org.ameba.annotation.Measured;
 import org.openwms.common.comm.osip.OSIPComponent;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -45,7 +46,7 @@ class AmqpResponseMessageListener {
     @RabbitListener(queues = "${owms.driver.osip.res.queue-name}")
     void handle(@Payload ResponseMessage res, @Headers Map<String, String> headers) {
         try {
-            handler.handle(res, headers);
+            handler.handle(res, headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }
