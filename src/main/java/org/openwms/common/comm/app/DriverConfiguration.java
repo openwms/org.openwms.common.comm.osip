@@ -303,11 +303,11 @@ class DriverConfiguration implements ApplicationEventPublisherAware {
 
             // This adapter is only required to let the SCF work as a CCF!!
             TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
-            adapter.setRetryInterval(120);
             adapter.setOutputChannel(inboundChannel);
             adapter.setConnectionFactory(clientConnectionFactory);
             adapter.setTaskScheduler(threadPoolTaskScheduler);
             adapter.setClientMode(true);
+            adapter.setRetryInterval(10000);
             adapter.start();
             registerBean("outboundAdapter_" + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, adapter);
 
