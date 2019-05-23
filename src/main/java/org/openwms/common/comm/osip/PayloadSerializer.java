@@ -19,6 +19,7 @@ import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.common.comm.config.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.serializer.Serializer;
 
 import javax.annotation.PostConstruct;
@@ -39,6 +40,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
  *
  * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
  */
+@Primary
 @OSIPComponent
 public class PayloadSerializer<T extends Payload> implements Serializer<T> {
 
