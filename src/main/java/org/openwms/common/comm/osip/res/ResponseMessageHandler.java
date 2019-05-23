@@ -17,15 +17,12 @@ package org.openwms.common.comm.osip.res;
 
 import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.osip.OSIP;
-import org.openwms.common.comm.osip.OSIPHeader;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
-
-import java.util.Map;
 
 /**
  * A ResponseMessageHandler.
@@ -42,8 +39,8 @@ class ResponseMessageHandler {
         this.channels = channels;
     }
 
-    public void handle(ResponseMessage msg, Map<String, String> headers) {
-        MessageChannel channel = channels.getOutboundChannel(headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
+    public void handle(ResponseMessage msg, String receiver) {
+        MessageChannel channel = channels.getOutboundChannel(receiver);
         MessagingTemplate template = new MessagingTemplate();
         Message<ResponseMessage> message =
                 MessageBuilder

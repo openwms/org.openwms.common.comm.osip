@@ -66,7 +66,7 @@ class UpdateTelegramDeserializer implements TelegramDeserializer<UpdateMessage> 
             TELEGRAM_LOGGER.debug("Incoming: [{}]", telegram);
         }
         if (provider == null) {
-            throw new NotFoundException(format("Telegram handling [%s] not supported", UpdateMessage.IDENTIFIER));
+            throw new NotFoundException(format("Telegram handling [%s] not supported", forType()));
         }
         int startPayload = LENGTH_HEADER + forType().length();
         int startActualLocation = startPayload + provider.barcodeLength();
