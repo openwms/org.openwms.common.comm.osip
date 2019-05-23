@@ -30,11 +30,11 @@ import java.util.StringJoiner;
  */
 public class ResponseHeader implements Serializable {
 
-    @JsonProperty
+    @JsonProperty(OSIPHeader.SENDER_FIELD_NAME)
     private String sender;
-    @JsonProperty
+    @JsonProperty(OSIPHeader.RECEIVER_FIELD_NAME)
     private String receiver;
-    @JsonProperty
+    @JsonProperty(OSIPHeader.SEQUENCE_FIELD_NAME)
     private short sequenceNo;
 
     /*~------------ Constructors ------------*/
