@@ -17,8 +17,11 @@ package org.openwms.common.comm.osip.res;
 
 import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.osip.OSIP;
+import org.openwms.common.comm.tcp.ConnectionHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -34,6 +37,8 @@ import org.springframework.messaging.MessageHeaders;
 class ResponseMessageHandler {
 
     private final Channels channels;
+    @Autowired
+    private ConnectionHolder connectionHolder;
 
     ResponseMessageHandler(Channels channels) {
         this.channels = channels;
@@ -47,6 +52,7 @@ class ResponseMessageHandler {
                         .withPayload(msg)
                         .copyHeaders(msg.getHeader().getAll())
                 .setHeader(MessageHeaders.REPLY_CHANNEL, "inboundChannel")
+                .setHeader(IpHeaders.CONNECTION_ID, connectionHolder.getConnectionId(receiver))
                 .build();
         template.send(channel, message);
     }

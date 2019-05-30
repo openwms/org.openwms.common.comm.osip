@@ -36,6 +36,8 @@ public final class CommConstants {
     public static final String PREFIX_CONNECTION_FACTORY = "connectionFactory_";
     /** Suffix used to identify the outbound channel. */
     public static final String SUFFIX_OUTBOUND = "_outbound";
+    /** Suffix used to identify the inbound channel. */
+    public static final String SUFFIX_INBOUND = "_inbound";
 
     private CommConstants() {
     }

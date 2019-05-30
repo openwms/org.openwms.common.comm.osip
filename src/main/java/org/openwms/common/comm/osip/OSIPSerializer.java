@@ -75,8 +75,10 @@ public abstract class OSIPSerializer<T extends Payload> {
      * @return The telegram type as case-insensitive String
      */
     public static String getTelegramType(String telegram) {
-        short headerLength = LENGTH_HEADER;
-        return telegram.substring(headerLength, headerLength + Payload.MESSAGE_IDENTIFIER_LENGTH);
+        if (telegram == null || telegram.length() < LENGTH_HEADER) {
+            throw new MessageMismatchException("Received an invalid OSIP telegram type");
+        }
+        return telegram.substring(LENGTH_HEADER, LENGTH_HEADER + Payload.MESSAGE_IDENTIFIER_LENGTH);
     }
 
     protected abstract String convert(T message);
