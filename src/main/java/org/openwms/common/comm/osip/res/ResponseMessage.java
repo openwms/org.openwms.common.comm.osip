@@ -174,6 +174,13 @@ public class ResponseMessage extends Payload implements Serializable {
             return this;
         }
 
+        public Builder withTargetLocationGroup(String targetLocationGroup) {
+            if (exists(targetLocationGroup)) {
+                responseMessage.setTargetLocationGroup(targetLocationGroup);
+            }
+            return this;
+        }
+
         public Builder withErrorCode(String errorCode) {
             if (exists(errorCode)) {
                 responseMessage.setErrorCode(errorCode);
