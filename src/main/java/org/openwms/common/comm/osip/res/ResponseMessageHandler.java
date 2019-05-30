@@ -18,7 +18,6 @@ package org.openwms.common.comm.osip.res;
 import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.osip.OSIP;
 import org.openwms.common.comm.tcp.ConnectionHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.ip.IpHeaders;
@@ -37,11 +36,11 @@ import org.springframework.messaging.MessageHeaders;
 class ResponseMessageHandler {
 
     private final Channels channels;
-    @Autowired
-    private ConnectionHolder connectionHolder;
+    private final ConnectionHolder connectionHolder;
 
-    ResponseMessageHandler(Channels channels) {
+    ResponseMessageHandler(Channels channels, ConnectionHolder connectionHolder) {
         this.channels = channels;
+        this.connectionHolder = connectionHolder;
     }
 
     public void handle(ResponseMessage msg, String receiver) {
