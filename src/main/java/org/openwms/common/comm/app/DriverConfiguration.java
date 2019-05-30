@@ -71,13 +71,13 @@ import static org.ameba.LoggingCategories.BOOT;
 @Configuration
 @IntegrationComponentScan
 @EnableIntegration
-class DriverConfiguration implements ApplicationEventPublisherAware {
+public class DriverConfiguration implements ApplicationEventPublisherAware {
 
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     private static final String SUFFIX_INBOUND = "_inbound";
     private static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
     private static final String PREFIX_SENDING_MESSAGE_HANDLER = "sendingMessageHandler_";
-    private static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
+    public static final String PREFIX_ENRICHED_OUTBOUND_CHANNEL = "enrichedOutboundChannel_";
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private GenericApplicationContext applicationContext;

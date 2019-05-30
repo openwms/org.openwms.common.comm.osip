@@ -44,9 +44,9 @@ class AmqpResponseMessageListener {
 
     @Measured
     @RabbitListener(queues = "${owms.driver.osip.res.queue-name}")
-    void handle(@Payload ResponseMessage res, @Headers Map<String, String> headers) {
+    void handle(@Payload ResponseMessage res, @Headers Map<String, Object> headers) {
         try {
-            handler.handle(res, headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
+            handler.handle(res, (String) headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
         }
