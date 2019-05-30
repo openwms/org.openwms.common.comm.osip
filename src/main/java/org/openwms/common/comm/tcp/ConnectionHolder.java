@@ -19,15 +19,22 @@ import org.openwms.common.comm.MessageChannelNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionFailedEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.openwms.common.comm.CommConstants.PREFIX_CONNECTION_FACTORY;
+import static org.openwms.common.comm.CommConstants.SUFFIX_INBOUND;
 import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 
 /**
@@ -42,6 +49,15 @@ public class ConnectionHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionHolder.class);
     private Map<String, String> connectionIds = new ConcurrentHashMap<>();
+    private final Map<String, AbstractConnectionFactory> factories;
+
+    public ConnectionHolder(List<AbstractConnectionFactory> factories) {
+        this.factories = factories == null ?
+                Collections.emptyMap() :
+                factories
+                        .stream()
+                        .collect(Collectors.toMap(AbstractConnectionFactory::getComponentName, m -> m));
+    }
 
     /**
      * On an {@link TcpConnectionOpenEvent} we store the connectionId along with the name
@@ -57,6 +73,7 @@ public class ConnectionHolder {
         }
     }
 
+
     /**
      * On an {@link TcpConnectionCloseEvent} we try to remove the existing assignment.
      *
@@ -71,6 +88,34 @@ public class ConnectionHolder {
     }
 
     /**
+     * On an {@link TcpConnectionCloseEvent} we try to remove the existing assignment.
+     *
+     * @param event The event
+     */
+    @EventListener
+    public void onFailedMessage(TcpConnectionFailedEvent event) {
+        LOGGER.debug("Connection Lost for : {}", ((AbstractConnectionFactory)event.getSource()).getComponentName());
+        String connectionId = connectionIds.remove(((AbstractConnectionFactory)event.getSource()).getComponentName());
+        if (connectionId != null && LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Deregister connection for factory [{}]", ((AbstractConnectionFactory)event.getSource()).getComponentName());
+        }
+    }
+
+    /**
+     * On an {@link TcpConnectionCloseEvent} we try to remove the existing assignment.
+     *
+     * @param event The event
+     */
+    @EventListener
+    public void onFailedConnectionMessage(TcpConnectionExceptionEvent event) {
+        LOGGER.debug("Connection Lost for : [{}]", event.getConnectionFactoryName());
+        String connectionId = connectionIds.remove(event.getConnectionFactoryName());
+        if (connectionId != null && LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Deregister connection for factory [{}]", event.getConnectionFactoryName());
+        }
+    }
+
+    /**
      * Return the current active connectionId for the ConnectionFactory given by the
      * {@code connectionFactoryName}.
      *
@@ -80,7 +125,10 @@ public class ConnectionHolder {
     public String getConnectionId(String connectionFactoryName) {
         String result = connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_OUTBOUND);
         if (result == null) {
-            throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
+            result = connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_INBOUND);
+            if (result == null) {
+                throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
+            }
         }
         return result;
     }

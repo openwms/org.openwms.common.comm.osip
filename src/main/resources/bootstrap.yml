@@ -61,6 +61,7 @@ owms:
             so-receive-buffer-size: 200
           outbound:
             mode: client
+            hostname: 0.0.0.0
             port: 30002
             so-send-buffer-size: 200
             identified-by-field: "RECV"
@@ -75,7 +76,7 @@ owms:
             identified-by-value: "SPS02"
         - name: SPS03
           duplex:
-            mode: client
+            mode: server
             hostname: localhost
             port: 30003
             so-send-buffer-size: 200

@@ -21,7 +21,9 @@ import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.common.comm.osip.ResponseHeader;
+import org.openwms.common.comm.tcp.ConnectionHolder;
 import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.MutableMessageHeaders;
 import org.springframework.messaging.Message;
@@ -39,10 +41,12 @@ import java.util.function.Function;
 class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void> {
 
     private final Channels channels;
+    private final ConnectionHolder connectionHolder;
     private final TimeProvider timeProvider;
 
-    TimesyncHandler(Channels channels, TimeProvider timeProvider) {
+    TimesyncHandler(Channels channels, ConnectionHolder connectionHolder, TimeProvider timeProvider) {
         this.channels = channels;
+        this.connectionHolder = connectionHolder;
         this.timeProvider = timeProvider;
     }
 
@@ -68,9 +72,10 @@ class TimesyncHandler implements Function<GenericMessage<TimesyncRequest>, Void>
                         .build();
 
         MessageHeaders headers = new MutableMessageHeaders(CommonMessageFactory.getOSIPHeaders(timesyncRequest));
-        Object sender = headers.get(OSIPHeader.SENDER_FIELD_NAME);
+        String sender = headers.get(OSIPHeader.SENDER_FIELD_NAME, String.class);
         headers.put(OSIPHeader.SENDER_FIELD_NAME, headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
         headers.put(OSIPHeader.RECEIVER_FIELD_NAME, sender);
+        headers.put(IpHeaders.CONNECTION_ID, connectionHolder.getConnectionId(sender));
 
         Message<TimesyncResponse> result =
                 MessageBuilder
