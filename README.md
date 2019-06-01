@@ -12,43 +12,70 @@ ports.
 
 # Operation Modes
 
-A driver instance can be started in different modes.
+A driver instance can be started in different operation modes: **Simplex** or **Duplex**
+communication and **Client** or **Server** connection mode. All four can be arbitrary
+combined.
 
 ## Simplex Communication
 
 Simplex communication means a client application connecting to the driver uses one Socket
-for the sending (or inbound) direction and another Socket for the receiving (or outbound)
-direction.
+for inbound communication and another Socket for the outbound. So sending and receiving
+messages is handled with separated and dedicated Socket connections.
 
-The simplex communication mode can be enabled just by configuring the inbound port
-differently as the outbound port. By doing so the driver creates a two separate
-ConnectionFactories, one for inbound and one for outbound.
+With the simplex communication mode the inbound communication is configured differently as
+the outbound communication. This way the driver creates two separate ConnectionFactories,
+one for inbound and one for outbound. Each Socket can be configured either in **client**
+or **server** mode. A _client_ configured Socket tries to connect to a listening server
+whereas configured as _server_ the driver opens a Socket itself and listens for incoming
+connections. 
 
-In the driver configuration this looks like:
+A typical simplex configuration looks like:
 ```
 owms:
   driver:
     connections:
-      hostname: localhost
-      tcpProperties:
-      - name: G02
-        serverport: 30002
-        clienthostname: localhost
-        clientport: 31002
-        identifyby: "02"
+      hostname: 0.0.0.0
+      subsystems:
+        - name: SPS01
+          inbound:
+            mode: server
+            port: 30001
+            so-receive-buffer-size: 200
+          outbound:
+            mode: client
+            port: 30002
+            so-send-buffer-size: 200
+            identified-by-field: "RECV"
+            identified-by-value: "SPS01"
 ```
 
-Here the server port is different from the client port and the identifier that is used
-to correlate the messages is the group controller field with the value '02'.
-
-To summarize: Configure the driver in Simplex mode with two different ports and an 
-identifier that is the GroupController in the message. Then the always last connection to
-the driver acts as active connection and receives the messages.
+Each communication direction is configured with a different port setting and with _mode_
+set to _server_ and _client_. To correlate outbound messages with previously received
+ones, the _identified-by-*_ fields are used.
 
 ## Duplex Communication
 
-In contrast to simplex connections a project could also decide to use duplex connections
-that require only one Socket for sending and receiving communication.
+In contrast to simplex connections the driver instance can also be configured for
+bidirectional duplex mode where only one Socket is used for inbound and outbound
+communication. Instead of configuring _inbound_ or _outbound_ a _duplex_ configuration
+must be present. 
+
+```
+owms:
+  driver:
+    connections:
+      subsystems:
+        - name: SPS03
+          duplex:
+            mode: server
+            hostname: localhost
+            port: 30003
+            so-send-buffer-size: 200
+            so-receive-buffer-size: 200
+            identified-by-field: "RECV"
+            identified-by-value: "SPS03"
+```
+
 
 # Resources
 
@@ -67,21 +94,6 @@ Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wik
 [codacy-image]: https://img.shields.io/codacy/grade/01c5633a8bd047b2b01c6075d49f5592.svg?style=flat-square
 [codacy-url]: https://www.codacy.com/app/openwms/org.openwms.common.comm
 
-# Requirements
-
-## Functional Requirements
-
-ID | Name | Priority | Description
---- | --- | --- | ---
-FR001 | Support OSIP 1.0 | HIGH | All functionality by OSIP defined must be implemented
-
-## Non-functional Requirements
-
-ID | Group | Priority | Description
---- | --- | --- | ---
-NR001 | Performance | HIGH | All expected responses to OSIP requests must be sent within **150 milliseconds** from message arrival.
-NR002 | Scalability | MEDIUM | The component must be capable to **scale out horizontally** within a projects scope (same tenant).
-NR003 | Extendability | MEDIUM | New telegram types (OSIP versions) must be integrated in an encapsulated fashion. At best a new library can be dropped onto the classpath, at minimum  all artifacts of the new telegram implementation must be located in the same Java package without the need to touch existing other packages.
 
 # Architecture
 
@@ -197,11 +209,11 @@ owms:
       so-send-buffer-size: 160
       routing-service-name: routing-service # is default
 ```
-# Communication
+# Communication Protocols
 
-The way how the driver communicates to the surrounding OpenWMS.org Microservices can be
-defined by another Spring Profile. In ASYNCHRONOUS mode the driver uses AMQP and sends 
-the messages to RabbitMQ Exchanges. In SYNCHRONOUS mode the driver calls defined REST
+The way how the driver communicates to other OpenWMS.org microservices can be defined by
+setting a Spring profile. In **ASYNCHRONOUS** mode the driver uses AMQP and sends the
+messages to RabbitMQ exchanges. In **SYNCHRONOUS** mode the driver calls defined REST
 endpoints of microservices.
 
 Synchronous communication is used by default.
@@ -216,22 +228,55 @@ $ java -Dspring.profiles.active=SYNCHRONOUS -Dspring.application.name=tcpip-pale
 
 ## Asynchronous Communication (RabbitMQ)
 
+To enable asynchronous communication over RabbitMQ set the Spring profile **ASYNCHRONOUS**
+
 ```
 $ java -Dspring.profiles.active=ASYNCHRONOUS -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
 ```
 
 # Configuration
 
-The most important configuration properties of the driver component are the following.
+Important configuration properties of the driver component are the following.
 
 Property | Description
 -------- | ---
-owms.tenant                               | The tenant defined the branch in the Git repository to look up configuration. It is also used to separate log files per tenant. Call it after your project name
-owms.driver.server.port                   | The unique port number the driver receives connections on. Multiple driver instances must have different port numbers.
-owms.driver.server.so-timeout             | Socket timeout whether the socket is closed after idle time, see [Spring Integration Reference](https://docs.spring.io/spring-integration/docs/4.3.9.RELEASE/reference/html/ip.html#connection-factories)
-owms.driver.server.so-receive-buffer-size | The expected telegram size of the receive buffer, by default OSIP telegrams have a length of 160 chars
-owms.driver.server.so-send-buffer-size    | The expected telegram size of the send buffer, by default OSIP telegrams have a length of 160 chars
-owms.driver.server.routing-service-name   | Most OSIP telegrams require to contact the routing service for further action. This is the Spring application name of the TMS Routing Service how it can be discovered from the service registry.
+owms.driver.timezone                      | The ZoneId (java.time.ZoneId) used to create timestamps
+owms.driver.serialization                 | (De-)Serialization method used for asynchronous communication. Possible values are `barray`and `json`
+owms.driver.osip.enabled                  | Whether OSIP telegram support is enabled or not
+owms.driver.osip.sync-field               | Value of the SYNC field used to detect the start of a telegram
+owms.driver.osip.date-pattern             | Date pattern used in OSIP telegrams
+owms.driver.routing-service.name          | The logical service name of the TMS Routing Service
+owms.driver.routing-service.protocol      | The protocol used to connect to the TMS Routing Service (eg. https) 
+owms.driver.routing-service.username      | The username for BASIC authentication 
+owms.driver.routing-service.password      | The password for BASIC authentication
+owms.driver.connections.hostname          | The hostname setting inherited to all subsequent subsystem configurations
+owms.driver.connections.port-rest         | The driver accepts incoming connections at this port in synchronous communication
+owms.driver.connections.so-timeout        | The socket timeout inherited to all subsequent subsystem configurations
+owms.driver.connections.so-receive-buffer-size | The receiving buffer size inherited to all subsequent subsystem configurations
+owms.driver.connections.so-send-buffer-size | The sending buffer size inherited to all subsequent subsystem configurations
+owms.driver.connections.identified-by-field | The identified-by-field inherited to all subsequent subsystem configurations
+owms.driver.connections.subsystems        | A list of subsystems. A driver can handle multiple subsystems in different modes
+owms.driver.connections.subsystems[].name | Unique name of the subsystem
+owms.driver.connections.subsystems[].inbound.mode | The operational mode. Either `server` or `client`
+owms.driver.connections.subsystems[].inbound.hostname | The hostname to connect to or the name of the interface to listen on (if mode is `server`)
+owms.driver.connections.subsystems[].inbound.port | The port to connect to or to listen on
+owms.driver.connections.subsystems[].inbound.so-timeout | The socket timeout 
+owms.driver.connections.subsystems[].inbound.so-receive-buffer-size | The size of the receiving buffer
+owms.driver.connections.subsystems[].outbound.mode | The operational mode. Either `server` or `client`
+owms.driver.connections.subsystems[].outbound.hostname | The hostname to connect to or the name of the interface to listen on (if mode is `server`)
+owms.driver.connections.subsystems[].outbound.port | The port to connect to or to listen on
+owms.driver.connections.subsystems[].outbound.so-timeout | The socket timeout 
+owms.driver.connections.subsystems[].outbound.so-send-buffer-size | The size of the send buffer
+owms.driver.connections.subsystems[].outbound.identified-by-field | The name of the telegram field that identifies the telegram receiver
+owms.driver.connections.subsystems[].outbound.identified-by-value | The actual telegram receiver name
+owms.driver.connections.subsystems[].duplex.mode | The operational mode. Either `server` or `client`
+owms.driver.connections.subsystems[].duplex.hostname | The hostname to connect to or the name of the interface to listen on (if mode is `server`)
+owms.driver.connections.subsystems[].duplex.port | The port to connect to or to listen on
+owms.driver.connections.subsystems[].duplex.so-timeout | The socket timeout 
+owms.driver.connections.subsystems[].duplex.so-send-buffer-size | The size of the send buffer
+owms.driver.connections.subsystems[].duplex.so-receive-buffer-size | The size of the receiving buffer
+owms.driver.connections.subsystems[].duplex.identified-by-field | The name of the telegram field that identifies the telegram receiver
+owms.driver.connections.subsystems[].duplex.identified-by-value | The actual telegram receiver name
 
 # Logging
 
