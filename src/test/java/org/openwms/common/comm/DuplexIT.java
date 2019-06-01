@@ -25,9 +25,11 @@ import org.openwms.common.comm.config.Subsystem;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.common.comm.osip.res.ResponseMessageSender;
 import org.openwms.common.comm.tcp.ConnectionHolder;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
@@ -69,6 +71,8 @@ public class DuplexIT {
     private Driver driver;
     @Autowired
     private ConnectionHolder connectionHolder;
+    @MockBean
+    private RabbitTemplate rabbitTemplateMock;
 
     @ComponentScan
     public static class TestConfig {
@@ -86,6 +90,8 @@ public class DuplexIT {
 
     @Test
     public void testTcpAdapters() throws Exception {
+
+
         System.out.println(connectionFactory_SPS03_outbound.getComponentName());
         ApplicationEventPublisher publisher = e -> { };
         Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
