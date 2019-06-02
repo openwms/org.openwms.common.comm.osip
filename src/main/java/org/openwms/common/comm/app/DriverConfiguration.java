@@ -179,33 +179,43 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         return connectionFactory;
     }
 
-    private AbstractServerConnectionFactory createOutboundServerConnectionFactory (
-            Connections connections,
+    private AbstractConnectionFactory createOutboundConnectionFactory (
+            Subsystem.MODE mode,
             String subsystemName,
-            Subsystem.Duplex outbound,
+            Connections connections,
+            Subsystem.Duplex duplex,
             TcpMessageMapper tcpMessageMapper, Serializer serializer,
             Deserializer deserializer) {
 
-        int port = Optional.ofNullable(outbound.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for outbound connection server [%s]", subsystemName)));
-
-        TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
-        if (outbound.getHostname() != null) {
-            connectionFactory.setHost(outbound.getHostname());
+        String host = duplex.getHostname() == null ? connections.getHostname() : duplex.getHostname();
+        int port = Optional.ofNullable(duplex.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for duplex connection server [%s]", subsystemName)));
+        AbstractConnectionFactory connectionFactory;
+        if (mode == Subsystem.MODE.server) {
+            connectionFactory = new TcpNetServerConnectionFactory(port);
+        } else {
+            connectionFactory = new TcpNetClientConnectionFactory(host, port);
         }
+
+        connectionFactory.setHost(
+                duplex.getHostname() == null ? connections.getHostname() : duplex.getHostname()
+        );
+
+        connectionFactory.setSoTimeout(
+                duplex.getSoTimeout() == null ? connections.getSoTimeout() : duplex.getSoTimeout()
+        );
+
+        connectionFactory.setSoSendBufferSize(
+                duplex.getSoSendBufferSize() == null ? connections.getSoSendBufferSize() : duplex.getSoSendBufferSize()
+        );
+
+        connectionFactory.setSoReceiveBufferSize(
+                duplex.getSoReceiveBufferSize() == null ? connections.getSoReceiveBufferSize() : duplex.getSoReceiveBufferSize()
+        );
+
         connectionFactory.setSerializer(serializer);
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
-
-        Integer soTimeout = outbound.getSoTimeout() == null ? connections.getSoTimeout() : outbound.getSoTimeout();
-        if (soTimeout != null) {
-            connectionFactory.setSoTimeout(soTimeout);
-        }
-
-        Integer soSendBufferSize = outbound.getSoSendBufferSize() == null ? connections.getSoSendBufferSize() : outbound.getSoSendBufferSize();
-        if (soSendBufferSize != null) {
-            connectionFactory.setSoSendBufferSize(soSendBufferSize);
-        }
         return connectionFactory;
     }
 
@@ -351,10 +361,15 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         if (subsystem.getDuplex().getMode() == Subsystem.MODE.client) {
 
             // Duplex mode !!!
-            AbstractClientConnectionFactory clientConnectionFactory = createClientConnectionFactory(hostname, duplex.getPort(), serializer, deserializer);
+            AbstractConnectionFactory clientConnectionFactory =
+                    createOutboundConnectionFactory(
+                            Subsystem.MODE.client,
+                            subsystem.getName(),
+                            connections, subsystem.getDuplex(),
+                            tcpMessageMapper, serializer, deserializer);
+
             clientConnectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
             clientConnectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            clientConnectionFactory.setApplicationEventPublisher(applicationEventPublisher);
             clientConnectionFactory.setSingleUse(false);
             registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, clientConnectionFactory);
 
@@ -381,16 +396,17 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
-            BOOT_LOGGER.info("[{}] Duplex   TCP/IP connection configured with client: Hostname [{}], port [{}]", subsystem.getName(), duplex.getHostname(), duplex.getPort());
+            String host = duplex.getHostname() == null ? connections.getHostname() : duplex.getHostname();
+            BOOT_LOGGER.info("[{}] Duplex   TCP/IP connection configured with client: Hostname [{}], port [{}]", subsystem.getName(), host, duplex.getPort());
         } else {
-            AbstractServerConnectionFactory connectionFactory =
-                    createOutboundServerConnectionFactory(
-                            connections, subsystem.getName(), subsystem.getDuplex(),
+            AbstractConnectionFactory connectionFactory =
+                    createOutboundConnectionFactory(
+                            Subsystem.MODE.server,
+                            subsystem.getName(),
+                            connections, subsystem.getDuplex(),
                             tcpMessageMapper, serializer, deserializer);
             connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
             connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            //connectionFactory.setSingleUse(false);
-            connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
             registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, connectionFactory);
 
             // This adapter is only required to let the SCF work as a CCF!!

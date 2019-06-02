@@ -32,8 +32,10 @@ public class Connections {
 
     /** The hostname to connect to in client mode. */
     private String hostname = "localhost";
+    /** The listening port used in synchronous mode. */
+    private String portRest;
     /** Socket timeout in [ms], the idle time when to close the connection. */
-    private Integer soTimeout = 30000;
+    private Integer soTimeout = 300000;
     /** The size of the receive buffer for tcp/ip connections. */
     private Integer soReceiveBufferSize = 160;
     /** The size of the send buffer for tcp/ip connections. */
@@ -49,6 +51,14 @@ public class Connections {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public String getPortRest() {
+        return portRest;
+    }
+
+    public void setPortRest(String portRest) {
+        this.portRest = portRest;
     }
 
     public Integer getSoTimeout() {
