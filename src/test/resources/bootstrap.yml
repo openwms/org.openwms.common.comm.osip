@@ -14,24 +14,18 @@ owms:
     username: user
     password: sa
   driver:
-    timezone: "Europe/Berlin"
-    serialization: json
-    osip:
-      enabled: true
-      sync-field: "###"
-      date-pattern: yyyyMMddHHmmss
     routing-service:
       name: routing-service # is default
       protocol: http # default: http
       username: user # default: user
       password: sa # default: sa
     connections:
-      hostname: localhost
+      hostname: 127.0.0.1
       port-rest: 30008
-      so-timeout: 300000
-      so-receive-buffer-size: 160
-      so-send-buffer-size: 160
-      identified-by-field: "RECV"
+      so-timeout: 200000
+      so-receive-buffer-size: 140
+      so-send-buffer-size: 140
+      identified-by-field: "TEST"
       subsystems:
         - name: SPS01
           inbound:
@@ -59,10 +53,21 @@ owms:
             mode: server
             hostname: localhost
             port: 30003
+            so-timeout: 60000
             so-send-buffer-size: 200
             so-receive-buffer-size: 200
             identified-by-field: "RECV"
             identified-by-value: "SPS03"
+        - name: SPS04
+          duplex:
+            mode: server
+            port: 30004
+            identified-by-value: "SPS04"
+        - name: SPS05
+          duplex:
+            mode: client
+            port: 30005
+            identified-by-value: "SPS05"
 
 server:
   port: ${owms.driver.connections.port-rest}
