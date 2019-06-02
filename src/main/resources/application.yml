@@ -36,9 +36,20 @@ owms:
 ---
 spring:
   profiles: "!ASYNCHRONOUS"
+  rabbitmq:
+    listener:
+      direct:
+        auto-startup: false
+
+management:
+  health:
+    rabbit:
+      enabled: false
 
 owms:
   driver:
+    osip:
+      enabled: true
     server:
       port-rest: 30008
 server:

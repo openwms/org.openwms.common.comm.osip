@@ -18,6 +18,7 @@ package org.openwms.common.comm.tcp;
 import org.openwms.common.comm.MessageChannelNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
@@ -51,7 +52,7 @@ public class ConnectionHolder {
     private Map<String, String> connectionIds = new ConcurrentHashMap<>();
     private final Map<String, AbstractConnectionFactory> factories;
 
-    public ConnectionHolder(List<AbstractConnectionFactory> factories) {
+    public ConnectionHolder(@Autowired(required = false) List<AbstractConnectionFactory> factories) {
         this.factories = factories == null ?
                 Collections.emptyMap() :
                 factories

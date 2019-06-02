@@ -5,7 +5,7 @@ spring:
     config:
       fail-fast: true # true means retry
       discovery:
-        enabled: true
+        enabled: false
         service-id: openwms-config
       retry:
         max-attempts: 120
@@ -13,7 +13,7 @@ spring:
       password: sa
       headers:
         protocol: ${owms.cfgsrv.protocol:http}
-      enabled: true
+      enabled: false
 
 feign:
   httpclient:
@@ -52,37 +52,6 @@ owms:
       so-receive-buffer-size: 160
       so-send-buffer-size: 160
       identified-by-field: "RECV"
-      subsystems:
-        - name: SPS01
-          inbound:
-            mode: server
-            hostname: 0.0.0.0
-            port: 30001
-            so-receive-buffer-size: 200
-          outbound:
-            mode: client
-            hostname: 0.0.0.0
-            port: 30002
-            so-send-buffer-size: 200
-            identified-by-field: "RECV"
-            identified-by-value: "SPS01"
-        - name: SPS02
-          inbound:
-            mode: client
-            port: 30012
-          outbound:
-            mode: server
-            port: 30011
-            identified-by-value: "SPS02"
-        - name: SPS03
-          duplex:
-            mode: server
-            hostname: localhost
-            port: 30003
-            so-send-buffer-size: 200
-            so-receive-buffer-size: 200
-            identified-by-field: "RECV"
-            identified-by-value: "SPS03"
 
 server:
   port: ${owms.driver.connections.port-rest}
@@ -108,6 +77,9 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    rabbit:
+      enabled: false
 
 logging:
   file: "/tmp/owms/BOOT-COMMON-Comm.log"
@@ -117,6 +89,8 @@ spring:
   profiles: DISTRIBUTED
   cloud:
     config:
+      discovery:
+        enabled: true
       enabled: true
 
 eureka:
