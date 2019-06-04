@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * A OSIPJsonMessageConverter.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 class OSIPJsonMessageConverter extends Jackson2JsonMessageConverter {
 

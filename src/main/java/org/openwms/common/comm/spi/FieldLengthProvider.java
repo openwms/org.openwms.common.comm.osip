@@ -18,7 +18,7 @@ package org.openwms.common.comm.spi;
 /**
  * A FieldLengthProvider.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public interface FieldLengthProvider {
 

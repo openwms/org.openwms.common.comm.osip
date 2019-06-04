@@ -25,7 +25,7 @@ import java.util.StringJoiner;
 /**
  * A UpdateVO.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 class UpdateVO implements Serializable {
 

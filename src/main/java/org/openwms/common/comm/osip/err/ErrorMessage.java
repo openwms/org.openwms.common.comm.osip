@@ -26,7 +26,7 @@ import java.util.StringJoiner;
 /**
  * An ErrorMessage signals any error or failure situation from or to an external system.
  * 
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class ErrorMessage extends Payload implements Serializable {
 

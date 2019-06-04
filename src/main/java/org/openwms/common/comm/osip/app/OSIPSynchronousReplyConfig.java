@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 /**
  * A OSIPSynchronousReplyConfig.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile("!" + SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration

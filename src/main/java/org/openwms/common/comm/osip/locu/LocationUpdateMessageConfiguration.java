@@ -29,7 +29,7 @@ import org.springframework.messaging.MessageChannel;
  * A LocationUpdateMessageConfiguration is the JavaConfig for the {@link LocationUpdateMessage}
  * handling part.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @Configuration

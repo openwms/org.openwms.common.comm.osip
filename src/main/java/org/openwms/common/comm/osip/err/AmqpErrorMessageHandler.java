@@ -30,7 +30,7 @@ import java.util.function.Function;
  * An AmqpErrorMessageHandler is the handler function to accept {@link ErrorMessage}s and
  * forward them for processing over AMQP.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent

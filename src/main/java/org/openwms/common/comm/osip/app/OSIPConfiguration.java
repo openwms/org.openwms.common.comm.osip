@@ -25,7 +25,7 @@ import org.springframework.integration.support.converter.MapMessageConverter;
 /**
  * A OSIPConfiguration.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @Configuration

@@ -27,7 +27,7 @@ import org.springframework.messaging.support.MessageBuilder;
  * A RequestMessageServiceActivator implements the Service Activator pattern and delegates
  * incoming {@link RequestMessage}s to the appropriate handler function.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @MessageEndpoint("responseMessageServiceActivator")

@@ -42,7 +42,7 @@ import static org.openwms.common.comm.osip.Payload.ERROR_CODE_LENGTH;
  * A SystemUpdateTelegramDeserializer deserializes OSIP SYSU telegram String into
  * {@link SystemUpdateMessage}s.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  * @see SystemUpdateMessage
  */
 @OSIPComponent

@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 /**
  * A LocationUpdateMessage.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class LocationUpdateMessage extends Payload implements Serializable {
 

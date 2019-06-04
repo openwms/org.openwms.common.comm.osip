@@ -27,7 +27,7 @@ import static org.openwms.common.comm.osip.OSIPHeader.PREFIX;
 /**
  * A CommonMessageFactory.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public final class CommonMessageFactory {
 

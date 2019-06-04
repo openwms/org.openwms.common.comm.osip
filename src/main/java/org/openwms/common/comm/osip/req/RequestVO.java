@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * A RequestVO.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class RequestVO implements Serializable {
 

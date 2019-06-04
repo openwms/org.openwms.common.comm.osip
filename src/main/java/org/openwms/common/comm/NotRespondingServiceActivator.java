@@ -22,7 +22,7 @@ import org.springframework.messaging.support.GenericMessage;
  * message but does not reply with a message.
  *
  * @param <T> A type of incoming payload
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public interface NotRespondingServiceActivator<T> extends CustomServiceActivator {
 

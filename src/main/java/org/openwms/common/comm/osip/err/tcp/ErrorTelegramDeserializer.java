@@ -41,7 +41,7 @@ import static org.openwms.common.comm.osip.Payload.ERROR_CODE_LENGTH;
  * A ErrorTelegramDeserializer deserializes OSIP ERR telegram String into
  * {@link ErrorMessage}s.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  * @see ErrorMessage
  */
 @OSIPComponent

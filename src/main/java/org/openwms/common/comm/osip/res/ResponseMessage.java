@@ -29,7 +29,7 @@ import java.util.StringJoiner;
  *
  * See https://interface21-io.gitbook.io/osip/messaging-between-layer-n-and-layer-n-1#response-telegram-res_
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class ResponseMessage extends Payload implements Serializable {
 

@@ -37,7 +37,7 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
  * A LocationUpdateTelegramDeserializer deserializes OSIP LOCU telegram String into
  * {@link LocationUpdateMessage}s.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  * @see LocationUpdateMessage
  */
 @OSIPComponent

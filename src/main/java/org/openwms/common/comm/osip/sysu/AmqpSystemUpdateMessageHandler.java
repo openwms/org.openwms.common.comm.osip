@@ -29,7 +29,7 @@ import java.util.function.Function;
 /**
  * A AmqpSystemUpdateMessageHandler.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent

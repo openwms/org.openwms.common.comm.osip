@@ -26,7 +26,7 @@ import static org.openwms.common.comm.ParserUtils.padLeft;
 /**
  * A OSIPHeader represents the header part of a OSIP telegram message.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class OSIPHeader implements Serializable {
 

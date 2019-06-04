@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 /**
  * A DriverStarter is the starter class of the SpringBoot application.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
 @EnableConfigurationProperties

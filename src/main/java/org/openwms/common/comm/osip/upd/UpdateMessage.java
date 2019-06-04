@@ -29,7 +29,7 @@ import java.util.StringJoiner;
  * A UpdateMessage reflects the OSIP UPD telegram type and is used to change the state of
  * a {@code LocationGroup}.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class UpdateMessage extends Payload implements Serializable {
 

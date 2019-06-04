@@ -21,7 +21,7 @@ import org.springframework.messaging.support.GenericMessage;
 /**
  * A RequestHelper.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 final class RequestHelper {
 

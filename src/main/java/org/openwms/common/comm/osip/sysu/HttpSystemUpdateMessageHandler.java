@@ -34,7 +34,7 @@ import java.util.function.Function;
 /**
  * A HttpSystemUpdateMessageHandler forwards system updates to the LocationGroup services directly without using the routing service.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent

@@ -25,7 +25,7 @@ import org.springframework.messaging.MessageChannel;
  * A TimesyncConfiguration is the JavaConfig for the {@link TimesyncRequest} handling
  * part.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @Configuration

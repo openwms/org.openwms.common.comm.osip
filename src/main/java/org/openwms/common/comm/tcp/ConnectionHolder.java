@@ -43,7 +43,7 @@ import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
  * listens on events whenever a new Connection is opened and stores the ConnectionId
  * that can be used as header argument in outbound messages.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Component
 public class ConnectionHolder {
@@ -73,7 +73,6 @@ public class ConnectionHolder {
             LOGGER.debug("New connection for factory [{}] established with id [{}]", event.getConnectionFactoryName(), event.getConnectionId());
         }
     }
-
 
     /**
      * On an {@link TcpConnectionCloseEvent} we try to remove the existing assignment.
