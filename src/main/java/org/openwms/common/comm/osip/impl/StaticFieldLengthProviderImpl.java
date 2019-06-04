@@ -21,7 +21,7 @@ import org.openwms.common.comm.spi.FieldLengthProvider;
 /**
  * A StaticFieldLengthProviderImpl.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIPComponent
 class StaticFieldLengthProviderImpl implements FieldLengthProvider {

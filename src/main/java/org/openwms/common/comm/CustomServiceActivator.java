@@ -20,7 +20,7 @@ import org.springframework.messaging.MessageChannel;
 /**
  * A CustomServiceActivator.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public interface CustomServiceActivator {
 

@@ -28,7 +28,7 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
  *
  * see https://interface21-io.gitbook.io/osip/
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public abstract class OSIPSerializer<T extends Payload> {
 

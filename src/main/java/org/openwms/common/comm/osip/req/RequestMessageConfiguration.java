@@ -29,7 +29,7 @@ import org.springframework.messaging.MessageChannel;
  * A RequestMessageConfiguration is the JavaConfig for the {@link RequestMessage} handling
  * part.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @Configuration

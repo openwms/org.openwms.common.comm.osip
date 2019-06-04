@@ -39,7 +39,7 @@ import static java.lang.String.format;
  * an incoming message arrives. If no suitable processor is found, the message will be
  * routed to the default exception channel.
  * 
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @MessageEndpoint("messageRouter")
 public class CommonMessageRouter {

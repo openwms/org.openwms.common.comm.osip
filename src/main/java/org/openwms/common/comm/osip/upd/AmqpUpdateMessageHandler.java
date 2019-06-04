@@ -31,7 +31,7 @@ import static org.openwms.common.comm.osip.upd.HttpUpdateMessageHandler.getReque
 /**
  * A AmqpUpdateMessageHandler.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent

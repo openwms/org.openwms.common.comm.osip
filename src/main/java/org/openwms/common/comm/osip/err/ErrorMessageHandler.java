@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * A ErrorMessageHandler.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @MessageEndpoint

@@ -23,7 +23,7 @@ import java.time.ZoneId;
 /**
  * A Driver.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Component
 @ConfigurationProperties("owms.driver")

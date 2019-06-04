@@ -26,7 +26,7 @@ import java.util.StringJoiner;
 /**
  * A TimesyncResponse.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public class TimesyncResponse extends Payload implements Serializable {
 

@@ -29,7 +29,7 @@ import org.springframework.messaging.MessageHeaders;
 /**
  * A ResponseMessageHandler.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @MessageEndpoint("responseMessageHandler")

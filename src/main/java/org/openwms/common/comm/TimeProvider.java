@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * A TimeProvider is able to provide dates and times.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public interface TimeProvider {
 

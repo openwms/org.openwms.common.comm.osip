@@ -30,7 +30,7 @@ import java.util.Date;
  * A FallbackServiceActivator takes all other telegrams not defined and not mapped to any
  * specific channel and publishes an OSIP ERR message.
  * 
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIP
 @MessageEndpoint("errorServiceActivator")

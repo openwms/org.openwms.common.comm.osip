@@ -36,7 +36,7 @@ import static org.openwms.common.comm.osip.req.RequestHelper.getRequest;
  * An AmqpRequestMessageHandler is the handler function to accept {@link RequestMessage}s
  * and forward them for processing over HTTP to the routing-service.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent

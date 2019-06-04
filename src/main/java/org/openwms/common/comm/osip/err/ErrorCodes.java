@@ -18,7 +18,7 @@ package org.openwms.common.comm.osip.err;
 /**
  * A ErrorCodes class defines all error constants used as error code within {@link ErrorMessage}s.
  * 
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public final class ErrorCodes {
 

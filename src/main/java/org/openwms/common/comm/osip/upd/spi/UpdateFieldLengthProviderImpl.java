@@ -20,7 +20,7 @@ import org.openwms.common.comm.osip.OSIPComponent;
 /**
  * A UpdateFieldLengthProviderImpl.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @OSIPComponent
 class UpdateFieldLengthProviderImpl implements UpdateFieldLengthProvider {

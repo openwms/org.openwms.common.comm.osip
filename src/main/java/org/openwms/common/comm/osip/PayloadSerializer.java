@@ -38,7 +38,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 /**
  * A PayloadSerializer.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Primary
 @OSIPComponent

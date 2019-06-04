@@ -26,7 +26,7 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 /**
  * A HeaderAppendingTransformer.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @MessageEndpoint
 public class HeaderAppendingTransformer {

@@ -38,7 +38,7 @@ import static org.openwms.common.comm.osip.Payload.DATE_LENGTH;
  * A TimesyncTelegramDeserializer deserializes OSIP SYNC telegram String into
  * {@link TimesyncRequest}s.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  * @see TimesyncRequest
  */
 @OSIPComponent

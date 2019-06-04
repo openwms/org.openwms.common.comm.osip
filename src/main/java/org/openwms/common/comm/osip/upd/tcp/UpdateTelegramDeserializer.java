@@ -41,7 +41,7 @@ import static org.openwms.common.comm.osip.Payload.ERROR_CODE_LENGTH;
  * A UpdateTelegramDeserializer deserializes OSIP SYNC telegram String into
  * {@link UpdateMessage}s.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  * @see UpdateMessage
  */
 @OSIPComponent

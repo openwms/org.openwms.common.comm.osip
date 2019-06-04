@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /**
  * A OSIPComponent.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @ConditionalOnExpression("${owms.driver.osip.enabled}")
 @Component

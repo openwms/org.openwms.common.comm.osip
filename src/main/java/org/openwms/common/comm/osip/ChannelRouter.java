@@ -27,7 +27,7 @@ import static java.lang.String.format;
 /**
  * A ChannelRouter.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @MessageEndpoint
 class ChannelRouter {

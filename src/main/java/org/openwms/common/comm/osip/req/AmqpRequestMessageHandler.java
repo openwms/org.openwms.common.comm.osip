@@ -30,7 +30,7 @@ import java.util.function.Function;
  * An AmqpRequestMessageHandler is the handler function to accept {@link RequestMessage}s
  * and forward them for processing over AMQP.
  *
- * @author <a href="mailto:hscherrer@openwms.org">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @OSIPComponent
