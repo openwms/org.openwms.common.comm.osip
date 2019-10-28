@@ -36,6 +36,8 @@ public class ResponseHeader implements Serializable {
     private String receiver;
     @JsonProperty(OSIPHeader.SEQUENCE_FIELD_NAME)
     private short sequenceNo;
+    @JsonProperty(OSIPHeader.TENANT_FIELD_NAME)
+    private String tenant;
 
     /*~------------ Constructors ------------*/
     private ResponseHeader() {
@@ -45,6 +47,7 @@ public class ResponseHeader implements Serializable {
         setSender(builder.sender);
         setReceiver(builder.receiver);
         setSequenceNo(builder.sequenceNo);
+        setTenant(builder.tenant);
     }
 
     /*~------------ Methods ------------*/
@@ -61,6 +64,7 @@ public class ResponseHeader implements Serializable {
         result.put(OSIPHeader.SENDER_FIELD_NAME, sender);
         result.put(OSIPHeader.RECEIVER_FIELD_NAME, receiver);
         result.put(OSIPHeader.SEQUENCE_FIELD_NAME, sequenceNo);
+        result.put(OSIPHeader.TENANT_FIELD_NAME, tenant);
         return result;
     }
 
@@ -89,11 +93,20 @@ public class ResponseHeader implements Serializable {
         this.sequenceNo = sequenceNo;
     }
 
+    public String getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
+    }
+
     /*~------------ Builder ------------*/
     public static final class Builder {
         private String sender;
         private String receiver;
         private short sequenceNo;
+        private String tenant;
 
         private Builder() {
         }
@@ -113,6 +126,11 @@ public class ResponseHeader implements Serializable {
             return this;
         }
 
+        public Builder tenant(String val) {
+            tenant = val;
+            return this;
+        }
+
         public ResponseHeader build() {
             return new ResponseHeader(this);
         }
@@ -121,21 +139,27 @@ public class ResponseHeader implements Serializable {
     /*~------------ Overrides ------------*/
     @Override
     public String toString() {
-        return new StringJoiner(", ", ResponseHeader.class.getSimpleName() + "[", "]").add("sender='" + sender + "'").add("receiver='" + receiver + "'").add("sequenceNo=" + sequenceNo).toString();
+        return new StringJoiner(", ", ResponseHeader.class.getSimpleName() + "[", "]")
+                .add("sender='" + sender + "'")
+                .add("receiver='" + receiver + "'")
+                .add("sequenceNo=" + sequenceNo)
+                .add("tenant='" + tenant + "'")
+                .toString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (!(o instanceof ResponseHeader)) return false;
         ResponseHeader that = (ResponseHeader) o;
-        return sequenceNo == that.sequenceNo && Objects.equals(sender, that.sender) && Objects.equals(receiver, that.receiver);
+        return sequenceNo == that.sequenceNo &&
+                Objects.equals(sender, that.sender) &&
+                Objects.equals(receiver, that.receiver) &&
+                Objects.equals(tenant, that.tenant);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sender, receiver, sequenceNo);
+        return Objects.hash(sender, receiver, sequenceNo, tenant);
     }
 }

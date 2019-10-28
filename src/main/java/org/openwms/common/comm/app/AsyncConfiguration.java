@@ -15,6 +15,8 @@
  */
 package org.openwms.common.comm.app;
 
+import org.ameba.tenancy.TenantHolder;
+import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SpringProfiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ import org.springframework.retry.support.RetryTemplate;
 import static org.ameba.LoggingCategories.BOOT;
 
 /**
- * A AsyncConfig.
+ * A AsyncConfiguration.
  *
  * @author Heiko Scherrer
  */
@@ -85,6 +87,12 @@ class AsyncConfiguration {
         rabbitTemplate.setRetryTemplate(retryTemplate);
 
         rabbitTemplate.setMessageConverter(messageConverter);
+        rabbitTemplate.setBeforePublishPostProcessors(
+                m -> {
+                    m.getMessageProperties().getHeaders().put(OSIPHeader.TENANT_FIELD_NAME, TenantHolder.getCurrentTenant());
+                    return m;
+                }
+        );
         return rabbitTemplate;
     }
 }
