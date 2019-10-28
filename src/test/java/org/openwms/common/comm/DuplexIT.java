@@ -60,7 +60,7 @@ import static org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OU
  */
 @SpringBootTest
 @ImportResource("classpath:test.xml")
-@ActiveProfiles("ASYNCHRONOUS")
+@ActiveProfiles({"ASYNCHRONOUS", "TEST"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @DirtiesContext

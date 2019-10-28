@@ -23,6 +23,11 @@ package org.openwms.common.comm.config;
 public class Subsystem {
     /** Unique subsystem name, that is used to identify the receiver. */
     private String name;
+    /**
+     * The type the driver instance is used for. Different types allow processing
+     * different kind of telegrams.
+     */
+    private TYPE type = TYPE.conveyor;
     /** The subsystem can be configured in bi-directional duplex mode. */
     private Duplex duplex;
     /** All inbound connection configuration. */
@@ -36,6 +41,14 @@ public class Subsystem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TYPE getType() {
+        return type;
+    }
+
+    public void setType(TYPE type) {
+        this.type = type;
     }
 
     public Duplex getDuplex() {
@@ -64,6 +77,23 @@ public class Subsystem {
 
     public enum MODE {
         client, server;
+    }
+
+    public enum TYPE {
+        /** Conveyor instance with latest telegram specification. */
+        conveyor("1"),
+        /** Crane instance with latest telegram specification. */
+        crane("1"),
+        /** Conveyor instance with telegram spec version 1. */
+        conveyor_1("1"),
+        /** Crane instance with telegram spec version 1. */
+        crane_1("1");
+
+        private String version;
+
+        TYPE(String version) {
+            this.version = version;
+        }
     }
 
     public static class Inbound {

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
+import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionFailedEvent;
@@ -35,7 +36,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.openwms.common.comm.CommConstants.PREFIX_CONNECTION_FACTORY;
-import static org.openwms.common.comm.CommConstants.SUFFIX_INBOUND;
 import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 
 /**
@@ -69,8 +69,8 @@ public class ConnectionHolder {
     @EventListener
     public void onOpenMessage(TcpConnectionOpenEvent event) {
         connectionIds.putIfAbsent(event.getConnectionFactoryName(), event.getConnectionId());
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("New connection for factory [{}] established with id [{}]", event.getConnectionFactoryName(), event.getConnectionId());
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("New connection for factory [{}] established with id [{}]", event.getConnectionFactoryName(), event.getConnectionId());
         }
     }
 
@@ -82,8 +82,8 @@ public class ConnectionHolder {
     @EventListener
     public void onClosedMessage(TcpConnectionCloseEvent event) {
         String connectionId = connectionIds.remove(event.getConnectionFactoryName());
-        if (connectionId != null && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Deregister connection for factory [{}] with id [{}]", event.getConnectionFactoryName(), event.getConnectionId());
+        if (connectionId != null && LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Deregister connection for factory [{}] with id [{}]", event.getConnectionFactoryName(), event.getConnectionId());
         }
     }
 
@@ -94,10 +94,10 @@ public class ConnectionHolder {
      */
     @EventListener
     public void onFailedMessage(TcpConnectionFailedEvent event) {
-        LOGGER.debug("Connection Lost for : {}", ((AbstractConnectionFactory)event.getSource()).getComponentName());
+        LOGGER.trace("Connection Lost for : {}", ((AbstractConnectionFactory)event.getSource()).getComponentName());
         String connectionId = connectionIds.remove(((AbstractConnectionFactory)event.getSource()).getComponentName());
-        if (connectionId != null && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Deregister connection for factory [{}]", ((AbstractConnectionFactory)event.getSource()).getComponentName());
+        if (connectionId != null && LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Deregister connection for factory [{}]", ((AbstractConnectionFactory)event.getSource()).getComponentName());
         }
     }
 
@@ -108,10 +108,10 @@ public class ConnectionHolder {
      */
     @EventListener
     public void onFailedConnectionMessage(TcpConnectionExceptionEvent event) {
-        LOGGER.debug("Connection Lost for : [{}]", event.getConnectionFactoryName());
+        LOGGER.trace("Connection Lost for : [{}]", event.getConnectionFactoryName());
         String connectionId = connectionIds.remove(event.getConnectionFactoryName());
-        if (connectionId != null && LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Deregister connection for factory [{}]", event.getConnectionFactoryName());
+        if (connectionId != null && LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Deregister connection for factory [{}]", event.getConnectionFactoryName());
         }
     }
 
@@ -123,13 +123,15 @@ public class ConnectionHolder {
      * @return The connectionId of the active Connection
      */
     public String getConnectionId(String connectionFactoryName) {
-        String result = connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_OUTBOUND);
-        if (result == null) {
-            result = connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_INBOUND);
-            if (result == null) {
-                throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
+        try {
+            AbstractConnectionFactory factory = factories.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_OUTBOUND);
+            if (factory instanceof AbstractServerConnectionFactory) {
+                return connectionIds.get(PREFIX_CONNECTION_FACTORY + connectionFactoryName + SUFFIX_OUTBOUND);
+            } else {
+                return factory.getConnection().getConnectionId();
             }
+        } catch (Exception e) {
+            throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
         }
-        return result;
     }
 }
