@@ -31,7 +31,7 @@ public class Driver {
 
     /** Timezone. */
     private ZoneId timezone = ZoneId.of("UTC+00:00");
-    /** Serialization methods: json, barray */
+    /** Serialization methods (JSON or Byte Array): json, barray. */
     private String serialization = "json";
     /** Port number used for synchronous RESTful communication. */
     private String portRest;
