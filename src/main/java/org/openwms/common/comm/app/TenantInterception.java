@@ -28,7 +28,8 @@ class TenantInterception extends TcpConnectionInterceptorSupport {
 
     @Override
     public boolean onMessage(Message<?> message) {
-        TenantHolder.setCurrentTenant(getTheConnection().getConnectionFactoryName());
+        String cfName = getTheConnection().getConnectionFactoryName();
+        TenantHolder.setCurrentTenant(cfName.substring(cfName.indexOf('_') + 1, cfName.lastIndexOf('_')));
         try {
             return super.onMessage(message);
         } finally {
