@@ -1,6 +1,8 @@
 spring:
   cloud:
     config:
+      discovery:
+        enabled: false
       enabled: false
 
 owms:
@@ -42,7 +44,7 @@ owms:
             identified-by-value: "SPS01"
         - name: SPS02
           inbound:
-            mode: client
+            mode: server
             port: 30012
           outbound:
             mode: server
@@ -87,7 +89,7 @@ eureka:
 
 ---
 spring:
-  profiles: CLOUD
+  profiles: HEROKU
   main:
     banner-mode: "OFF"
   cloud:

@@ -291,7 +291,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
     private TcpConnectionInterceptorFactoryChain createInterceptorChain() {
         TcpConnectionInterceptorFactoryChain chain = new TcpConnectionInterceptorFactoryChain();
-        chain.setInterceptors(new TcpConnectionInterceptorFactory[]{TenantInterception::new});
+        chain.setInterceptors(new TcpConnectionInterceptorFactory[]{() -> new TenantInterception(applicationEventPublisher)});
         return chain;
     }
 
