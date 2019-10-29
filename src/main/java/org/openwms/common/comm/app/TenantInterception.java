@@ -16,6 +16,8 @@
 package org.openwms.common.comm.app;
 
 import org.ameba.tenancy.TenantHolder;
+import org.slf4j.MDC;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorSupport;
 import org.springframework.messaging.Message;
 
@@ -26,13 +28,19 @@ import org.springframework.messaging.Message;
  */
 class TenantInterception extends TcpConnectionInterceptorSupport {
 
+    public TenantInterception(ApplicationEventPublisher applicationEventPublisher) {
+        super(applicationEventPublisher);
+    }
+
     @Override
     public boolean onMessage(Message<?> message) {
         String cfName = getTheConnection().getConnectionFactoryName();
         TenantHolder.setCurrentTenant(cfName.substring(cfName.indexOf('_') + 1, cfName.lastIndexOf('_')));
+        MDC.put("Tenant", TenantHolder.getCurrentTenant());
         try {
             return super.onMessage(message);
         } finally {
+            MDC.clear();
             TenantHolder.destroy();
         }
     }
