@@ -16,9 +16,11 @@
 package org.openwms.common.comm.osip.res;
 
 import org.ameba.annotation.Measured;
+import org.ameba.tenancy.TenantHolder;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SpringProfiles;
+import org.slf4j.MDC;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Profile;
@@ -46,9 +48,14 @@ class AmqpResponseMessageListener {
     @RabbitListener(queues = "${owms.driver.osip.res.queue-name}")
     void handle(@Payload ResponseMessage res, @Headers Map<String, Object> headers) {
         try {
+            TenantHolder.setCurrentTenant((String) headers.get(OSIPHeader.TENANT_FIELD_NAME));
+            MDC.put("Tenant", TenantHolder.getCurrentTenant());
             handler.handle(res, (String) headers.get(OSIPHeader.RECEIVER_FIELD_NAME));
         } catch (Exception e) {
             throw new AmqpRejectAndDontRequeueException(e.getMessage(), e);
+        } finally {
+            MDC.clear();
+            TenantHolder.destroy();
         }
     }
 }
