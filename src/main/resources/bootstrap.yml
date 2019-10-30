@@ -91,15 +91,6 @@ logging:
 
 ---
 spring:
-  profiles: ASYNCHRONOUS
-  cloud:
-    config:
-      discovery:
-        enabled: true
-      enabled: true
-
----
-spring:
   profiles: DISTRIBUTED
   cloud:
     config:
