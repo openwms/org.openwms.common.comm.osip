@@ -60,7 +60,7 @@ import static org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OU
  */
 @SpringBootTest
 @ImportResource("classpath:test.xml")
-@ActiveProfiles("ASYNCHRONOUS")
+@ActiveProfiles({"ASYNCHRONOUS", "TEST"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @DirtiesContext
@@ -75,10 +75,13 @@ public class DuplexIT {
     @Autowired
     private ResponseMessageSender sender;
     @Autowired
+    @Qualifier("connectionFactory_SPS03_outbound")
     private AbstractServerConnectionFactory connectionFactory_SPS03_outbound;
     @Autowired
+    @Qualifier("connectionFactory_SPS04_outbound")
     private AbstractServerConnectionFactory connectionFactory_SPS04_outbound;
     @Autowired
+    @Qualifier("connectionFactory_SPS05_outbound")
     private AbstractClientConnectionFactory connectionFactory_SPS05_outbound;
     @Autowired
     @Qualifier(PREFIX_ENRICHED_OUTBOUND_CHANNEL + "SPS03")
@@ -118,9 +121,6 @@ public class DuplexIT {
 
     @Test
     public void testTcpAdapters() throws Exception {
-
-
-        System.out.println(connectionFactory_SPS03_outbound.getComponentName());
         ApplicationEventPublisher publisher = e -> { };
         Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
 

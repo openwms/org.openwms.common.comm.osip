@@ -23,7 +23,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A AppConfiguration.
+ * A AppConfiguration is a Spring configuration class used when no ASYNCHRONOUS profile is active and synchronous RESTful communication
+ * is used.
  *
  * @author Heiko Scherrer
  */
@@ -34,6 +35,8 @@ class AppConfiguration {
     @LoadBalanced
     @Bean
     RestTemplate aLoadBalanced() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new RestTemplateInterceptor());
+        return restTemplate;
     }
 }

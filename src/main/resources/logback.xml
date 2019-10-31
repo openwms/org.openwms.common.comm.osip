@@ -7,14 +7,12 @@
     <include resource="logback-appenders.xml"/>
     <include resource="logback-loggers.xml"/>
 
-    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
-
     <logger name="com.netflix.discovery" level="OFF"/>
     <logger name="com.netflix.config.sources" level="ERROR"/>
     <logger name="org.dozer" level="ERROR" />
     <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.integration" level="WARN"/>
-    <logger name="org.openwms" level="INFO"/>
+    <logger name="org.openwms" level="DEBUG"/>
 
     <logger name="MEASURED" level="OFF">
         <appender-ref ref="STDOUT"/>

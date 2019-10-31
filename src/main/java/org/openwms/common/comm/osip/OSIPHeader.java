@@ -47,6 +47,8 @@ public class OSIPHeader implements Serializable {
     public static final short LENGTH_RECEIVER_FIELD = 5;
     public static final String SEQUENCE_FIELD_NAME = PREFIX + "sequenceno";
     public static final short LENGTH_SEQUENCE_NO_FIELD = 5;
+    public static final String TENANT_FIELD_NAME = PREFIX + "tenant";
+
     public static final short LENGTH_HEADER =
                     LENGTH_SYNC_FIELD +
                     LENGTH_MESSAGE_LENGTH_FIELD +

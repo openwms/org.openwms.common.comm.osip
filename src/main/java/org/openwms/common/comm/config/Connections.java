@@ -35,7 +35,7 @@ public class Connections {
     /** The listening port used in synchronous mode. */
     private String portRest;
     /** Socket timeout in [ms], the idle time when to close the connection. */
-    private Integer soTimeout = 300000;
+    private Integer soTimeout;
     /** The size of the receive buffer for tcp/ip connections. */
     private Integer soReceiveBufferSize = 160;
     /** The size of the send buffer for tcp/ip connections. */
