@@ -65,6 +65,7 @@
     </ciManagement>
 
     <properties>
+        <ameba-lib.version>2.2-SNAPSHOT</ameba-lib.version>
         <core.version>1.5.0-SNAPSHOT</core.version>
     </properties>
 
@@ -216,6 +217,10 @@
             <artifactId>spring-messaging</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.interface21</groupId>
+            <artifactId>ameba-lib</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>

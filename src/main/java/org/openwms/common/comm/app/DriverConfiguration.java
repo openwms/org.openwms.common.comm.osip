@@ -16,7 +16,6 @@
 package org.openwms.common.comm.app;
 
 import org.openwms.common.comm.Channels;
-import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.ConfigurationException;
 import org.openwms.common.comm.config.Connections;
 import org.openwms.common.comm.config.Subsystem;
@@ -26,6 +25,7 @@ import org.openwms.common.comm.transformer.tcp.Transformable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -47,6 +47,8 @@ import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
 import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.AbstractConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.ip.tcp.connection.TcpMessageMapper;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
@@ -62,6 +64,8 @@ import java.util.concurrent.Executors;
 
 import static java.lang.String.format;
 import static org.ameba.LoggingCategories.BOOT;
+import static org.openwms.common.comm.CommConstants.PREFIX_CONNECTION_FACTORY;
+import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 
 /**
  * A DriverConfiguration.
@@ -73,6 +77,7 @@ import static org.ameba.LoggingCategories.BOOT;
 @EnableIntegration
 public class DriverConfiguration implements ApplicationEventPublisherAware {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DriverConfiguration.class);
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     private static final String SUFFIX_INBOUND = "_inbound";
     private static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
@@ -99,7 +104,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             AbstractConnectionFactory connectionFactory) {
         TcpReceivingChannelAdapter channelAdapter = tcpReceivingChannelAdapter(connectionFactory, inboundChannel);
 
-        registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
+        registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
         registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_INBOUND, channelAdapter);
     }
 
@@ -113,11 +118,22 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
     private AbstractClientConnectionFactory createClientConnectionFactory(
             String clientHostname, int clientPort, Serializer serializer,
-            Deserializer deserializer) {
+            Deserializer deserializer, Integer soTimeout, Integer soReceiveBufferSize, Integer soSendBufferSize) {
 
         TcpNetClientConnectionFactory connectionFactory = new TcpNetClientConnectionFactory(clientHostname, clientPort);
         connectionFactory.setSerializer(serializer);
         connectionFactory.setDeserializer(deserializer);
+        if (soTimeout != null) {
+            connectionFactory.setSoTimeout(soTimeout);
+        }
+        if (soReceiveBufferSize != null) {
+            connectionFactory.setSoReceiveBufferSize(soReceiveBufferSize);
+        }
+        if (soSendBufferSize != null) {
+            connectionFactory.setSoSendBufferSize(soSendBufferSize);
+        }
+        LOGGER.debug("Hostname [{}], Port [{}], SoTimeout [{}], SoReceiveBufferSize [{}], SoSendBufferSize [{}]",
+                clientHostname, clientPort, soTimeout, soReceiveBufferSize, soSendBufferSize);
         connectionFactory.start();
         return connectionFactory;
     }
@@ -125,7 +141,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
     private AbstractServerConnectionFactory createInboundServerConnectionFactory(
             Connections connections,
             Subsystem subsystem,
-            TcpMessageMapper tcpMessageMapper,
+            TcpMessageMapper tcpMessageMapper, Serializer serializer,
             Deserializer deserializer) {
 
         Subsystem.Inbound inbound = subsystem.getInbound();
@@ -133,6 +149,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
         TcpNetServerConnectionFactory connectionFactory = new TcpNetServerConnectionFactory(port);
         connectionFactory.setHost(inbound.getHostname());
+        connectionFactory.setLeaveOpen(true);
+        connectionFactory.setSerializer(serializer);
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
@@ -146,6 +164,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         if (soReceiveBufferSize != null) {
             connectionFactory.setSoReceiveBufferSize(soReceiveBufferSize);
         }
+        LOGGER.debug("Hostname [{}], Port [{}], SoTimeout [{}], SoReceiveBufferSize [{}]",
+                inbound.getHostname(), port, soTimeout, soReceiveBufferSize);
         return connectionFactory;
     }
 
@@ -162,6 +182,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         if (outbound.getHostname() != null) {
             connectionFactory.setHost(outbound.getHostname());
         }
+        connectionFactory.setLeaveOpen(true);
         connectionFactory.setSerializer(serializer);
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
@@ -176,6 +197,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         if (soSendBufferSize != null) {
             connectionFactory.setSoSendBufferSize(soSendBufferSize);
         }
+        LOGGER.debug("Hostname [{}], Port [{}], SoTimeout [{}], SoSendBufferSize [{}]",
+                outbound.getHostname(), port, soTimeout, soSendBufferSize);
         return connectionFactory;
     }
 
@@ -216,6 +239,9 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         connectionFactory.setDeserializer(deserializer);
         connectionFactory.setMapper(tcpMessageMapper);
         connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+        LOGGER.debug("Hostname [{}], Port [{}], SoTimeout [{}], SoReceiveBufferSize [{}], SoSendBufferSize [{}]",
+                host, port, connectionFactory.getSoTimeout(), connectionFactory.getSoReceiveBufferSize(), connectionFactory.getSoSendBufferSize()
+        );
         return connectionFactory;
     }
 
@@ -228,20 +254,26 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         Subsystem.Inbound inbound = subsystem.getInbound();
         if (inbound.getMode() == Subsystem.MODE.server) {
 
-            AbstractServerConnectionFactory connectionFactory = createInboundServerConnectionFactory(connections, subsystem, tcpMessageMapper, deserializer);
-            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
+            AbstractServerConnectionFactory connectionFactory = createInboundServerConnectionFactory(connections, subsystem, tcpMessageMapper, serializer, deserializer);
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
+            connectionFactory.setInterceptorFactoryChain(createInterceptorChain());
             attachReceivingChannelAdapter(subsystem, inboundChannel, connectionFactory);
             BOOT_LOGGER.info("[{}] Inbound  TCP/IP connection configured as server: Port [{}]", subsystem.getName(), inbound.getPort());
         } else if (inbound.getMode() == Subsystem.MODE.client) {
 
             String hostname = inbound.getHostname() == null ? connections.getHostname() : inbound.getHostname();
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(hostname, inbound.getPort(), serializer, deserializer);
-            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
-            connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
+            Integer soTimeout = inbound.getSoTimeout() == null ? connections.getSoTimeout() : inbound.getSoTimeout();
+            Integer soReceiveBufferSize = inbound.getSoReceiveBufferSize() == null ? connections.getSoReceiveBufferSize() : inbound.getSoReceiveBufferSize();
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(
+                    hostname, inbound.getPort(), serializer, deserializer, soTimeout, soReceiveBufferSize, null
+            );
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
+            connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND);
             connectionFactory.setSingleUse(false);
             connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+            connectionFactory.setInterceptorFactoryChain(createInterceptorChain());
+            registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
 
-            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
             TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
             adapter.setOutputChannel(inboundChannel);
             adapter.setConnectionFactory(connectionFactory);
@@ -257,6 +289,12 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
         }
     }
 
+    private TcpConnectionInterceptorFactoryChain createInterceptorChain() {
+        TcpConnectionInterceptorFactoryChain chain = new TcpConnectionInterceptorFactoryChain();
+        chain.setInterceptors(new TcpConnectionInterceptorFactory[]{() -> new TenantInterception(applicationEventPublisher)});
+        return chain;
+    }
+
     private void setupOutbound(
             Connections connections, Subsystem subsystem,
             TcpMessageMapper tcpMessageMapper, Channels channels,
@@ -270,48 +308,62 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
                     createOutboundServerConnectionFactory(
                             connections, subsystem.getName(), outbound, tcpMessageMapper,
                             serializer, deserializer);
-            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            //connectionFactory.setSingleUse(false);
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND);
+            connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND);
 
-            TcpSendingMessageHandler sendingMessageHandler = new TcpSendingMessageHandler();
-            sendingMessageHandler.setConnectionFactory(connectionFactory);
-            sendingMessageHandler.setClientMode(true);
-            //TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
+            TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
+            sendingMessageHandler.setTaskScheduler(taskScheduler);
             DirectChannel channel = createEnrichedOutboundChannel(sendingMessageHandler);
 
             // This adapter is only required to let the SCF work as a CCF!!
             TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
             adapter.setConnectionFactory(connectionFactory);
+            adapter.setOutputChannel(channel);
             adapter.setClientMode(false);
+            adapter.setTaskScheduler(taskScheduler);
+            adapter.setRetryInterval(10000);
             adapter.start();
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
-            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, connectionFactory);
-            registerBean("outboundAdapter_" + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, adapter);
-            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, sendingMessageHandler);
+            registerBean(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND, connectionFactory);
+            registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
             String hostname = outbound.getHostname() == null ? connections.getHostname() : outbound.getHostname();
-            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(hostname, outbound.getPort(), serializer, deserializer);
-            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND);
-            connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND);
-            connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+            Integer soTimeout = outbound.getSoTimeout() == null ? connections.getSoTimeout() : outbound.getSoTimeout();
+            Integer soSendBufferSize = outbound.getSoSendBufferSize() == null ? connections.getSoSendBufferSize() : outbound.getSoSendBufferSize();
+            AbstractClientConnectionFactory connectionFactory = createClientConnectionFactory(
+                    hostname, outbound.getPort(), serializer, deserializer, soTimeout, null, soSendBufferSize
+            );
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND);
+            connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND);
             connectionFactory.setSingleUse(false);
-            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, connectionFactory);
+            connectionFactory.setApplicationEventPublisher(applicationEventPublisher);
+            registerBean(PREFIX_CONNECTION_FACTORY + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND, connectionFactory);
 
             TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
             sendingMessageHandler.setClientMode(true);
             sendingMessageHandler.setTaskScheduler(taskScheduler);
-            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, sendingMessageHandler);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + outbound.getIdentifiedByValue() + SUFFIX_OUTBOUND, sendingMessageHandler);
 
             DirectChannel channel = createEnrichedOutboundChannel(sendingMessageHandler);
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
+
+            TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
+            adapter.setConnectionFactory(connectionFactory);
+            adapter.setClientMode(true);
+            adapter.setOutputChannel(channel);
+            adapter.setTaskScheduler(taskScheduler);
+            adapter.setRetryInterval(10000);
+            adapter.start();
+            registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
+
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), outbound.getHostname(), outbound.getPort());
         } else {
             throw new ConfigurationException(format("Mode [%s] for outbound not supported. Please use [server] or [client]", outbound.getMode()));
@@ -325,8 +377,10 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             MessageChannel inboundChannel,
             Serializer serializer,
             Deserializer deserializer,
-            TaskScheduler taskScheduler
+            TaskScheduler taskScheduler,
+            @Value("${owms.driver.type:NA}") String type
             ) {
+        BOOT_LOGGER.info("Driver instantiated in [{}] mode", "NA".equals(type) ? "N/A" : type);
         Channels channels =  new Channels();
         for(Subsystem subsystem : connections.getSubsystems()) {
             if (subsystem.getDuplex() != null) {
@@ -368,10 +422,11 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
                             connections, subsystem.getDuplex(),
                             tcpMessageMapper, serializer, deserializer);
 
-            clientConnectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            clientConnectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
+            clientConnectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + SUFFIX_OUTBOUND);
+            clientConnectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + SUFFIX_OUTBOUND);
             clientConnectionFactory.setSingleUse(false);
-            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, clientConnectionFactory);
+            clientConnectionFactory.setInterceptorFactoryChain(createInterceptorChain());
+            registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND, clientConnectionFactory);
 
             // This adapter is only required to let the SCF work as a CCF!!
             TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
@@ -381,7 +436,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             adapter.setClientMode(true);
             adapter.setRetryInterval(10000);
             adapter.start();
-            registerBean("outboundAdapter_" + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, adapter);
+            registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
 
             // ---- Sending part
             TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(clientConnectionFactory);
@@ -389,7 +444,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             sendingMessageHandler.setRetryInterval(10000);
             sendingMessageHandler.setLoggingEnabled(true);
             sendingMessageHandler.setTaskScheduler(taskScheduler);
-            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, sendingMessageHandler);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             sendingMessageHandler.start();
 
             DirectChannel channel = createEnrichedOutboundChannel(sendingMessageHandler);
@@ -405,9 +460,10 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
                             subsystem.getName(),
                             connections, subsystem.getDuplex(),
                             tcpMessageMapper, serializer, deserializer);
-            connectionFactory.setBeanName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            connectionFactory.setComponentName(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + CommConstants.SUFFIX_OUTBOUND);
-            registerBean(CommConstants.PREFIX_CONNECTION_FACTORY + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, connectionFactory);
+            connectionFactory.setInterceptorFactoryChain(createInterceptorChain());
+            connectionFactory.setBeanName(PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + SUFFIX_OUTBOUND);
+            connectionFactory.setComponentName(PREFIX_CONNECTION_FACTORY + subsystem.getDuplex().getIdentifiedByValue() + SUFFIX_OUTBOUND);
+            registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_OUTBOUND, connectionFactory);
 
             // This adapter is only required to let the SCF work as a CCF!!
             TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
@@ -416,13 +472,13 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             adapter.setTaskScheduler(taskScheduler);
             adapter.setClientMode(false);
             adapter.setRetryInterval(10000);
-            registerBean("outboundAdapter_" + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, adapter);
+            registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
             adapter.start();
 
             TcpSendingMessageHandler sendingMessageHandler = new TcpSendingMessageHandler();
             sendingMessageHandler.setConnectionFactory(connectionFactory);
             sendingMessageHandler.setClientMode(false);
-            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + CommConstants.SUFFIX_OUTBOUND, sendingMessageHandler);
+            registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             //TcpSendingMessageHandler sendingMessageHandler = createSendingMessageHandler(connectionFactory);
             sendingMessageHandler.start();
 

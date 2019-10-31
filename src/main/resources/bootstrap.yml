@@ -14,7 +14,9 @@ spring:
       headers:
         protocol: ${owms.cfgsrv.protocol:http}
       enabled: false
-
+  zipkin:
+    sender:
+      type: web
 feign:
   httpclient:
     connection-timeout: 30000
@@ -40,6 +42,7 @@ owms:
       enabled: true
       sync-field: "###"
       date-pattern: yyyyMMddHHmmss
+      telegram-ending: "\r\n"
     routing-service:
       name: routing-service # is default
       protocol: http # default: http
@@ -54,6 +57,8 @@ owms:
       identified-by-field: "RECV"
 
 server:
+  tomcat:
+    max-threads: 5
   port: ${owms.driver.connections.port-rest}
 
 eureka:
@@ -101,7 +106,7 @@ eureka:
 
 ---
 spring:
-  profiles: CLOUD
+  profiles: HEROKU
   main:
     banner-mode: "OFF"
   cloud:
@@ -123,3 +128,68 @@ eureka:
     healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/health
     homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}:${server.port}/actuator/
 
+---
+spring:
+  profiles: TEST
+  cloud:
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+
+owms:
+  driver:
+    routing-service:
+      name: routing-service # is default
+      protocol: http # default: http
+      username: user # default: user
+      password: sa # default: sa
+    connections:
+      hostname: 127.0.0.1
+      port-rest: 30008
+      so-timeout: 200000
+      so-receive-buffer-size: 140
+      so-send-buffer-size: 140
+      identified-by-field: "TEST"
+      subsystems:
+        - name: SPS01
+          inbound:
+            mode: server
+            hostname: 0.0.0.0
+            port: 30001
+            so-receive-buffer-size: 200
+          outbound:
+            mode: client
+            hostname: 0.0.0.0
+            port: 30002
+            so-send-buffer-size: 200
+            identified-by-field: "RECV"
+            identified-by-value: "SPS01"
+        - name: SPS02
+          inbound:
+            mode: server
+            port: 30012
+          outbound:
+            mode: server
+            port: 30011
+            identified-by-value: "SPS02"
+        - name: SPS03
+          duplex:
+            mode: server
+            hostname: localhost
+            port: 30003
+            so-timeout: 60000
+            so-send-buffer-size: 200
+            so-receive-buffer-size: 200
+            identified-by-field: "RECV"
+            identified-by-value: "SPS03"
+        - name: SPS04
+          duplex:
+            mode: server
+            port: 30004
+            identified-by-value: "SPS04"
+        - name: SPS05
+          duplex:
+            mode: client
+            port: 30005
+            identified-by-value: "SPS05"

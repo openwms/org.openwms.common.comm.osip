@@ -34,6 +34,8 @@ public class Osip {
     private String telegramFiller = "*";
     /** The expected length of OSIP telegrams. */
     private short telegramLength = 160;
+    /** (Optional) EOL character for each outgoing telegram. */
+    private String telegramEnding;
 
     public boolean isEnabled() {
         return enabled;
@@ -73,5 +75,13 @@ public class Osip {
 
     public void setTelegramLength(short telegramLength) {
         this.telegramLength = telegramLength;
+    }
+
+    public String getTelegramEnding() {
+        return telegramEnding;
+    }
+
+    public void setTelegramEnding(String telegramEnding) {
+        this.telegramEnding = telegramEnding;
     }
 }
