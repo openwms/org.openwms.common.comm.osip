@@ -58,7 +58,6 @@ class AmqpRequestMessageHandler implements Function<GenericMessage<RequestMessag
         msg.getPayload().getHeader().setSender((String) msg.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME));
         msg.getPayload().getHeader().setSequenceNo((Short) msg.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME));
         msg.getPayload().getHeader().setTenant((String) msg.getHeaders().get(OSIPHeader.TENANT_FIELD_NAME));
-
         amqpTemplate.convertAndSend(
                 exchangeName,
                 routingKey,

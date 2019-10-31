@@ -38,7 +38,7 @@ import static org.openwms.common.comm.osip.Payload.DATE_LENGTH;
 import static org.openwms.common.comm.osip.Payload.ERROR_CODE_LENGTH;
 
 /**
- * A UpdateTelegramDeserializer deserializes OSIP SYNC telegram String into
+ * A UpdateTelegramDeserializer deserializes OSIP UPD telegram String into
  * {@link UpdateMessage}s.
  *
  * @author Heiko Scherrer
