@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openwms</groupId>
         <artifactId>org.openwms.parent</artifactId>
-        <version>7</version>
+        <version>14</version>
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
     <version>1.4.0-SNAPSHOT</version>
     <name>OpenWMS.org COMMON: OSIP TCP/IP Driver</name>
-    <url>https://www.interface21.io/docs/common/comm/index.html</url>
+    <url>https://openwms.github.io/${project.artifactId}/index.html</url>
 
     <issueManagement>
-        <system>Github</system>
-        <url>https://github.com/openwms/org.openwms.common.comm/issues</url>
+        <system>github</system>
+        <url>https://github.com/openwms/${project.artifactId}/issues</url>
     </issueManagement>
 
     <distributionManagement>
         <site>
-            <id>site-server</id>
-            <name>OpenWMS.org WebSite</name>
-            <url>scp://ftp.interface21.io/home/cgxusdef/public_html/docs/common/comm</url>
+            <id>site</id>
+            <url>scm:git:git@github.com:openwms/${project.artifactId}.git</url>
         </site>
     </distributionManagement>
 
     <scm>
-        <url>https://github.com/openwms/org.openwms.common.comm</url>
-        <connection>scm:git:git://github.com/openwms/org.openwms.common.comm.git</connection>
-        <developerConnection>scm:git:git@github.com:openwms/org.openwms.common.comm.git</developerConnection>
+        <url>https://github.com/openwms/${project.artifactId}</url>
+        <connection>scm:git:https://${scmuser}github.com/openwms/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:https://${scmuser}github.com/openwms/${project.artifactId}.git</developerConnection>
     </scm>
 
     <developers>
@@ -53,7 +50,7 @@
 
     <ciManagement>
         <system>travis</system>
-        <url>https://travis-ci.com/openwms/org.openwms.common.comm</url>
+        <url>https://travis-ci.com/openwms/${project.artifactId}</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
@@ -65,8 +62,8 @@
     </ciManagement>
 
     <properties>
-        <ameba-lib.version>2.2-SNAPSHOT</ameba-lib.version>
-        <core.version>1.5.0-SNAPSHOT</core.version>
+        <core.version>1.6.0</core.version>
+        <spring-cloud-dependencies.version>Hoxton.RELEASE</spring-cloud-dependencies.version>
     </properties>
 
     <reporting>
@@ -136,7 +133,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Project dependencies -->
+        <!-- Project Dependencies -->
         <dependency>
             <groupId>org.openwms</groupId>
             <artifactId>org.openwms.core.util</artifactId>
