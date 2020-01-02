@@ -25,6 +25,7 @@ import org.openwms.common.comm.transformer.tcp.Transformable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -330,7 +331,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), outbound.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as server: Port [{}]", subsystem.getName(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
             String hostname = outbound.getHostname() == null ? connections.getHostname() : outbound.getHostname();
@@ -374,10 +375,10 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
     @DependsOn("connections")
     Channels channels(
             Connections connections, TcpMessageMapper tcpMessageMapper,
-            MessageChannel inboundChannel,
+            @Qualifier("inboundChannel") MessageChannel inboundChannel,
             Serializer serializer,
             Deserializer deserializer,
-            TaskScheduler taskScheduler,
+            @Qualifier("taskScheduler") TaskScheduler taskScheduler,
             @Value("${owms.driver.type:NA}") String type
             ) {
         BOOT_LOGGER.info("Driver instantiated in [{}] mode", "NA".equals(type) ? "N/A" : type);
@@ -486,7 +487,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), duplex.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as server: Port [{}]", subsystem.getName(), duplex.getPort());
 
         }
     }
@@ -550,8 +551,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
     /*~ -------------------- Flows ----------------- */
     @Bean
     IntegrationFlow inboundFlow(
-            MessageChannel inboundChannel,
-            MessageChannel transformerOutputChannel,
+            @Qualifier("inboundChannel") MessageChannel inboundChannel,
+            @Qualifier("transformerOutputChannel") MessageChannel transformerOutputChannel,
             Transformable telegramTransformer) {
         return IntegrationFlows
                 .from(inboundChannel)
