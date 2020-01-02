@@ -25,7 +25,6 @@ import org.openwms.common.comm.osip.OSIPSerializer;
 import java.text.SimpleDateFormat;
 
 import static java.lang.String.format;
-import static org.openwms.common.comm.ParserUtils.padRight;
 
 /**
  * A ResponseMessageSerializer.
@@ -64,7 +63,7 @@ public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
         if (s.length() > maxTelegramLength) {
             throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.osip.telegram-length=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
         }
-        return padRight(s, maxTelegramLength, getDriver().getOsip().getTelegramFiller());
+        return s;
     }
 
     /**
