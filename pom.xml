@@ -184,20 +184,13 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <exclusions>
-                <exclusion>
-                    <!-- Several versions of Guava used internally, exclude all -->
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <exclusions>
                 <exclusion>
-                    <!-- Take the newer patch from actuator -->
+                    <!-- Newer version pulled by actuator -->
                     <groupId>org.hdrhistogram</groupId>
                     <artifactId>HdrHistogram</artifactId>
                 </exclusion>
@@ -214,6 +207,7 @@
             <artifactId>spring-messaging</artifactId>
         </dependency>
 
+        <!-- 3rd party dependencies -->
         <dependency>
             <groupId>io.interface21</groupId>
             <artifactId>ameba-lib</artifactId>
@@ -221,11 +215,6 @@
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-core</artifactId>
-        </dependency>
-        <dependency>
-            <!-- Required by eureka-client -->
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
