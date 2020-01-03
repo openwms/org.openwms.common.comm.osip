@@ -102,7 +102,7 @@ public class DuplexIT {
     }
 
     @Test
-    public void testDuplexConfigurationInheritenceServer() {
+    public void testDuplexConfigurationInheritanceServer() {
         assertThat(connectionFactory_SPS04_outbound.getSoReceiveBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS04_outbound.getSoSendBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS04_outbound.getSoTimeout()).isEqualTo(200000);
@@ -111,7 +111,7 @@ public class DuplexIT {
     }
 
     @Test
-    public void testDuplexConfigurationInheritenceClient() {
+    public void testDuplexConfigurationInheritanceClient() {
         assertThat(connectionFactory_SPS05_outbound.getSoReceiveBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS05_outbound.getSoSendBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS05_outbound.getSoTimeout()).isEqualTo(200000);

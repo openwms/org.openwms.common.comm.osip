@@ -40,7 +40,7 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.channel.MessageChannels;
+import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.handler.AbstractMessageHandler;
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter;
 import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
@@ -330,7 +330,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             registerBean(PREFIX_SENDING_MESSAGE_HANDLER + subsystem.getName() + SUFFIX_OUTBOUND, sendingMessageHandler);
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + outbound.getIdentifiedByValue(), channel);
 
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), outbound.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as server: Port [{}]", subsystem.getName(), outbound.getPort());
         } else if (outbound.getMode() == Subsystem.MODE.client) {
 
             String hostname = outbound.getHostname() == null ? connections.getHostname() : outbound.getHostname();
@@ -486,7 +486,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             registerBean(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configures as server: Port [{}]", subsystem.getName(), duplex.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as server: Port [{}]", subsystem.getName(), duplex.getPort());
 
         }
     }
