@@ -25,7 +25,6 @@ import org.openwms.common.comm.transformer.tcp.Transformable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationEventPublisher;
@@ -375,10 +374,10 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
     @DependsOn("connections")
     Channels channels(
             Connections connections, TcpMessageMapper tcpMessageMapper,
-            @Qualifier("inboundChannel") MessageChannel inboundChannel,
+            MessageChannel inboundChannel,
             Serializer serializer,
             Deserializer deserializer,
-            @Qualifier("taskScheduler") TaskScheduler taskScheduler,
+            TaskScheduler taskScheduler,
             @Value("${owms.driver.type:NA}") String type
             ) {
         BOOT_LOGGER.info("Driver instantiated in [{}] mode", "NA".equals(type) ? "N/A" : type);
@@ -551,8 +550,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
     /*~ -------------------- Flows ----------------- */
     @Bean
     IntegrationFlow inboundFlow(
-            @Qualifier("inboundChannel") MessageChannel inboundChannel,
-            @Qualifier("transformerOutputChannel") MessageChannel transformerOutputChannel,
+            MessageChannel inboundChannel,
+            MessageChannel transformerOutputChannel,
             Transformable telegramTransformer) {
         return IntegrationFlows
                 .from(inboundChannel)
