@@ -152,8 +152,8 @@ $ telnet localhost 30001
 Trying ::1...
 Connected to localhost.
 Escape character is '^]'.
-###00160RAS10MFC__00001SYNQ20171123225959***********************************************************************************************************************
-###00160MFC__RAS1000002SYNC20180927152848***********************************************************************************************************************
+###00160SPS01MFC__00001SYNQ20171123225959***********************************************************************************************************************
+###00160MFC__SPS0100002SYNC20180927152848***********************************************************************************************************************
 ```
 The first telegram string (SYNQ) is sent to the driver, whereas the driver responds with a
 SYNC telegram to synchronize the current system time.
@@ -311,7 +311,7 @@ Column   | Description
 # Build and Release
 
 ```
-$ mvn deploy -Prelease,gpg
+$ mvn deploy -Prelease,gpg -Ddebug.info=true
 ```
 
  [4]: src/site/resources/images/integration_patterns.png
