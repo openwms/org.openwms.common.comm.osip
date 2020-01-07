@@ -24,7 +24,6 @@ feign:
 ribbon:
   connectTimeout: 30000
   ReadTimeout: 30000
-
 owms:
   eureka:
     url: http://user:sa@localhost:8761
