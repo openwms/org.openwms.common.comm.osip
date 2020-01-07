@@ -19,8 +19,8 @@ addons:
     organization: "openwms-github"
 
 script:
-  - sonar-scanner
   - mvn clean package -Prelease -Ddebug.info=true -U -B $MAVEN_OPTS
+  - if [[ ( "$TRAVIS_BRANCH" == "master" ) ]]; then mvn clean package sonar:sonar -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -B $MAVEN_OPTS; fi
 
 after_success:
   - docker build -t openwms/org.openwms.common.comm:latest .
