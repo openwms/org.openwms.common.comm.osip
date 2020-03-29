@@ -33,7 +33,7 @@ import static org.ameba.LoggingCategories.BOOT;
 /**
  * A AsynchronousConfiguration.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * A Transformable.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 public interface Transformable<T> {
 

@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * A Osip.
  *
- * @author <a href="mailto:hscherrer@interface21.io">Heiko Scherrer</a>
+ * @author Heiko Scherrer
  */
 @ConfigurationProperties(prefix = "owms.driver.osip")
 public class Osip {
