@@ -43,7 +43,7 @@ class ResponseMessageController {
 
     @PostMapping("/res")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void handleRes(@RequestBody ResponseMessage response, @RequestHeader(OSIPHeader.RECEIVER_FIELD_NAME) String receiver) {
+    public void handleRes(@RequestBody ResponseMessage response, @RequestHeader(OSIPHeader.RECEIVER_FIELD_NAME) String receiver) {
         handler.handle(response, receiver);
     }
 }
