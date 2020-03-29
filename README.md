@@ -1,32 +1,30 @@
 # Purpose
 
 This standalone and runnable Spring Boot application is an implementation of the [OSIP specification](https://interface21-io.gitbook.io/osip/)
-that communicates with the OSIP TCP/IP message format with subsystems like PLC or
-Raspberry Pi. These kind of subsystems almost lack of resources and do not provide a
-higher level protocol on top of TCP/IP. The implementation is aware of multiple tenants
-(e.g. projects) and may run in the cloud with different port settings.
-Note: Instantiating multiple instances of the driver component with same port settings is
-not possible. Each instance must have it's own configuration, in particular TCP/IP port
-settings. A project (tenant) may have multiple drivers deployed, all running on different
-ports.
+that communicates with the subsystems, like a PLC or a Raspberry Pi, using the OSIP TCP/IP message format.
+This kind of subsystems lack of resources and do not provide a higher level protocol on top of TCP/IP.
+The implementation is aware of multiple tenants (e.g. projects) and may run in the cloud with different
+port settings.
+Note: Instantiating multiple instances of the driver component with same port settings is not possible.
+Each instance must have its own configuration, in particular its own TCP/IP port settings. A project
+(tenant) may have multiple drivers deployed, all running on different ports.
 
 # Operation Modes
 
 A driver instance can be started in different operation modes: **Simplex** or **Duplex**
-communication and **Client** or **Server** connection mode. All four can be arbitrary
-combined.
+communication with either **Client** or **Server** connection mode. All four can be arbitrary combined.
 
 ## Simplex Communication
 
-Simplex communication means a client application connecting to the driver uses one Socket
-for inbound communication and another Socket for the outbound. So sending and receiving
-messages is handled with separated and dedicated Socket connections.
+Simplex communication means a client application connecting to the driver uses one socket
+for inbound communication and another socket for the outbound. So sending and receiving
+messages is handled through separated and dedicated socket connections.
 
 With the simplex communication mode the inbound communication is configured differently as
-the outbound communication. This way the driver creates two separate ConnectionFactories,
-one for inbound and one for outbound. Each Socket can be configured either in **client**
-or **server** mode. A _client_ configured Socket tries to connect to a listening server
-whereas configured as _server_ the driver opens a Socket itself and listens for incoming
+the outbound communication. This way the driver creates two separate `ConnectionFactories`,
+one for inbound and one for outbound. Each socket can be configured either in **Client**
+or **Server** mode. A _Client_ configured Socket tries to connect to a listening server
+whereas configured as _Server_ the driver opens a socket itself and listens for incoming
 connections. 
 
 A typical simplex configuration looks like:
@@ -56,8 +54,8 @@ ones, the _identified-by-*_ fields are used.
 ## Duplex Communication
 
 In contrast to simplex connections the driver instance can also be configured for
-bidirectional duplex mode where only one Socket is used for inbound and outbound
-communication. Instead of configuring _inbound_ or _outbound_ a _duplex_ configuration
+bidirectional duplex mode where only one socket is used for inbound and outbound
+communication. Instead of configuring _inbound_ or _outbound_ only one _duplex_ configuration
 must be present. 
 
 ```
@@ -75,7 +73,6 @@ owms:
             identified-by-field: "RECV"
             identified-by-value: "SPS03"
 ```
-
 
 # Resources
 
@@ -103,8 +100,8 @@ beside TCP/IP.
 
 The overall integration architecture is shown below. The entry point is the `inboundAdapter` that is connected to a `TcpNetServerConnectionFactory` (not shown) and forwards incoming telegrams
 to the `inboundChannel`. A first transformer (`telegramTransformer`) terminates the ASCII string and converts into a Spring [Message](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/messaging/Message.html).
-This is done with support of the appropriate `MessageMapper` that should exist for each telegram type. For instance the [TimesyncTelegramMapper](src/main/java/org/openwms/common/comm/osip/synq/tcp/TimesyncTelegramMapper.java) knows best
-how to transform from a String into a [TimesyncRequest](src/main/java/org/openwms/common/comm/osip/synq/TimesyncRequest.java). After the telegram is transformed into a valid message type the generic 
+This is done with support of the appropriate `MessageMapper` that must exist for each telegram type. For instance the [TimesyncTelegramMapper](src/main/java/org/openwms/common/comm/osip/synq/tcp/TimesyncTelegramMapper.java) knows best
+how to transform a String into a [TimesyncRequest](src/main/java/org/openwms/common/comm/osip/synq/TimesyncRequest.java). After the telegram is transformed into a valid message type the generic 
 [`messageRouter`](src/main/java/org/openwms/common/comm/router/CommonMessageRouter.java) picks up the right queue and activates the proper `ServiceActivator`. Notice that the service activators
 queue name is built on the fly and follows a naming convention. This is one aspect to support requirements NR003.
 
@@ -114,8 +111,8 @@ queue name is built on the fly and follows a naming convention. This is one aspe
 
 The TCP/IP driver can run completely independent of cloud infrastructure services. This
 could be the appropriate deployment model during development or for small projects where
-no central infrastructure services are required. In a larger project setup where with lots
-of subsystems where the driver component is instantiated multiple times it makes sense to
+no central infrastructure services are required. In a larger project setup with lots of
+subsystems and where the driver component is instantiated multiple times it makes sense to
 keep configuration on a central config server, this is where [OpenWMS.org Configuration](https://github.com/spring-labs/org.openwms.configuration)
 comes into play.
 

@@ -10,7 +10,6 @@ spring:
 owms:
   driver:
     osip:
-      enabled: true
       err:
         exchange-name: osip
         queue-name: osip-err-queue
@@ -33,24 +32,3 @@ owms:
         exchange-name: osip
         routing-key-out: osip.upd.ss
 
----
-spring:
-  profiles: "!ASYNCHRONOUS"
-  rabbitmq:
-    listener:
-      direct:
-        auto-startup: false
-
-management:
-  health:
-    rabbit:
-      enabled: false
-
-owms:
-  driver:
-    osip:
-      enabled: true
-    server:
-      port-rest: 30008
-server:
-  port: ${owms.driver.connections.port-rest}

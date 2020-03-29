@@ -86,7 +86,9 @@ management:
       enabled: false
 
 logging:
-  file: "/tmp/owms/BOOT-COMMON-Comm.log"
+  file:
+    name: BOOT-COMMON-Comm.log
+    path: "/tmp/owms"
 
 ---
 spring:
@@ -95,6 +97,10 @@ spring:
     config:
       discovery:
         enabled: true
+      enabled: true
+management:
+  health:
+    rabbit:
       enabled: true
 
 ---
@@ -111,6 +117,33 @@ eureka:
     statusPageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/info
     healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}/health
     homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/
+
+---
+spring:
+  profiles: SYNCHRONOUS
+  rabbitmq:
+    listener:
+      direct:
+        auto-startup: false
+  cloud:
+    config:
+      discovery:
+        enabled: true
+      enabled: true
+
+management:
+  health:
+    rabbit:
+      enabled: false
+
+owms:
+  driver:
+    osip:
+      enabled: true
+    server:
+      port-rest: 30008
+server:
+  port: ${owms.driver.connections.port-rest}
 
 ---
 spring:

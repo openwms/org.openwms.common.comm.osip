@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static org.ameba.LoggingCategories.BOOT;
 import static org.openwms.common.comm.CommConstants.CORE_INTEGRATION_MESSAGING;
 import static org.openwms.common.comm.ParserUtils.padRight;
 
@@ -44,6 +45,7 @@ import static org.openwms.common.comm.ParserUtils.padRight;
 @OSIPComponent
 public class PayloadSerializer<T extends Payload> implements Serializer<T> {
 
+    private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CORE_INTEGRATION_MESSAGING);
     private static final byte[] CRLF = "\r\n".getBytes();
     private final Driver driver;
@@ -58,6 +60,7 @@ public class PayloadSerializer<T extends Payload> implements Serializer<T> {
     @PostConstruct
     void onPostConstruct() {
         serializersMap = serializers.stream().collect(Collectors.toMap(OSIPSerializer::getMessageIdentifier, p -> p));
+        serializersMap.forEach((key, value) -> BOOT_LOGGER.debug("Registered serializer for type [{}]: [{}]", key, value.getClass().getSimpleName()));
     }
 
     /**

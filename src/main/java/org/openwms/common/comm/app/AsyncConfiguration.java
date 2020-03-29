@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Heiko Scherrer
+ * Copyright 2005-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,24 +18,17 @@ package org.openwms.common.comm.app;
 import org.ameba.tenancy.TenantHolder;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.core.SpringProfiles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.amqp.support.converter.SerializerMessageConverter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 import org.springframework.retry.support.RetryTemplate;
-
-import static org.ameba.LoggingCategories.BOOT;
 
 /**
  * A AsyncConfiguration.
@@ -46,24 +39,6 @@ import static org.ameba.LoggingCategories.BOOT;
 @Configuration
 @EnableRabbit
 class AsyncConfiguration {
-
-    private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
-
-    @ConditionalOnExpression("'${owms.driver.serialization}'=='json'")
-    @Bean
-    MessageConverter messageConverter() {
-        Jackson2JsonMessageConverter messageConverter = new Jackson2JsonMessageConverter();
-        BOOT_LOGGER.info("Using JSON serialization over AMQP");
-        return messageConverter;
-    }
-
-    @ConditionalOnExpression("'${owms.driver.serialization}'=='barray'")
-    @Bean
-    MessageConverter serializerMessageConverter() {
-        SerializerMessageConverter messageConverter = new SerializerMessageConverter();
-        BOOT_LOGGER.info("Using byte array serialization over AMQP");
-        return messageConverter;
-    }
 
     @Bean
     StatefulRetryOperationsInterceptor interceptor() {
