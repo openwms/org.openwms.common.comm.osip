@@ -1,5 +1,10 @@
 language: java
 
+dist: trusty
+
+git:
+  depth: false
+
 jdk:
   - openjdk11
 
@@ -13,20 +18,23 @@ cache:
 
 services:
   - docker
+  - rabbitmq
 
 addons:
   sonarcloud:
     organization: "openwms-github"
 
 script:
-  - mvn clean package -Prelease -Ddebug.info=true -U -B $MAVEN_OPTS
-  - if [[ ( "$TRAVIS_BRANCH" == "master" ) ]]; then mvn clean package sonar:sonar -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST -Dmaven.test.error.ignore=true -Dmaven.test.failure.ignore=true -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -B $MAVEN_OPTS; fi
+  - if [[ ( "$TRAVIS_BRANCH" != "master" ) ]]; then mvn package -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -U -B $MAVEN_OPTS; fi
+  - if [[ ( "$TRAVIS_BRANCH" == "master" ) ]]; then mvn clean package sonar:sonar -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -Psonar -U -B $MAVEN_OPTS; fi
+  - if [[ ( "$TRAVIS_BRANCH" == "master" ) ]]; then mvn site scm-publish:publish-scm -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST -Denforcer.skip=true -Dscmpublish.pubScmUrl=scm:git:https://${PUSHKEY}@github.com/openwms/org.openwms.common.comm.git -DdeveloperConnectionUrl=scm:git:https://${PUSHKEY}@github.com/openwms/org.openwms.common.comm.git -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -B $MAVEN_OPTS; fi
+  - if [[ ( "$TRAVIS_BRANCH" == "master" ) ]]; then mvn clean package -Denforcer.skip=true -DskipTests=true -Dci.buildNumber=$TRAVIS_BUILD_NUMBER -Prelease,gpg -B $MAVEN_OPTS; fi
 
 after_success:
-  - docker build -t openwms/org.openwms.common.comm:latest .
+  - ./scripts/docker_build
 
 deploy:
   provider: script
-  script: bash docker_push
+  script: bash scripts/docker_push
   on:
     branch: master
