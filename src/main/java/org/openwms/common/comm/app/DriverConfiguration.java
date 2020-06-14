@@ -68,7 +68,8 @@ import static org.openwms.common.comm.CommConstants.PREFIX_CONNECTION_FACTORY;
 import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 
 /**
- * A DriverConfiguration.
+ * A DriverConfiguration is the main Spring configuration class to setup all TCP/IP connections like configured in project specific
+ * configuration files. Multiple driver instances can be bootstrapped each in a different mode, like Duplex, Client or Server.
  *
  * @author Heiko Scherrer
  */
@@ -212,12 +213,9 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
         String host = duplex.getHostname() == null ? connections.getHostname() : duplex.getHostname();
         int port = Optional.ofNullable(duplex.getPort()).orElseThrow(() -> new ConfigurationException(format("Port not configured for duplex connection server [%s]", subsystemName)));
-        AbstractConnectionFactory connectionFactory;
-        if (mode == Subsystem.MODE.server) {
-            connectionFactory = new TcpNetServerConnectionFactory(port);
-        } else {
-            connectionFactory = new TcpNetClientConnectionFactory(host, port);
-        }
+        AbstractConnectionFactory connectionFactory = mode == Subsystem.MODE.server
+                ? new TcpNetServerConnectionFactory(port)
+                : new TcpNetClientConnectionFactory(host, port);
 
         connectionFactory.setHost(
                 duplex.getHostname() == null ? connections.getHostname() : duplex.getHostname()
@@ -364,7 +362,7 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             adapter.start();
             registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_OUTBOUND, adapter);
 
-            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), outbound.getHostname(), outbound.getPort());
+            BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as client: Hostname [{}], port [{}]", subsystem.getName(), hostname, outbound.getPort());
         } else {
             throw new ConfigurationException(format("Mode [%s] for outbound not supported. Please use [server] or [client]", outbound.getMode()));
         }
@@ -410,7 +408,6 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             Serializer serializer, Deserializer deserializer) {
 
         Subsystem.Duplex duplex = subsystem.getDuplex();
-        String hostname = duplex.getHostname();
 
         if (subsystem.getDuplex().getMode() == Subsystem.MODE.client) {
 
@@ -487,7 +484,6 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
             channels.addOutboundChannel(PREFIX_ENRICHED_OUTBOUND_CHANNEL + duplex.getIdentifiedByValue(), channel);
             BOOT_LOGGER.info("[{}] Outbound TCP/IP connection configured as server: Port [{}]", subsystem.getName(), duplex.getPort());
-
         }
     }
 
