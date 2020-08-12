@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.openwms</groupId>
         <artifactId>org.openwms.parent</artifactId>
-        <version>14</version>
+        <version>17</version>
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
@@ -62,7 +62,8 @@
     </ciManagement>
 
     <properties>
-        <core.version>1.6.0</core.version>
+        <core.version>1.8.0</core.version>
+        <guava.version>29.0-jre</guava.version>
         <spring-cloud-dependencies.version>Hoxton.RELEASE</spring-cloud-dependencies.version>
     </properties>
 
@@ -94,6 +95,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>repackage</id>
                         <goals>
                             <goal>build-info</goal>
                             <goal>repackage</goal>
@@ -114,6 +116,11 @@
                 <groupId>org.openwms</groupId>
                 <artifactId>org.openwms.core.util</artifactId>
                 <version>${core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.dozer</groupId>
@@ -177,6 +184,13 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!-- Bites with Guava -->
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -214,6 +228,14 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
+        <!-- Observability: Monitoring -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Unfortunately Spring integration depends on spring-retry that comes with an old Spring version 3.0.x -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -224,6 +246,14 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <!-- Need to upgrade Guava from version 11 because of CVE -->
+            <!-- Required by eureka-client -->
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>io.interface21</groupId>
