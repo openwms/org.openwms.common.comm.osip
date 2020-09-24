@@ -131,6 +131,7 @@ public class ConnectionHolder {
                 return factory.getConnection().getConnectionId();
             }
         } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
             throw new MessageChannelNotFoundException(format("No Connection found for ConnectionFactory [%s]", connectionFactoryName));
         }
     }

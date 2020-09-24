@@ -104,7 +104,6 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
             Subsystem subsystem, MessageChannel inboundChannel,
             AbstractConnectionFactory connectionFactory) {
         TcpReceivingChannelAdapter channelAdapter = tcpReceivingChannelAdapter(connectionFactory, inboundChannel);
-
         registerBean(PREFIX_CONNECTION_FACTORY + subsystem.getName() + SUFFIX_INBOUND, connectionFactory);
         registerBean(PREFIX_CHANNEL_ADAPTER + subsystem.getName() + SUFFIX_INBOUND, channelAdapter);
     }
@@ -388,17 +387,14 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
                 setupOutbound(connections, subsystem, tcpMessageMapper, channels, taskScheduler, serializer, deserializer);
             }
         }
-
         return channels;
     }
 
     @Bean
     public ThreadPoolTaskScheduler threadPoolTaskScheduler(){
-        ThreadPoolTaskScheduler threadPoolTaskScheduler
-                = new ThreadPoolTaskScheduler();
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(5);
-        threadPoolTaskScheduler.setThreadNamePrefix(
-                "ThreadPoolTaskScheduler");
+        threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
         return threadPoolTaskScheduler;
     }
 
