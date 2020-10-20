@@ -13,7 +13,7 @@
     <logger name="com.netflix.config.sources" level="ERROR"/>
     <logger name="org.dozer" level="ERROR" />
     <logger name="org.springframework" level="WARN"/>
-    <logger name="org.openwms" level="DEBUG"/>
+    <logger name="org.openwms" level="TRACE"/>
 
     <logger name="MEASURED" level="OFF">
         <appender-ref ref="STDOUT"/>
@@ -24,5 +24,4 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="LOGFILE"/>
     </root>
-
 </configuration>
