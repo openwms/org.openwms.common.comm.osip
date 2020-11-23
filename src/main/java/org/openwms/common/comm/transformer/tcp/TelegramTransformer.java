@@ -85,7 +85,7 @@ public class TelegramTransformer<T> implements Transformable<T> {
         MDC.put(CommConstants.LOG_TELEGRAM_TYPE, telegramType);
         TelegramDeserializer<T> deserializer = deserializersMap.get(telegramType);
         if (deserializer == null) {
-            throw new MessageMismatchException(format("No deserializer found for telegram type [%s]. Is that type supported?", OSIPSerializer.getTelegramType(telegram)));
+            throw new MessageMismatchException(format("No deserializer found for telegram type [%s]. Is that type supported?", telegramType));
         }
         return deserializer.deserialize(telegram, headers);
     }
