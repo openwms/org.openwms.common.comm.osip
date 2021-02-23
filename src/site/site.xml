@@ -35,7 +35,6 @@
             <item name="Confluence Wiki" href="https://openwms.atlassian.net/l/c/vCvs0gz2" />
             <item name="Javadoc" href="apidocs/index.html" />
             <item name="Sonarcloud" href="https://sonarcloud.io/dashboard?id=org.openwms:${project.artifactId}" />
-            <item name="Jacoco" href="jacoco/index.html" />
         </menu>
         <menu name="Project" ref="reports" />
     </body>

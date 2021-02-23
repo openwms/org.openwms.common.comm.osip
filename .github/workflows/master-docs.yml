@@ -41,7 +41,7 @@ jobs:
           git config --global user.name "CI Server"
       - name: Site
         run: >
-          ./mvnw site scm-publish:publish-scm
+          ./mvnw post-integration-test site scm-publish:publish-scm
           -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST
           -Dargs=-Dspring.profiles.active=ASYNCHRONOUS,TEST
           -Dspring.rabbitmq.host=localhost
@@ -54,7 +54,7 @@ jobs:
           PUSHKEY: ${{ secrets.PUSHKEY }}
       - name: Sonar
         run: >
-          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
+          ./mvnw verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar
           -Dsonar.login=$SONAR_TOKEN
           -Dspring.rabbitmq.host=localhost
           -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST
