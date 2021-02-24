@@ -9,6 +9,17 @@ Note: Instantiating multiple instances of the driver component with same port se
 Each instance must have its own configuration, in particular its own TCP/IP port settings. A project
 (tenant) may have multiple drivers deployed, all running on different ports.
 
+# Resources
+
+Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wiki)
+
+[![Build status](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml/badge.svg)](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml)
+[![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Maven central](https://img.shields.io/maven-central/v/org.openwms/org.openwms.common.comm)](https://search.maven.org/search?q=a:org.openwms.common.comm)
+[![Docker pulls](https://img.shields.io/docker/pulls/openwms/org.openwms.common.comm)](https://hub.docker.com/r/openwms/org.openwms.common.comm)
+[![Join the chat at https://gitter.im/openwms/org.openwms](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openwms/org.openwms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Operation Modes
 
 A driver instance can be started in different operation modes: **Simplex** or **Duplex**
@@ -73,22 +84,6 @@ owms:
             identified-by-field: "RECV"
             identified-by-value: "SPS03"
 ```
-
-# Resources
-
-Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wiki)
-
-[![Build status](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml/badge.svg)](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml)
-[![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Codacy][codacy-image]][codacy-url]
-[![Maven central](https://img.shields.io/maven-central/v/org.openwms/org.openwms.common.comm)](https://search.maven.org/search?q=a:org.openwms.common.comm)
-[![Docker pulls](https://img.shields.io/docker/pulls/openwms/org.openwms.common.comm)](https://hub.docker.com/r/openwms/org.openwms.common.comm)
-[![Join the chat at https://gitter.im/openwms/org.openwms](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openwms/org.openwms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[codacy-image]: https://img.shields.io/codacy/grade/01c5633a8bd047b2b01c6075d49f5592.svg?style=flat-square
-[codacy-url]: https://www.codacy.com/app/openwms/org.openwms.common.comm
-
 
 # Architecture
 
