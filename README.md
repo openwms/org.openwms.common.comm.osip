@@ -11,7 +11,7 @@ Each instance must have its own configuration, in particular its own TCP/IP port
 
 # Resources
 
-Documentation at [GitHub](https://github.com/openwms/org.openwms.common.comm/wiki)
+Documentation at [OpenProject Wiki](https://openproject.butan092.startdedicated.de/projects/common-osip-tcp-slash-ip-driver/wiki/main-page)
 
 [![Build status](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml/badge.svg)](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml)
 [![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
