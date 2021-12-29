@@ -1,22 +1,10 @@
 spring:
   application:
     name: tcpip-driver
-  cloud:
-    config:
-      fail-fast: true # true means retry
-      discovery:
-        enabled: false
-        service-id: openwms-config
-      retry:
-        max-attempts: 120
-      username: user
-      password: sa
-      headers:
-        protocol: ${owms.cfgsrv.protocol:http}
-      enabled: false
   zipkin:
     sender:
       type: web
+
 feign:
   httpclient:
     connection-timeout: 30000
@@ -24,6 +12,7 @@ feign:
 ribbon:
   connectTimeout: 30000
   ReadTimeout: 30000
+
 owms:
   eureka:
     url: http://user:sa@localhost:8761
@@ -66,6 +55,7 @@ eureka:
     service-url:
       defaultZone: ${owms.eureka.zone}  # Must be camelCase
   instance:
+    hostname: ${owms.srv.hostname}
     secure-port-enabled: false
     non-secure-port-enabled: true
     metadata-map:
@@ -74,7 +64,6 @@ eureka:
       password: ${spring.security.user.password}
       protocol: ${owms.srv.protocol}
       zone: ${owms.eureka.zone}
-    hostname: ${owms.srv.hostname}
 
 management:
   endpoints:
@@ -92,12 +81,38 @@ logging:
 
 ---
 spring:
-  profiles: ASYNCHRONOUS
-  cloud:
-    config:
-      discovery:
-        enabled: true
-      enabled: true
+  config:
+    activate:
+      on-profile: ASYNCHRONOUS
+
+owms:
+  driver:
+    dead-letter:
+      exchange-name: dle.driver
+      queue-name: driver-dl-queue
+    osip:
+      err:
+        exchange-name: osip
+        queue-name: osip-err-queue
+        routing-key-in: osip.err.mfc
+        routing-key-out: osip.err.ss
+      locu:
+        exchange-name: osip
+        routing-key-out: osip.locu.ss
+      req:
+        exchange-name: osip
+        routing-key-out: osip.req.ss
+      res:
+        exchange-name: osip
+        queue-name: osip-res-queue
+        routing-key-in: osip.res.*
+      sysu:
+        exchange-name: osip
+        routing-key-out: osip.sysu.ss
+      upd:
+        exchange-name: osip
+        routing-key-out: osip.upd.ss
+
 management:
   health:
     rabbit:
@@ -105,31 +120,13 @@ management:
 
 ---
 spring:
-  profiles: DISTRIBUTED
-  cloud:
-    config:
-      discovery:
-        enabled: true
-      enabled: true
-
-eureka:
-  instance:
-    statusPageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/info
-    healthCheckUrl: ${owms.srv.protocol}://${owms.srv.hostname}/health
-    homePageUrl: ${owms.srv.protocol}://${owms.srv.hostname}/
-
----
-spring:
-  profiles: SYNCHRONOUS
+  config:
+    activate:
+      on-profile: SYNCHRONOUS
   rabbitmq:
     listener:
       direct:
         auto-startup: false
-  cloud:
-    config:
-      discovery:
-        enabled: true
-      enabled: true
 
 management:
   health:
@@ -147,14 +144,15 @@ server:
 
 ---
 spring:
-  profiles: HEROKU
+  config:
+    activate:
+      on-profile: HEROKU
   main:
     banner-mode: "OFF"
   cloud:
     config:
       headers:
         protocol: ${owms.cfgsrv.protocol:https}
-      enabled: true
 
 owms:
   srv:
@@ -171,11 +169,21 @@ eureka:
 
 ---
 spring:
-  profiles: TEST
+  config:
+    activate:
+      on-profile: TEST
+    import: classpath:application.yml
   cloud:
+    bootstrap:
+      enabled: false
     config:
       discovery:
         enabled: false
+      enabled: false
+      fail-fast: false # true means retry
+      retry:
+        max-attempts: 120
+    discovery:
       enabled: false
 
 owms:
