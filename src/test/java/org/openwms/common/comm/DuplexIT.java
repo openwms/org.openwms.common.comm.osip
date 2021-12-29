@@ -16,7 +16,9 @@
 package org.openwms.common.comm;
 
 import org.ameba.exception.NotFoundException;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.config.Subsystem;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
@@ -56,9 +59,10 @@ import static org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OU
  * @author Heiko Scherrer
  */
 @SpringBootTest
-//@ImportResource("classpath:test.xml")
-@ActiveProfiles({"default", "ASYNCHRONOUS", "TEST"})
 @ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.MethodName.class)
+@ImportResource("classpath:test.xml")
+@ActiveProfiles({"ASYNCHRONOUS", "TEST"})
 @DirtiesContext
 public class DuplexIT {
 
@@ -83,40 +87,8 @@ public class DuplexIT {
     @Qualifier(PREFIX_ENRICHED_OUTBOUND_CHANNEL + "SPS03")
     private MessageChannel channel;
 
-    @Test
-    public void testDuplexConfigurationOverride() {
-        assertThat(driver.getConnections().getSubsystems().size()).isGreaterThan(1);
-        Subsystem sps03 = driver.getConnections().getSubsystems().stream().filter(f -> f.getName().equals("SPS03")).findFirst().orElseThrow(NotFoundException::new);
-        assertThat(sps03.getDuplex().getSoReceiveBufferSize()).isEqualTo(200);
-        assertThat(sps03.getDuplex().getSoSendBufferSize()).isEqualTo(200);
-        assertThat(sps03.getDuplex().getSoTimeout()).isEqualTo(60000);
-
-        assertThat(connectionFactory_SPS03_outbound.getSoReceiveBufferSize()).isEqualTo(200);
-        assertThat(connectionFactory_SPS03_outbound.getSoSendBufferSize()).isEqualTo(200);
-        assertThat(connectionFactory_SPS03_outbound.getSoTimeout()).isEqualTo(60000);
-        assertThat(connectionFactory_SPS03_outbound.getHost()).isEqualTo("localhost");
-    }
-
-    @Test
-    public void testDuplexConfigurationInheritanceServer() {
-        assertThat(connectionFactory_SPS04_outbound.getSoReceiveBufferSize()).isEqualTo(140);
-        assertThat(connectionFactory_SPS04_outbound.getSoSendBufferSize()).isEqualTo(140);
-        assertThat(connectionFactory_SPS04_outbound.getSoTimeout()).isEqualTo(200000);
-        assertThat(connectionFactory_SPS04_outbound.getHost()).isEqualTo("127.0.0.1");
-        assertThat(connectionFactory_SPS04_outbound.getPort()).isEqualTo(30004);
-    }
-
-    @Test
-    public void testDuplexConfigurationInheritanceClient() {
-        assertThat(connectionFactory_SPS05_outbound.getSoReceiveBufferSize()).isEqualTo(140);
-        assertThat(connectionFactory_SPS05_outbound.getSoSendBufferSize()).isEqualTo(140);
-        assertThat(connectionFactory_SPS05_outbound.getSoTimeout()).isEqualTo(200000);
-        assertThat(connectionFactory_SPS05_outbound.getHost()).isEqualTo("127.0.0.1");
-        assertThat(connectionFactory_SPS05_outbound.getPort()).isEqualTo(30005);
-    }
-
-    @Test
-    public void testTcpAdapters() throws Exception {
+    //@Test
+    public void test5TcpAdapters() throws Exception {
         ApplicationEventPublisher publisher = e -> { };
         Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
 
@@ -143,4 +115,35 @@ public class DuplexIT {
         client.stop();
     }
 
+    @Test
+    public void test2DuplexConfigurationOverride() {
+        assertThat(driver.getConnections().getSubsystems().size()).isGreaterThan(1);
+        Subsystem sps03 = driver.getConnections().getSubsystems().stream().filter(f -> f.getName().equals("SPS03")).findFirst().orElseThrow(NotFoundException::new);
+        assertThat(sps03.getDuplex().getSoReceiveBufferSize()).isEqualTo(200);
+        assertThat(sps03.getDuplex().getSoSendBufferSize()).isEqualTo(200);
+        assertThat(sps03.getDuplex().getSoTimeout()).isEqualTo(60000);
+
+        assertThat(connectionFactory_SPS03_outbound.getSoReceiveBufferSize()).isEqualTo(200);
+        assertThat(connectionFactory_SPS03_outbound.getSoSendBufferSize()).isEqualTo(200);
+        assertThat(connectionFactory_SPS03_outbound.getSoTimeout()).isEqualTo(60000);
+        assertThat(connectionFactory_SPS03_outbound.getHost()).isEqualTo("localhost");
+    }
+
+    @Test
+    public void test3DuplexConfigurationInheritanceServer() {
+        assertThat(connectionFactory_SPS04_outbound.getSoReceiveBufferSize()).isEqualTo(140);
+        assertThat(connectionFactory_SPS04_outbound.getSoSendBufferSize()).isEqualTo(140);
+        assertThat(connectionFactory_SPS04_outbound.getSoTimeout()).isEqualTo(200000);
+        assertThat(connectionFactory_SPS04_outbound.getHost()).isEqualTo("127.0.0.1");
+        assertThat(connectionFactory_SPS04_outbound.getPort()).isEqualTo(30004);
+    }
+
+    @Test
+    public void test4DuplexConfigurationInheritanceClient() {
+        assertThat(connectionFactory_SPS05_outbound.getSoReceiveBufferSize()).isEqualTo(140);
+        assertThat(connectionFactory_SPS05_outbound.getSoSendBufferSize()).isEqualTo(140);
+        assertThat(connectionFactory_SPS05_outbound.getSoTimeout()).isEqualTo(200000);
+        assertThat(connectionFactory_SPS05_outbound.getHost()).isEqualTo("127.0.0.1");
+        assertThat(connectionFactory_SPS05_outbound.getPort()).isEqualTo(30005);
+    }
 }
