@@ -17,7 +17,9 @@ package org.openwms.common.comm.osip.res;
 
 import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.spi.FieldLengthProvider;
+import org.openwms.core.SpringProfiles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -27,6 +29,7 @@ import java.util.Map;
  *
  * @author Heiko Scherrer
  */
+@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
 public class ResponseMessageSender {
 
