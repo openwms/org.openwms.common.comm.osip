@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0</version>
     <name>OpenWMS.org COMMON: OSIP TCP/IP Driver</name>
     <description>Essential services on common resources like Locations, LocationGroups and TransportUnits</description>
     <url>https://openwms.github.io/${project.artifactId}/index.html</url>
@@ -66,7 +66,7 @@
 
     <properties>
         <commons-configuration.version>1.10</commons-configuration.version>
-        <core.version>1.9.0-SNAPSHOT</core.version>
+        <core.version>1.9.0</core.version>
         <guava.version>30.0-jre</guava.version>
         <HdrHistogram.version>2.1.12</HdrHistogram.version>
         <spring-cloud-dependencies.version>Hoxton.SR10</spring-cloud-dependencies.version>
