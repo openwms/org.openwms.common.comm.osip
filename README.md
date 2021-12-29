@@ -130,8 +130,8 @@ In case you want to override the port number on startup just set the environment
 accordingly. In the following example 2 drivers are started, with different ports.
 
 ```
-$ java -Dowms.driver.server.port=30001 -jar tcpip-driver.jar
-$ java -Dowms.driver.server.port=30002 -jar tcpip-driver.jar
+$ java -Dowms.driver.server.port=30001 -jar tcpip-driver-exec.jar
+$ java -Dowms.driver.server.port=30002 -jar tcpip-driver-exec.jar
 ```
 
 Afterwards simply send a OSIP SYNQ telegram to driver with port 30001 to get a response
@@ -163,8 +163,8 @@ must be enabled. It's also a good practice to provide unique application names, 
 when the driver is instantiated multiple times:
 
 ```
-$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
-$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett2 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett1 -jar tcpip-driver-exec.jar
+$ java -Dspring.profiles.active=DISTRIBUTED -Dspring.application.name=tcpip-palett2 -jar tcpip-driver-exec.jar
 ```
 
 Each driver is now starting up and looking for a configuration server. The application
@@ -213,7 +213,7 @@ Synchronous communication is used by default.
 Either set the SYNCHRONOUS profile explicitly or omit it. 
 
 ```
-$ java -Dspring.profiles.active=SYNCHRONOUS -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=SYNCHRONOUS -Dspring.application.name=tcpip-palett1 -jar tcpip-driver-exec.jar
 ```
 
 ## Asynchronous Communication (RabbitMQ)
@@ -221,7 +221,7 @@ $ java -Dspring.profiles.active=SYNCHRONOUS -Dspring.application.name=tcpip-pale
 To enable asynchronous communication over RabbitMQ set the Spring profile **ASYNCHRONOUS**
 
 ```
-$ java -Dspring.profiles.active=ASYNCHRONOUS -Dspring.application.name=tcpip-palett1 -jar tcpip-driver.jar
+$ java -Dspring.profiles.active=ASYNCHRONOUS -Dspring.application.name=tcpip-palett1 -jar tcpip-driver-exec.jar
 ```
 
 # Configuration

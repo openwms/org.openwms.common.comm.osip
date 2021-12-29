@@ -16,10 +16,8 @@
 package org.openwms.common.comm;
 
 import org.ameba.exception.NotFoundException;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openwms.common.comm.config.Driver;
 import org.openwms.common.comm.config.Subsystem;
 import org.openwms.common.comm.osip.OSIPHeader;
@@ -31,7 +29,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
@@ -42,7 +39,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,10 +56,9 @@ import static org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OU
  * @author Heiko Scherrer
  */
 @SpringBootTest
-@ImportResource("classpath:test.xml")
-@ActiveProfiles({"ASYNCHRONOUS", "TEST"})
-@RunWith(SpringJUnit4ClassRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@ImportResource("classpath:test.xml")
+@ActiveProfiles({"default", "ASYNCHRONOUS", "TEST"})
+@ExtendWith(SpringExtension.class)
 @DirtiesContext
 public class DuplexIT {
 
