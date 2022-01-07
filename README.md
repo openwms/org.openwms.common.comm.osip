@@ -10,8 +10,7 @@ Each instance must have its own configuration, in particular its own TCP/IP port
 (tenant) may have multiple drivers deployed, all running on different ports.
 
 # Resources
-
-Documentation at [OpenProject Wiki](https://openproject.butan092.startdedicated.de/projects/common-osip-tcp-slash-ip-driver/wiki/main-page)
+Find further documentation in the [Wiki](https://wiki.butan092.startdedicated.de/projects/common-osip-tcp-slash-ip-driver/wiki/main-page)
 
 [![Build status](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml/badge.svg)](https://github.com/openwms/org.openwms.common.comm/actions/workflows/master-build.yml)
 [![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm)
