@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2020 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,18 @@ package org.openwms.common.comm.app;
 
 import org.ameba.tenancy.TenantHolder;
 import org.openwms.common.comm.osip.OSIPHeader;
+import org.openwms.core.SpringProfiles;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
- * A OSIPAppConfiguration is a Spring configuration class that bootstraps the OSIP specific beans.
+ * A OSIPAppConfiguration is a Spring configuration class that bootstraps OSIP specific beans active with ASYNCHRONOUS profile .
  *
  * @author Heiko Scherrer
  */
+@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 class OSIPAppConfiguration {
 
