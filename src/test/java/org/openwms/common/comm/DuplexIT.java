@@ -51,18 +51,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OUTBOUND_CHANNEL;
 
 /**
  * A DuplexIT.
  *
  * @author Heiko Scherrer
  */
-@SpringBootTest
+@SpringBootTest(properties = "owms.driver.osip.enabled=true")
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @ImportResource("classpath:test.xml")
-@ActiveProfiles({"ASYNCHRONOUS", "TEST"})
+@ActiveProfiles({"ASYNCHRONOUS", "TEST", "OSIP"})
 @DirtiesContext
 public class DuplexIT {
 
@@ -84,7 +83,7 @@ public class DuplexIT {
     @Qualifier("connectionFactory_SPS05_outbound")
     private AbstractClientConnectionFactory connectionFactory_SPS05_outbound;
     @Autowired
-    @Qualifier(PREFIX_ENRICHED_OUTBOUND_CHANNEL + "SPS03")
+    @Qualifier("enrichedOutboundChannel_" + "SPS03") // org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OUTBOUND_CHANNEL
     private MessageChannel channel;
 
     //@Test

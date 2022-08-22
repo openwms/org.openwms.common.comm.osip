@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Contains types that act as Message Transformer components.
+ * Contains implementations following the Message Router pattern.
  */
-package org.openwms.common.comm.transformer;
+package org.openwms.common.comm.osip.router;

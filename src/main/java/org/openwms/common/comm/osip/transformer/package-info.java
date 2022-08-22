@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2020 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openwms.common.comm.app;
-
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
 /**
- * A DistributedConfiguration.
- *
- * @author Heiko Scherrer
+ * Contains types that act as Message Transformer components.
  */
-@Configuration
-@EnableDiscoveryClient
-@Profile("!INMEM")
-class DistributedConfiguration {
-}
+package org.openwms.common.comm.osip.transformer;

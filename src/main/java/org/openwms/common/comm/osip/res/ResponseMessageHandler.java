@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.res;
 
-import org.openwms.common.comm.Channels;
+import org.openwms.common.comm.app.Channels;
 import org.openwms.common.comm.osip.OSIP;
 import org.openwms.common.comm.tcp.ConnectionHolder;
 import org.springframework.integration.annotation.MessageEndpoint;

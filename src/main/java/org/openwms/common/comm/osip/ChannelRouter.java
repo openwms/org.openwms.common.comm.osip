@@ -15,8 +15,8 @@
  */
 package org.openwms.common.comm.osip;
 
-import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.MessageProcessingException;
+import org.openwms.common.comm.app.Channels;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.Router;
 import org.springframework.messaging.Message;

@@ -17,7 +17,7 @@ package org.openwms.common.comm.osip.locu.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.Payload;
@@ -45,9 +45,9 @@ class LocationUpdateTelegramDeserializer implements TelegramDeserializer<Locatio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationUpdateTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
-    private final Driver driver;
+    private final Osip driver;
 
-    LocationUpdateTelegramDeserializer(Driver driver) {
+    LocationUpdateTelegramDeserializer(Osip driver) {
         this.driver = driver;
     }
 
@@ -73,7 +73,7 @@ class LocationUpdateTelegramDeserializer implements TelegramDeserializer<Locatio
                         .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
                         .withCreated(
                             telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH),
-                            driver.getOsip().getDatePattern()
+                            driver.getDatePattern()
                         ).build(),
                         CommonMessageFactory.createHeaders(telegram, headers)
                 );

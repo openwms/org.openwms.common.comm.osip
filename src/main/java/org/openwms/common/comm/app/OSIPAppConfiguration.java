@@ -15,28 +15,25 @@
  */
 package org.openwms.common.comm.app;
 
-import org.openwms.core.SpringProfiles;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.ameba.tenancy.TenantHolder;
+import org.openwms.common.comm.osip.OSIPHeader;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.web.client.RestTemplate;
 
 /**
- * A AppConfiguration is a Spring configuration class used when no ASYNCHRONOUS profile is active and synchronous RESTful communication
- * is used.
+ * A OSIPAppConfiguration is a Spring configuration class that bootstraps the OSIP specific beans.
  *
  * @author Heiko Scherrer
  */
-@Profile("!"+ SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
-class AppConfiguration {
+class OSIPAppConfiguration {
 
-    @LoadBalanced
     @Bean
-    RestTemplate aLoadBalanced() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getInterceptors().add(new RestTemplateInterceptor());
-        return restTemplate;
+    MessagePostProcessor osipMessagePostProcessor() {
+        return m -> {
+            m.getMessageProperties().getHeaders().put(OSIPHeader.TENANT_FIELD_NAME, TenantHolder.getCurrentTenant());
+            return m;
+        };
     }
 }

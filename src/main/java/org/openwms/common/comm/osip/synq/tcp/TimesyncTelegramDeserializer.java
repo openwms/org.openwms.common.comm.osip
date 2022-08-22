@@ -17,7 +17,7 @@ package org.openwms.common.comm.osip.synq.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.synq.TimesyncRequest;
@@ -46,9 +46,9 @@ class TimesyncTelegramDeserializer implements TelegramDeserializer<TimesyncReque
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimesyncTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
-    private final Driver driver;
+    private final Osip driver;
 
-    TimesyncTelegramDeserializer(Driver driver) {
+    TimesyncTelegramDeserializer(Osip driver) {
         this.driver = driver;
     }
 
@@ -65,7 +65,7 @@ class TimesyncTelegramDeserializer implements TelegramDeserializer<TimesyncReque
         try {
             request.setSenderTimer(
                     new SimpleDateFormat(driver
-                            .getOsip().getDatePattern())
+                            .getDatePattern())
                             .parse(telegram.substring(startSendertime, startSendertime + DATE_LENGTH))
             );
 

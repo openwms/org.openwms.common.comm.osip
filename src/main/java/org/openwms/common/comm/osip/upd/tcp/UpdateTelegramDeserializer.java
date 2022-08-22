@@ -18,7 +18,7 @@ package org.openwms.common.comm.osip.upd.tcp;
 import org.ameba.exception.NotFoundException;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.upd.UpdateMessage;
@@ -50,9 +50,9 @@ class UpdateTelegramDeserializer implements TelegramDeserializer<UpdateMessage> 
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     private final UpdateFieldLengthProvider provider;
-    private final Driver driver;
+    private final Osip driver;
 
-    UpdateTelegramDeserializer(UpdateFieldLengthProvider provider, Driver driver) {
+    UpdateTelegramDeserializer(UpdateFieldLengthProvider provider, Osip driver) {
         this.provider = provider;
         this.driver = driver;
     }
@@ -82,7 +82,7 @@ class UpdateTelegramDeserializer implements TelegramDeserializer<UpdateMessage> 
                         .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
                         .withCreateDate(
                             telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH),
-                            driver.getOsip().getDatePattern()
+                            driver.getDatePattern()
                         ).build(),
                         CommonMessageFactory.createHeaders(telegram, headers)
                 );

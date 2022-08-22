@@ -22,14 +22,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
- * A DriverStarter is the starter class of the SpringBoot application.
+ * A TestDriverStarter is the starter class of the integration tests.
  *
  * @author Heiko Scherrer
  */
-@SpringBootApplication(scanBasePackageClasses = {DriverStarter.class, SolutionApp.class})
+@SpringBootApplication(scanBasePackageClasses = {TestDriverStarter.class, SolutionApp.class})
 @EnableConfigurationProperties
 @EnableAspects
-public class DriverStarter {
+public class TestDriverStarter {
 
     /**
      * Boot up!
@@ -37,6 +37,6 @@ public class DriverStarter {
      * @param args Some args
      */
     public static void main(String[] args) {
-        SpringApplication.run(DriverStarter.class, args);
+        SpringApplication.run(TestDriverStarter.class, args);
     }
 }

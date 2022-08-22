@@ -18,7 +18,7 @@ package org.openwms.common.comm.osip.err.tcp;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.ParserUtils;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.err.ErrorMessage;
@@ -49,10 +49,10 @@ class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
-    private final Driver driver;
+    private final Osip driver;
     private final FieldLengthProvider lengthProvider;
 
-    ErrorTelegramDeserializer(Driver driver, FieldLengthProvider lengthProvider) {
+    ErrorTelegramDeserializer(Osip driver, FieldLengthProvider lengthProvider) {
         this.driver = driver;
         this.lengthProvider = lengthProvider;
     }
@@ -76,7 +76,7 @@ class ErrorTelegramDeserializer implements TelegramDeserializer<ErrorMessage> {
                         .locationGroupName(ParserUtils.trimRight(telegram.substring(startLocationGroup, startErrorCode), '*'))
                         .created(
                             new SimpleDateFormat(driver
-                                .getOsip().getDatePattern())
+                                .getDatePattern())
                                 .parse(telegram.substring(startCreateDate, startCreateDate + DATE_LENGTH))
                         )
                         .build(),

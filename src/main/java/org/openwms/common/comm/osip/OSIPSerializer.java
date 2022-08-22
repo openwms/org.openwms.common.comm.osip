@@ -16,11 +16,10 @@
 package org.openwms.common.comm.osip;
 
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 
 import static java.lang.String.format;
 import static org.openwms.common.comm.ParserUtils.padRight;
-import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
 
 /**
  * A OSIPSerializer is able to serialize OSIP messages into Strings that can be sent over
@@ -32,9 +31,9 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
  */
 public abstract class OSIPSerializer<T extends Payload> {
 
-    private final Driver driver;
+    private final Osip driver;
 
-    protected OSIPSerializer(Driver driver) {
+    protected OSIPSerializer(Osip driver) {
         this.driver = driver;
     }
 
@@ -52,9 +51,9 @@ public abstract class OSIPSerializer<T extends Payload> {
      * @return The telegram String
      */
     public String serialize(T obj) {
-        short maxTelegramLength = driver.getOsip().getTelegramLength();
+        short maxTelegramLength = driver.getTelegramLength();
         OSIPHeader header = new OSIPHeader.Builder()
-                .sync(driver.getOsip().getSyncField())
+                .sync(driver.getSyncField())
                 .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())
                 .receiver(obj.getHeader().getReceiver())
@@ -64,26 +63,12 @@ public abstract class OSIPSerializer<T extends Payload> {
         if (s.length() > maxTelegramLength) {
             throw new MessageMismatchException(format("Defined telegram length exceeds configured size of owms.driver.osip.telegram-length=[%d]. Actual length is [%d]", maxTelegramLength, s.length()));
         }
-        return padRight(s, maxTelegramLength, driver.getOsip().getTelegramFiller());
-    }
-
-    /**
-     * A CommonMessage is able to define the type of message from the telegram String. Currently the type identifier starts directly after
-     * the header and has a length of 4 characters.
-     *
-     * @param telegram The telegram String to resolve the type for
-     * @return The telegram type as case-insensitive String
-     */
-    public static String getTelegramType(String telegram) {
-        if (telegram == null || telegram.length() < LENGTH_HEADER) {
-            throw new MessageMismatchException("Received an invalid OSIP telegram type");
-        }
-        return telegram.substring(LENGTH_HEADER, LENGTH_HEADER + Payload.MESSAGE_IDENTIFIER_LENGTH);
+        return padRight(s, maxTelegramLength, driver.getTelegramFiller());
     }
 
     protected abstract String convert(T message);
 
-    protected Driver getDriver() {
+    protected Osip getDriver() {
         return driver;
     }
 }

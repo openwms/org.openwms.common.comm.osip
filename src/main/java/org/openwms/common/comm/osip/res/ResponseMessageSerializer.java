@@ -17,7 +17,7 @@ package org.openwms.common.comm.osip.res;
 
 import org.openwms.common.comm.MessageMismatchException;
 import org.openwms.common.comm.ParserUtils;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.openwms.common.comm.osip.OSIPSerializer;
@@ -34,7 +34,7 @@ import static java.lang.String.format;
 @OSIPComponent
 public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
 
-    public ResponseMessageSerializer(Driver driver) {
+    public ResponseMessageSerializer(Osip driver) {
         super(driver);
     }
 
@@ -51,9 +51,9 @@ public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
      */
     @Override
     public String serialize(ResponseMessage obj) {
-        short maxTelegramLength = getDriver().getOsip().getTelegramLength();
+        short maxTelegramLength = getDriver().getTelegramLength();
         OSIPHeader header = new OSIPHeader.Builder()
-                .sync(getDriver().getOsip().getSyncField())
+                .sync(getDriver().getSyncField())
                 .messageLength(maxTelegramLength)
                 .sender(obj.getHeader().getSender())
                 .receiver(obj.getHeader().getReceiver())
@@ -77,6 +77,6 @@ public class ResponseMessageSerializer extends OSIPSerializer<ResponseMessage> {
                 ParserUtils.nullableLocation(message.getTargetLocation()) +
                 ParserUtils.nullableLocationGroup(message.getTargetLocationGroup()) +
                 message.getErrorCode() +
-                new SimpleDateFormat(getDriver().getOsip().getDatePattern()).format(message.getCreated());
+                new SimpleDateFormat(getDriver().getDatePattern()).format(message.getCreated());
     }
 }

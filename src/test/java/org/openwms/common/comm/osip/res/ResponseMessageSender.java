@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.res;
 
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class ResponseMessageSender {
     @Autowired
     private AmqpResponseMessageListener listener;
     @Autowired
-    private Driver driver;
+    private Osip driver;
     @Autowired
     private FieldLengthProvider provider;
 

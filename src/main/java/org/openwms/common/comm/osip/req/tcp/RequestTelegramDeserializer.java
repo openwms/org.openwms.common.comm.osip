@@ -17,7 +17,7 @@ package org.openwms.common.comm.osip.req.tcp;
 
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.MessageMismatchException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.Payload;
@@ -49,9 +49,9 @@ class RequestTelegramDeserializer implements TelegramDeserializer<RequestMessage
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
     @Autowired(required = false)
     private FieldLengthProvider provider;
-    private final Driver driver;
+    private final Osip driver;
 
-    RequestTelegramDeserializer(Driver driver) {
+    RequestTelegramDeserializer(Osip driver) {
         this.driver = driver;
     }
 
@@ -82,7 +82,7 @@ class RequestTelegramDeserializer implements TelegramDeserializer<RequestMessage
                         .withErrorCode(telegram.substring(startErrorCode, startCreateDate))
                         .withCreateDate(
                             telegram.substring(startCreateDate, startCreateDate + Payload.DATE_LENGTH),
-                            driver.getOsip().getDatePattern()
+                            driver.getDatePattern()
                         ).build(),
                     CommonMessageFactory.createHeaders(telegram, headers)
                 );

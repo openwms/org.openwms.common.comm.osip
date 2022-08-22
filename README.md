@@ -94,7 +94,7 @@ The overall integration architecture is shown below. The entry point is the `inb
 to the `inboundChannel`. A first transformer (`telegramTransformer`) terminates the ASCII string and converts into a Spring [Message](http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/messaging/Message.html).
 This is done with support of the appropriate `MessageMapper` that must exist for each telegram type. For instance the [TimesyncTelegramMapper](src/main/java/org/openwms/common/comm/osip/synq/tcp/TimesyncTelegramMapper.java) knows best
 how to transform a String into a [TimesyncRequest](src/main/java/org/openwms/common/comm/osip/synq/TimesyncRequest.java). After the telegram is transformed into a valid message type the generic 
-[`messageRouter`](src/main/java/org/openwms/common/comm/router/CommonMessageRouter.java) picks up the right queue and activates the proper `ServiceActivator`. Notice that the service activators
+[`messageRouter`](openwms/org.openwms.common.comm.osip/src/main/java/org/openwms/common/comm/osip/router/CommonMessageRouter.java) picks up the right queue and activates the proper `ServiceActivator`. Notice that the service activators
 queue name is built on the fly and follows a naming convention. This is one aspect to support requirements NR003.
 
 ![Architecture][4]

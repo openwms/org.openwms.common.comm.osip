@@ -9,10 +9,10 @@
         <version>21</version>
         <relativePath/>
     </parent>
-    <artifactId>org.openwms.common.comm</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
-    <name>OpenWMS.org COMMON: OSIP TCP/IP Driver</name>
-    <description>TCP/IP driver to connect subsystems like PLC or IPC to the OpenWMS system</description>
+    <artifactId>org.openwms.common.comm.osip</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>OpenWMS.org COMMON: TCP/IP Driver OSIP Support</name>
+    <description>The OSIP message structure support for the OpenWMS.org TCP/IP driver</description>
     <url>https://openwms.github.io/${project.artifactId}/index.html</url>
 
     <issueManagement>
@@ -66,6 +66,7 @@
 
     <properties>
         <commons-configuration.version>1.10</commons-configuration.version>
+        <comm.lib.version>1.0.0-SNAPSHOT</comm.lib.version>
         <core.version>2.0.0-SNAPSHOT</core.version>
         <guava.version>30.0-jre</guava.version>
         <servo-core.version>0.12.21</servo-core.version>
@@ -93,37 +94,7 @@
     </reporting>
 
     <build>
-        <finalName>tcpip-driver</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>build-info</goal>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <layers>
-                        <configuration>${project.basedir}/src/layers.xml</configuration>
-                        <enabled>true</enabled>
-                    </layers>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
+        <finalName>tcpip-driver-osip</finalName>
     </build>
 
     <dependencyManagement>
@@ -151,6 +122,11 @@
                 <version>${core.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.openwms</groupId>
+                <artifactId>org.openwms.common.comm.lib</artifactId>
+                <version>${comm.lib.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud-dependencies.version}</version>
@@ -165,6 +141,10 @@
         <dependency>
             <groupId>org.openwms</groupId>
             <artifactId>org.openwms.core.util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openwms</groupId>
+            <artifactId>org.openwms.common.comm.lib</artifactId>
         </dependency>
 
         <!-- Spring Dependencies -->

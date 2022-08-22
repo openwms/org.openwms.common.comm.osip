@@ -15,8 +15,8 @@
  */
 package org.openwms.common.comm.osip.synq;
 
-import org.openwms.common.comm.Channels;
 import org.openwms.common.comm.TimeProvider;
+import org.openwms.common.comm.app.Channels;
 import org.openwms.common.comm.osip.CommonMessageFactory;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPHeader;

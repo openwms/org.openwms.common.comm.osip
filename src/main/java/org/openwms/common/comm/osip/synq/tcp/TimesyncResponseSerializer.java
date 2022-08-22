@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.synq.tcp;
 
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPSerializer;
 import org.openwms.common.comm.osip.synq.TimesyncResponse;
@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 @OSIPComponent
 class TimesyncResponseSerializer extends OSIPSerializer<TimesyncResponse> {
 
-    public TimesyncResponseSerializer(Driver driver) {
+    public TimesyncResponseSerializer(Osip driver) {
         super(driver);
     }
 
@@ -48,6 +48,6 @@ class TimesyncResponseSerializer extends OSIPSerializer<TimesyncResponse> {
     @Override
     protected String convert(TimesyncResponse message) {
         return getMessageIdentifier() +
-                new SimpleDateFormat(getDriver().getOsip().getDatePattern()).format(message.getSenderTime());
+                new SimpleDateFormat(getDriver().getDatePattern()).format(message.getSenderTime());
     }
 }

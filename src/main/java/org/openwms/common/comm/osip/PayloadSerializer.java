@@ -16,7 +16,7 @@
 package org.openwms.common.comm.osip;
 
 import org.openwms.common.comm.MessageProcessingException;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -48,11 +48,11 @@ public class PayloadSerializer<T extends Payload> implements Serializer<T> {
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CORE_INTEGRATION_MESSAGING);
     private static final byte[] CRLF = "\r\n".getBytes();
-    private final Driver driver;
+    private final Osip driver;
     private final List<OSIPSerializer<T>> serializers;
     private Map<String, OSIPSerializer<T>> serializersMap;
 
-    public PayloadSerializer(Driver driver, List<OSIPSerializer<T>> serializers) {
+    public PayloadSerializer(Osip driver, List<OSIPSerializer<T>> serializers) {
         this.driver = driver;
         this.serializers = serializers;
     }
@@ -80,7 +80,7 @@ public class PayloadSerializer<T extends Payload> implements Serializer<T> {
             TELEGRAM_LOGGER.debug("Outgoing: [{}]", res);
         }
 
-        os.write(padRight(res, driver.getOsip().getTelegramLength(), driver.getOsip().getTelegramFiller()).getBytes(Charset.defaultCharset()));
+        os.write(padRight(res, driver.getTelegramLength(), driver.getTelegramFiller()).getBytes(Charset.defaultCharset()));
         os.write(CRLF);
         os.flush();
     }

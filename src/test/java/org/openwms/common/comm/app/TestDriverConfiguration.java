@@ -15,8 +15,7 @@
  */
 package org.openwms.common.comm.app;
 
-import org.openwms.common.comm.Channels;
-import org.openwms.common.comm.ConfigurationException;
+import org.openwms.common.comm.TelegramResolver;
 import org.openwms.common.comm.config.Connections;
 import org.openwms.common.comm.config.Subsystem;
 import org.openwms.common.comm.tcp.TelegramDeserializer;
@@ -76,9 +75,9 @@ import static org.openwms.common.comm.CommConstants.SUFFIX_OUTBOUND;
 @Configuration
 @IntegrationComponentScan
 @EnableIntegration
-public class DriverConfiguration implements ApplicationEventPublisherAware {
+public class TestDriverConfiguration implements ApplicationEventPublisherAware {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DriverConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestDriverConfiguration.class);
     private static final Logger BOOT_LOGGER = LoggerFactory.getLogger(BOOT);
     private static final String SUFFIX_INBOUND = "_inbound";
     private static final String PREFIX_CHANNEL_ADAPTER = "channelAdapter_";
@@ -535,8 +534,8 @@ public class DriverConfiguration implements ApplicationEventPublisherAware {
 
     @Bean
     @ConditionalOnMissingBean(Transformable.class)
-    Transformable telegramTransformer(List<TelegramDeserializer> deserializers) {
-        return new TelegramTransformer(deserializers);
+    Transformable telegramTransformer(List<TelegramDeserializer> deserializers, TelegramResolver telegramResolver) {
+        return new TelegramTransformer(telegramResolver, deserializers);
     }
 
     /*~ -------------------- Flows ----------------- */

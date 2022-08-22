@@ -16,7 +16,7 @@
 package org.openwms.common.comm.osip.err.tcp;
 
 import org.openwms.common.comm.TimeProvider;
-import org.openwms.common.comm.config.Driver;
+import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.osip.OSIPComponent;
 import org.openwms.common.comm.osip.OSIPSerializer;
 import org.openwms.common.comm.osip.err.ErrorMessage;
@@ -33,7 +33,7 @@ public class ErrorMessageSerializer extends OSIPSerializer<ErrorMessage> {
 
     private final TimeProvider timeProvider;
 
-    public ErrorMessageSerializer(Driver driver, TimeProvider timeProvider) {
+    public ErrorMessageSerializer(Osip driver, TimeProvider timeProvider) {
         super(driver);
         this.timeProvider = timeProvider;
     }
@@ -54,6 +54,6 @@ public class ErrorMessageSerializer extends OSIPSerializer<ErrorMessage> {
         return getMessageIdentifier() +
                 message.getLocationGroupName() +
                 message.getErrorCode() +
-                new SimpleDateFormat(getDriver().getOsip().getDatePattern()).format(timeProvider.now());
+                new SimpleDateFormat(getDriver().getDatePattern()).format(timeProvider.now());
     }
 }

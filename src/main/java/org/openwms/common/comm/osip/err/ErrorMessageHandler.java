@@ -15,7 +15,7 @@
  */
 package org.openwms.common.comm.osip.err;
 
-import org.openwms.common.comm.Channels;
+import org.openwms.common.comm.app.Channels;
 import org.openwms.common.comm.osip.OSIP;
 import org.openwms.common.comm.osip.OSIPHeader;
 import org.springframework.integration.annotation.MessageEndpoint;
