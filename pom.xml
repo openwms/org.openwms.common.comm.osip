@@ -93,10 +93,6 @@
         </plugins>
     </reporting>
 
-    <build>
-        <finalName>tcpip-driver-osip</finalName>
-    </build>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
