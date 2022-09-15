@@ -63,7 +63,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ImportResource("classpath:test.xml")
 @ActiveProfiles({"ASYNCHRONOUS", "TEST", "OSIP"})
 @DirtiesContext
-public class DuplexIT {
+class DuplexIT {
 
     @Autowired
     private Driver driver;
@@ -86,8 +86,8 @@ public class DuplexIT {
     @Qualifier("enrichedOutboundChannel_" + "SPS03") // org.openwms.common.comm.app.DriverConfiguration.PREFIX_ENRICHED_OUTBOUND_CHANNEL
     private MessageChannel channel;
 
-    //@Test
-    public void test5TcpAdapters() throws Exception {
+    @Test
+    void test5TcpAdapters() throws Exception {
         ApplicationEventPublisher publisher = e -> { };
         Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
 
@@ -115,8 +115,8 @@ public class DuplexIT {
     }
 
     @Test
-    public void test2DuplexConfigurationOverride() {
-        assertThat(driver.getConnections().getSubsystems().size()).isGreaterThan(1);
+    void test2DuplexConfigurationOverride() {
+        assertThat(driver.getConnections().getSubsystems()).hasSizeGreaterThan(1);
         Subsystem sps03 = driver.getConnections().getSubsystems().stream().filter(f -> f.getName().equals("SPS03")).findFirst().orElseThrow(NotFoundException::new);
         assertThat(sps03.getDuplex().getSoReceiveBufferSize()).isEqualTo(200);
         assertThat(sps03.getDuplex().getSoSendBufferSize()).isEqualTo(200);
@@ -129,7 +129,7 @@ public class DuplexIT {
     }
 
     @Test
-    public void test3DuplexConfigurationInheritanceServer() {
+    void test3DuplexConfigurationInheritanceServer() {
         assertThat(connectionFactory_SPS04_outbound.getSoReceiveBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS04_outbound.getSoSendBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS04_outbound.getSoTimeout()).isEqualTo(200000);
@@ -138,7 +138,7 @@ public class DuplexIT {
     }
 
     @Test
-    public void test4DuplexConfigurationInheritanceClient() {
+    void test4DuplexConfigurationInheritanceClient() {
         assertThat(connectionFactory_SPS05_outbound.getSoReceiveBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS05_outbound.getSoSendBufferSize()).isEqualTo(140);
         assertThat(connectionFactory_SPS05_outbound.getSoTimeout()).isEqualTo(200000);

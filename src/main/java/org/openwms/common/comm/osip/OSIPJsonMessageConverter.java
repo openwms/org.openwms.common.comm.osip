@@ -32,8 +32,7 @@ class OSIPJsonMessageConverter extends Jackson2JsonMessageConverter {
     @Override
     protected Message createMessage(Object objectToConvert, MessageProperties messageProperties) {
 
-        if (objectToConvert instanceof GenericMessage) {
-            GenericMessage gm = (GenericMessage) objectToConvert;
+        if (objectToConvert instanceof GenericMessage gm) {
             for (Map.Entry<String, Object> entry : gm.getHeaders().entrySet()) {
                 if (entry.getKey().startsWith(OSIPHeader.PREFIX)) {
                     messageProperties.setHeader(entry.getKey(), entry.getValue());

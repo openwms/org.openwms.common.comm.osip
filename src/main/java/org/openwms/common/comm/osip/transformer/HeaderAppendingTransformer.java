@@ -37,19 +37,9 @@ public class HeaderAppendingTransformer {
         mha.copyHeaders(msg.getHeaders());
         mha.setReplyChannelName("enrichedOutboundChannel");
         mha.setHeader(OSIPHeader.SYNC_FIELD_NAME, msg.getHeaders().get(OSIPHeader.SYNC_FIELD_NAME));
-        // FIXME [openwms]: 2019-04-09 d
-        //mha.setHeader(CommHeader.MSG_LENGTH_FIELD_NAME, headerLength(msg.getHeaders()) + msg.getPayload().asString().length());
         mha.setHeader(OSIPHeader.SENDER_FIELD_NAME, msg.getHeaders().get(OSIPHeader.RECEIVER_FIELD_NAME));
         mha.setHeader(OSIPHeader.RECEIVER_FIELD_NAME, msg.getHeaders().get(OSIPHeader.SENDER_FIELD_NAME));
         mha.setHeader(OSIPHeader.SEQUENCE_FIELD_NAME, ""+(Integer.parseInt(String.valueOf(msg.getHeaders().get(OSIPHeader.SEQUENCE_FIELD_NAME))) + 1));
         return org.springframework.messaging.support.MessageBuilder.withPayload(msg.getPayload()).setHeaders(mha).build();
-    }
-
-    private int headerLength(MessageHeaders h) {
-        return String.valueOf(h.get(OSIPHeader.SYNC_FIELD_NAME)).length() +
-                String.valueOf( h.get(OSIPHeader.MSG_LENGTH_FIELD_NAME)).length() +
-                String.valueOf( h.get(OSIPHeader.SENDER_FIELD_NAME)).length() +
-                String.valueOf( h.get(OSIPHeader.RECEIVER_FIELD_NAME)).length() +
-                String.valueOf( h.get(OSIPHeader.SEQUENCE_FIELD_NAME)).length();
     }
 }
