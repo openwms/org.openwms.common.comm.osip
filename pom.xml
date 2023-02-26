@@ -11,7 +11,7 @@
     </parent>
     <artifactId>org.openwms.common.comm.osip</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>OpenWMS.org COMMON: TCP/IP Driver OSIP Support</name>
+    <name>OpenWMS.org COMMON: TCP/IP Driver OSIP Library</name>
     <description>The OSIP message structure support for the OpenWMS.org TCP/IP driver</description>
     <url>https://openwms.github.io/${project.artifactId}/index.html</url>
 
