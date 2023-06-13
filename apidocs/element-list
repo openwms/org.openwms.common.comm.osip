@@ -1,5 +1,6 @@
 org.openwms.common.comm
 org.openwms.common.comm.app
+org.openwms.common.comm.corren
 org.openwms.common.comm.osip
 org.openwms.common.comm.osip.app
 org.openwms.common.comm.osip.err
