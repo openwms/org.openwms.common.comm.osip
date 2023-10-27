@@ -31,6 +31,7 @@
         <url>https://github.com/openwms/${project.artifactId}</url>
         <connection>scm:git:https://${scmuser}github.com/openwms/${project.artifactId}.git</connection>
         <developerConnection>scm:git:https://${scmuser}github.com/openwms/${project.artifactId}.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
@@ -65,12 +66,11 @@
     </ciManagement>
 
     <properties>
-        <commons-configuration.version>1.10</commons-configuration.version>
         <comm.lib.version>1.0.0-SNAPSHOT</comm.lib.version>
-        <core.version>2.0.0</core.version>
+        <core.version>2.1.0-SNAPSHOT</core.version>
         <guava.version>30.0-jre</guava.version>
         <servo-core.version>0.12.21</servo-core.version>
-        <spring-cloud-dependencies.version>2021.0.7</spring-cloud-dependencies.version>
+        <spring-cloud-dependencies.version>2021.0.8</spring-cloud-dependencies.version>
     </properties>
 
     <reporting>
@@ -96,6 +96,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <!-- Need to upgrade Guava from version 11 because of CVE -->
+                <!-- Required by eureka-client -->
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -105,12 +107,6 @@
                 <groupId>com.netflix.servo</groupId>
                 <artifactId>servo-core</artifactId>
                 <version>${servo-core.version}</version>
-            </dependency>
-            <dependency>
-                <!-- com.netflix.eureka:eureka has an internal clash -->
-                <groupId>commons-configuration</groupId>
-                <artifactId>commons-configuration</artifactId>
-                <version>${commons-configuration.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openwms</groupId>
@@ -245,13 +241,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <!-- Need to upgrade Guava from version 11 because of CVE -->
-            <!-- Required by eureka-client -->
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

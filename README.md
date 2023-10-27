@@ -4,7 +4,7 @@ This library is the implementation of the [OSIP message specification](https://i
 [OpenWMS.org TCP/IP driver](https://openwms.github.io/org.openwms.common.comm) by default. 
 
 # Resources
-Find further documentation in the [Wiki](https://wiki.butan092.startdedicated.de/projects/common-tcp-slash-ip-driver/wiki)
+Find further documentation in the [Wiki](https://wiki.openwms.cloud/projects/common-tcp-slash-ip-driver/wiki)
 
 [![Build status](https://github.com/openwms/org.openwms.common.comm.osip/actions/workflows/master-build.yml/badge.svg)](https://github.com/openwms/org.openwms.common.comm.osip/actions/workflows/master-build.yml)
 [![Quality](https://sonarcloud.io/api/project_badges/measure?project=org.openwms:org.openwms.common.comm.osip&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openwms:org.openwms.common.comm.osip)
