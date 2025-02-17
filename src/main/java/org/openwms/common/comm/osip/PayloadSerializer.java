@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip;
 
+import jakarta.annotation.PostConstruct;
 import org.openwms.common.comm.MessageProcessingException;
 import org.openwms.common.comm.config.Osip;
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.serializer.Serializer;
 
-import javax.annotation.PostConstruct;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

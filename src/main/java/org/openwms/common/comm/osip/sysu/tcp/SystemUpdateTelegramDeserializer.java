@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,11 @@ class SystemUpdateTelegramDeserializer implements TelegramDeserializer<SystemUpd
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemUpdateTelegramDeserializer.class);
     private static final Logger TELEGRAM_LOGGER = LoggerFactory.getLogger(CommConstants.CORE_INTEGRATION_MESSAGING);
-    @Autowired(required = false)
-    private FieldLengthProvider provider;
+    private final FieldLengthProvider provider;
     private final Osip driver;
 
-    SystemUpdateTelegramDeserializer(Osip driver) {
+    SystemUpdateTelegramDeserializer(@Autowired(required = false) FieldLengthProvider provider, Osip driver) {
+        this.provider = provider;
         this.driver = driver;
     }
 

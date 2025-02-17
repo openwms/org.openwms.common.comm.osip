@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ class DuplexIT {
         ApplicationEventPublisher publisher = e -> { };
         Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
 
-        AbstractClientConnectionFactory client = Tcp.netClient(duplex.getHostname(), duplex.getPort()).id("client").get();
+        AbstractClientConnectionFactory client = Tcp.netClient(duplex.getHostname(), duplex.getPort()).id("client").getObject();
         final AtomicReference<Message<?>> received = new AtomicReference<>();
         final CountDownLatch latch = new CountDownLatch(1);
         client.registerListener(m -> {

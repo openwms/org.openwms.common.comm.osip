@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.handler.AbstractMessageHandler;
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter;
@@ -485,27 +484,27 @@ public class TestDriverConfiguration implements ApplicationEventPublisherAware {
     /*~ --------------- MessageChannels ------------ */
     @Bean
     MessageChannel commonExceptionChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();
     }
 
     @Bean
     MessageChannel transformerOutputChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();
     }
 
     @Bean
     MessageChannel inboundChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();
     }
 
     @Bean
     MessageChannel outboundChannel() {
-        return MessageChannels.direct().get();
+        return MessageChannels.direct().getObject();
     }
 
     private DirectChannel createEnrichedOutboundChannel(
             AbstractMessageHandler messageHandler) {
-        DirectChannel channel = MessageChannels.direct().get();
+        DirectChannel channel = MessageChannels.direct().getObject();
         channel.subscribe(messageHandler);
         return channel;
     }
@@ -544,7 +543,7 @@ public class TestDriverConfiguration implements ApplicationEventPublisherAware {
             MessageChannel inboundChannel,
             MessageChannel transformerOutputChannel,
             Transformable telegramTransformer) {
-        return IntegrationFlows
+        return IntegrationFlow
                 .from(inboundChannel)
                 .transform(telegramTransformer)
                 .channel(transformerOutputChannel)

@@ -32,13 +32,13 @@ jobs:
         with:
           java-version: 21
       - name: Cache SonarQube packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache Maven packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -55,7 +55,6 @@ jobs:
           -DsurefireArgs=-Dspring.profiles.active=ASYNCHRONOUS,TEST
           -Dargs=-Dspring.profiles.active=ASYNCHRONOUS,TEST
           -Dspring.rabbitmq.host=localhost
-          -Dscmuser=$PUSHKEY
           -Dscmpublish.pubScmUrl=scm:git:https://openwms:$PUSHKEY@github.com/openwms/org.openwms.common.comm.osip.git
           -DdeveloperConnectionUrl=scm:git:https://openwms:$PUSHKEY@github.com/openwms/org.openwms.common.comm.osip.git
           -Dci.buildNumber=$GITHUB_RUN_NUMBER

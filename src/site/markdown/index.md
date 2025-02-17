@@ -1,5 +1,4 @@
 # Purpose
-
 This library is the implementation of the [OSIP message specification](https://interface21-io.gitbook.io/osip) that is used by the
 [OpenWMS.org TCP/IP driver](https://openwms.github.io/org.openwms.common.comm) by default.
 
@@ -13,10 +12,7 @@ Find further documentation in the [Wiki](https://wiki.openwms.cloud/projects/com
 [![Join the chat at https://gitter.im/openwms/org.openwms](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openwms/org.openwms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Build and Release
-
 Build the component locally and release to Maven Central
 ```
 $ mvn deploy -Prelease,gpg
 ```
-
-[1]: images/module_composition.png

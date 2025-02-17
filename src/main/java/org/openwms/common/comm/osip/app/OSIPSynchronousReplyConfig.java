@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.http.dsl.Http;
 import org.springframework.messaging.MessageChannel;
@@ -47,12 +46,12 @@ class OSIPSynchronousReplyConfig {
     /*~ ----------------- Inbound ------------------ */
     @Bean
     MessageChannel resInChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();
     }
 
     @Bean
     MessageChannel resOutChannel() {
-        return MessageChannels.executor(Executors.newCachedThreadPool()).get();
+        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();
     }
 
     @Bean
@@ -62,7 +61,7 @@ class OSIPSynchronousReplyConfig {
 
     @Bean
     public IntegrationFlow httpPostAtms(ResponseMessageServiceActivator responseMessageServiceActivator) {
-        return IntegrationFlows.from(Http.inboundGateway("/res")
+        return IntegrationFlow.from(Http.inboundGateway("/res")
                 .requestMapping(
                         m -> m.methods(HttpMethod.POST))
                 .messageConverters(

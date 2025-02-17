@@ -11,8 +11,6 @@ spring:
         max-attempts: 120
     discovery:
       enabled: false
-  zipkin:
-    enabled: false
 owms:
   driver:
     dead-letter:

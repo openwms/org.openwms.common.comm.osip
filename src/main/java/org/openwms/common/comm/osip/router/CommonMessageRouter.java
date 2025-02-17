@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.openwms.common.comm.osip.router;
 
+import jakarta.annotation.PostConstruct;
 import org.openwms.common.comm.CommConstants;
 import org.openwms.common.comm.CustomServiceActivator;
 import org.openwms.common.comm.MessageProcessingException;
@@ -25,7 +26,6 @@ import org.springframework.integration.annotation.Router;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
