@@ -15,9 +15,11 @@
  */
 package org.openwms.common.comm.osip.res;
 
+import org.ameba.app.SpringProfiles;
 import org.openwms.common.comm.config.Osip;
 import org.openwms.common.comm.spi.FieldLengthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -27,7 +29,7 @@ import java.util.Map;
  *
  * @author Heiko Scherrer
  */
-//@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
+@Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Component
 public class ResponseMessageSender {
 

@@ -51,27 +51,6 @@ owms:
       so-send-buffer-size: 140
       identified-by-field: "TEST"
       subsystems:
-        - name: SPS01
-          inbound:
-            mode: server
-            hostname: 0.0.0.0
-            port: 30001
-            so-receive-buffer-size: 200
-          outbound:
-            mode: client
-            hostname: 0.0.0.0
-            port: 30002
-            so-send-buffer-size: 200
-            identified-by-field: "RECV"
-            identified-by-value: "SPS01"
-        - name: SPS02
-          inbound:
-            mode: server
-            port: 30012
-          outbound:
-            mode: server
-            port: 30011
-            identified-by-value: "SPS02"
         - name: SPS03
           duplex:
             mode: server
@@ -92,3 +71,5 @@ owms:
             mode: client
             port: 30005
             identified-by-value: "SPS05"
+  tracing:
+    url: http://localhost:4317

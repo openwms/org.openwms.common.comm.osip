@@ -89,21 +89,24 @@ class DuplexIT {
     @Test
     void test5TcpAdapters() throws Exception {
         ApplicationEventPublisher publisher = e -> { };
-        Subsystem.Duplex duplex = driver.getConnections().getSubsystems().stream().filter(c -> c.getDuplex() != null).findFirst().orElseThrow(NotFoundException::new).getDuplex();
+        var duplex = driver.getConnections().getSubsystems().stream()
+                .filter(s -> s.getDuplex() != null)
+                .findFirst()
+                .orElseThrow(NotFoundException::new).getDuplex();
 
-        AbstractClientConnectionFactory client = Tcp.netClient(duplex.getHostname(), duplex.getPort()).id("client").getObject();
+        var clientConnectionFactory = Tcp.netClient(duplex.getHostname(), duplex.getPort()).id("client").getObject();
         final AtomicReference<Message<?>> received = new AtomicReference<>();
+        clientConnectionFactory.setApplicationEventPublisher(publisher);
         final CountDownLatch latch = new CountDownLatch(1);
-        client.registerListener(m -> {
+        clientConnectionFactory.registerListener(m -> {
             received.set(new ObjectToStringTransformer().transform(m));
             latch.countDown();
             return false;
         });
-        client.setApplicationEventPublisher(publisher);
-        client.afterPropertiesSet();
+        clientConnectionFactory.afterPropertiesSet();
+        clientConnectionFactory.start();
+        clientConnectionFactory.getConnection().send(new GenericMessage<>("###00160SPS03MFC__00001REQ_000000000S0000004711FGINIPNT000100000000????????????????????0000009020131123225959***************************************************"));
 
-        client.start();
-        client.getConnection().send(new GenericMessage<>("###00160SPS03MFC__00001REQ_000000000S0000004711FGINIPNT000100000000????????????????????0000009020131123225959***************************************************"));
         Map<String, Object> headers = new HashMap<>();
         headers.put(IpHeaders.CONNECTION_ID, connectionHolder.getConnectionId("SPS03"));
         headers.put(OSIPHeader.RECEIVER_FIELD_NAME, "SPS03");
@@ -111,7 +114,7 @@ class DuplexIT {
         sender.send("###00160MFC__SPS0300002RES_000000000S0000004711FGINIPNT000100000000FGINCONV000100000000********************0000009020190527184424*******************************", headers);
         assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
         assertThat(received.get().getPayload()).isEqualTo("###00160nullnull00001RES_000000000S0000004711FGINIPNT000100000000FGINCONV000100000000********************0000009020190527184424*********************************");
-        client.stop();
+        clientConnectionFactory.stop();
     }
 
     @Test
