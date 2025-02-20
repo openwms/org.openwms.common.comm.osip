@@ -1,5 +1,4 @@
 # Purpose
-
 This library is the implementation of the [OSIP message specification](https://interface21-io.gitbook.io/osip) that is used by the
 [OpenWMS.org TCP/IP driver](https://openwms.github.io/org.openwms.common.comm) by default. 
 
