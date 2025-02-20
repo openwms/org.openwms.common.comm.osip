@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OSIPSynchronousReplyConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">OpenWMS.org COMMON: TCP/IP Driver OSIP Library</a> &gt; <a href="index.source.html" class="el_package">org.openwms.common.comm.osip.app</a> &gt; <span class="el_source">OSIPSynchronousReplyConfig.java</span></div><h1>OSIPSynchronousReplyConfig.java</h1><pre class="source lang-java linenums">/*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.http.dsl.Http;
 import org.springframework.messaging.MessageChannel;
@@ -42,38 +41,38 @@ import java.util.concurrent.Executors;
 @Profile(&quot;!&quot; + SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
 @EnableDiscoveryClient
-<span class="nc" id="L45">class OSIPSynchronousReplyConfig {</span>
+<span class="nc" id="L44">class OSIPSynchronousReplyConfig {</span>
 
     /*~ ----------------- Inbound ------------------ */
     @Bean
     MessageChannel resInChannel() {
-<span class="nc" id="L50">        return MessageChannels.executor(Executors.newCachedThreadPool()).get();</span>
+<span class="nc" id="L49">        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();</span>
     }
 
     @Bean
     MessageChannel resOutChannel() {
-<span class="nc" id="L55">        return MessageChannels.executor(Executors.newCachedThreadPool()).get();</span>
+<span class="nc" id="L54">        return MessageChannels.executor(Executors.newCachedThreadPool()).getObject();</span>
     }
 
     @Bean
     MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-<span class="nc" id="L60">        return new MappingJackson2HttpMessageConverter();</span>
+<span class="nc" id="L59">        return new MappingJackson2HttpMessageConverter();</span>
     }
 
     @Bean
     public IntegrationFlow httpPostAtms(ResponseMessageServiceActivator responseMessageServiceActivator) {
-<span class="nc" id="L65">        return IntegrationFlows.from(Http.inboundGateway(&quot;/res&quot;)</span>
-<span class="nc" id="L66">                .requestMapping(</span>
-<span class="nc" id="L67">                        m -&gt; m.methods(HttpMethod.POST))</span>
-<span class="nc" id="L68">                .messageConverters(</span>
-<span class="nc" id="L69">                        mappingJackson2HttpMessageConverter(),</span>
+<span class="nc" id="L64">        return IntegrationFlow.from(Http.inboundGateway(&quot;/res&quot;)</span>
+<span class="nc" id="L65">                .requestMapping(</span>
+<span class="nc" id="L66">                        m -&gt; m.methods(HttpMethod.POST))</span>
+<span class="nc" id="L67">                .messageConverters(</span>
+<span class="nc" id="L68">                        mappingJackson2HttpMessageConverter(),</span>
                         new ByteArrayHttpMessageConverter(),
                         new StringHttpMessageConverter())
-<span class="nc" id="L72">                .requestPayloadType(ResponseMessage.class))</span>
-<span class="nc" id="L73">                .channel(&quot;resInChannel&quot;)</span>
-<span class="nc" id="L74">                .transform(responseMessageServiceActivator)</span>
-<span class="nc" id="L75">                .channel(&quot;enrichedOutboundChannel&quot;)</span>
-<span class="nc" id="L76">                .get();</span>
+<span class="nc" id="L71">                .requestPayloadType(ResponseMessage.class))</span>
+<span class="nc" id="L72">                .channel(&quot;resInChannel&quot;)</span>
+<span class="nc" id="L73">                .transform(responseMessageServiceActivator)</span>
+<span class="nc" id="L74">                .channel(&quot;enrichedOutboundChannel&quot;)</span>
+<span class="nc" id="L75">                .get();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

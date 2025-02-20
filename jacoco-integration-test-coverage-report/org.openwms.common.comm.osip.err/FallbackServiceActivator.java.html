@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FallbackServiceActivator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">OpenWMS.org COMMON: TCP/IP Driver OSIP Library</a> &gt; <a href="index.source.html" class="el_package">org.openwms.common.comm.osip.err</a> &gt; <span class="el_source">FallbackServiceActivator.java</span></div><h1>FallbackServiceActivator.java</h1><pre class="source lang-java linenums">/*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@ import java.util.Date;
  */
 @OSIP
 @MessageEndpoint(&quot;errorServiceActivator&quot;)
-<span class="fc" id="L37">public class FallbackServiceActivator {</span>
+<span class="nc" id="L37">public class FallbackServiceActivator {</span>
 
-<span class="fc" id="L39">    private static final Logger LOGGER = LoggerFactory.getLogger(FallbackServiceActivator.class);</span>
+<span class="nc" id="L39">    private static final Logger LOGGER = LoggerFactory.getLogger(FallbackServiceActivator.class);</span>
 
     /**
      * Reply to incoming OSIP telegrams on the inputChannel with an {@link ErrorMessage} o the outputChannel.
@@ -59,4 +59,4 @@ import java.util.Date;
 <span class="nc" id="L59">        return ErrorMessage.newBuilder().errorCode(ErrorCodes.UNKNOWN_MESSAGE_TYPE).created(new Date()).build();</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
