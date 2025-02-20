@@ -29,7 +29,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.integration.ip.IpHeaders;
@@ -42,6 +41,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
@@ -69,7 +69,7 @@ class DuplexIT {
     private Driver driver;
     @Autowired
     private ConnectionHolder connectionHolder;
-    @MockBean
+    @MockitoBean
     private RabbitTemplate rabbitTemplateMock;
     @Autowired
     private ResponseMessageSender sender;
