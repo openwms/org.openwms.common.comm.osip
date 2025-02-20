@@ -27,7 +27,7 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
  * @author Heiko Scherrer
  */
 @Component
-<span class="nc" id="L30">class OSIPTelegramResolver implements TelegramResolver {</span>
+<span class="fc" id="L30">class OSIPTelegramResolver implements TelegramResolver {</span>
 
     /**
      * A CommonMessage is able to define the type of message from the telegram String. Currently, the type identifier starts directly after
@@ -37,10 +37,10 @@ import static org.openwms.common.comm.osip.OSIPHeader.LENGTH_HEADER;
      * @return The telegram type as case-insensitive String
      */
     public String getTelegramType(String telegram) {
-<span class="nc bnc" id="L40" title="All 4 branches missed.">        if (telegram == null || telegram.length() &lt; LENGTH_HEADER) {</span>
+<span class="pc bpc" id="L40" title="2 of 4 branches missed.">        if (telegram == null || telegram.length() &lt; LENGTH_HEADER) {</span>
 <span class="nc" id="L41">            throw new MessageMismatchException(&quot;Received an invalid OSIP telegram type&quot;);</span>
         }
-<span class="nc" id="L43">        return telegram.substring(LENGTH_HEADER, LENGTH_HEADER + Payload.MESSAGE_IDENTIFIER_LENGTH);</span>
+<span class="fc" id="L43">        return telegram.substring(LENGTH_HEADER, LENGTH_HEADER + Payload.MESSAGE_IDENTIFIER_LENGTH);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -30,11 +30,11 @@ import org.springframework.context.annotation.Profile;
  */
 @Profile(SpringProfiles.ASYNCHRONOUS_PROFILE)
 @Configuration
-<span class="nc" id="L33">class OSIPAppConfiguration {</span>
+<span class="fc" id="L33">class OSIPAppConfiguration {</span>
 
     @Bean
     MessagePostProcessor osipMessagePostProcessor() {
-<span class="nc" id="L37">        return m -&gt; {</span>
+<span class="fc" id="L37">        return m -&gt; {</span>
 <span class="nc" id="L38">            m.getMessageProperties().getHeaders().put(OSIPHeader.TENANT_FIELD_NAME, TenantHolder.getCurrentTenant());</span>
 <span class="nc" id="L39">            return m;</span>
         };

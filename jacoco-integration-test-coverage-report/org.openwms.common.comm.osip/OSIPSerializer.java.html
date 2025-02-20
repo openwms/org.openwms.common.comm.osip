@@ -33,9 +33,9 @@ public abstract class OSIPSerializer&lt;T extends Payload&gt; {
 
     private final Osip driver;
 
-<span class="nc" id="L36">    protected OSIPSerializer(Osip driver) {</span>
-<span class="nc" id="L37">        this.driver = driver;</span>
-<span class="nc" id="L38">    }</span>
+<span class="fc" id="L36">    protected OSIPSerializer(Osip driver) {</span>
+<span class="fc" id="L37">        this.driver = driver;</span>
+<span class="fc" id="L38">    }</span>
 
     /**
      * Subclasses have to return an unique, case-sensitive message identifier.
@@ -69,7 +69,7 @@ public abstract class OSIPSerializer&lt;T extends Payload&gt; {
     protected abstract String convert(T message);
 
     protected Osip getDriver() {
-<span class="nc" id="L72">        return driver;</span>
+<span class="fc" id="L72">        return driver;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
