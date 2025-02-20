@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <artifactId>org.openwms.common.comm.osip</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>OpenWMS.org COMMON: TCP/IP Driver OSIP Library</name>
     <description>The OSIP message structure support for the OpenWMS.org TCP/IP driver</description>
     <url>https://openwms.github.io/${project.artifactId}/index.html</url>
@@ -34,7 +34,7 @@
     </developers>
 
     <properties>
-        <comm.lib.version>1.0.0-SNAPSHOT</comm.lib.version>
+        <comm.lib.version>1.0.0</comm.lib.version>
         <core.test.arch.version>1.0.2</core.test.arch.version>
         <spring-cloud-dependencies.version>2024.0.0</spring-cloud-dependencies.version>
     </properties>
